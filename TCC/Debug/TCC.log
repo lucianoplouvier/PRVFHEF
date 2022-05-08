@@ -1,0 +1,20 @@
+﻿  auxiliaryStructures.cpp
+C:\Users\frien\source\repos\TCC\TCC\auxiliaryStructures.cpp(146,35): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\auxiliaryStructures.cpp(148,36): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\auxiliaryStructures.cpp(171,35): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\auxiliaryStructures.cpp(172,36): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\auxiliaryStructures.cpp(213,12): warning C4018: '<': incompatibilidade de signed/unsigned
+  heterogeneousTransports.cpp
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(11,21): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(26,29): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(38,27): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(68,20): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(79,21): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(92,21): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(151,25): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(158,32): warning C4018: '<': incompatibilidade de signed/unsigned
+C:\Users\frien\source\repos\TCC\TCC\heterogeneousTransports.cpp(192,28): warning C4018: '<': incompatibilidade de signed/unsigned
+  main.cpp
+C:\Users\frien\source\repos\TCC\TCC\main.cpp(43,31): warning C4018: '<': incompatibilidade de signed/unsigned
+  Gerando Código...
+  TCC.vcxproj -> C:\Users\frien\source\repos\TCC\Debug\TCC.exe
