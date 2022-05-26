@@ -1,28 +1,28 @@
 #pragma once
+#include <stdlib.h>
+#include <iostream>
+#include <stdio.h>
+#include "route.h"
+#include "auxiliaryStructures.h"
 
-enum class NEIGHBORHOODTYPES {
-	EXCHANGE,
-	TWO_OPT,
-	REINSERTION,
-	OR_OP2,
-	OR_OP3,	
-};
 
 /*
 * @brief namespace para execução das buscas locais do Iterated Local Search.
 */
 namespace intrarouteStructures {
 
-	static void exchange();
+	std::list<INTRAROUTETYPES> getAll();
 
-	static void two_opt();
+	static int intrarrouteCount() { return getAll().size(); }
 
-	static void reinsertion();
+	static std::vector<Route> shift(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
 
-	static void or_op2();
+	static std::vector<Route> swap(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
 
-	static void or_op3();
+	static std::vector<Route> orOpt2(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
 
-	static int typesCount() { return 5; }
+	static std::vector<Route> orOpt3(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
+
+	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
 }

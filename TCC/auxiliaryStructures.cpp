@@ -4,14 +4,11 @@
 #include <functional>
 
 using namespace std;
+#include "interrouteStructures.h"
 
-AuxiliaryStructures::AuxiliaryStructures() {
-
-}
-
-AuxiliaryStructures::AuxiliaryStructures(const std::vector<std::vector<int>>& adjacencies, int neighborhoodTypes) {
+AuxiliaryStructures::AuxiliaryStructures(const AdjacencyCosts* adjacenciesCosts, int neighborhoodTypes) {
 	m_neighborhoodTypes = neighborhoodTypes;
-	m_adjacencyMatrix = &adjacencies;
+	m_adjacencyMatrix = adjacenciesCosts;
 }
 
 AuxiliaryStructures::~AuxiliaryStructures() {
@@ -29,38 +26,38 @@ void AuxiliaryStructures::recalculate(const std::vector<Route>& routes)
 	calculateSumDelivery(routes);
 }
 
-int AuxiliaryStructures::sumDelivery(int route) const
+float AuxiliaryStructures::sumDelivery(int routeIndex) const
 {
-	return m_sumDelivery[route];
+	return m_sumDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::minDelivery(int route) const
+float AuxiliaryStructures::minDelivery(int routeIndex) const
 {
-	return m_minDelivery[route];
+	return m_minDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::maxDelivery(int route) const
+float AuxiliaryStructures::maxDelivery(int routeIndex) const
 {
-	return m_maxDelivery[route];
+	return m_maxDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::minPairDelivery(int route) const
+float AuxiliaryStructures::minPairDelivery(int routeIndex) const
 {
-	return m_minPairDelivery[route];
+	return m_minPairDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::maxPairDelivery(int route) const
+float AuxiliaryStructures::maxPairDelivery(int routeIndex) const
 {
-	return m_maxPairDelivery[route];
+	return m_maxPairDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::cumulativeDelivery(int routeIndex, int customers) const
+float AuxiliaryStructures::cumulativeDelivery(int routeIndex, int customers) const
 {
 	int total = 0;
 	int size = m_cumulativeDelivery[routeIndex].size();
 	if (customers > size) {
 		cout << "AuxiliaryStructures::cumulativeDelivery , pedido de clientes maior que quantidade de clientes na rota";
-		exit(1);
+		customers = size;
 	}
 	for (int i = 0; i < customers && i < size; i++) {
 		total += m_cumulativeDelivery[routeIndex][i];
@@ -68,11 +65,15 @@ int AuxiliaryStructures::cumulativeDelivery(int routeIndex, int customers) const
 	return total;
 }
 
-bool AuxiliaryStructures::neighborhoodStatus(NEIGHBORHOODTYPES neighborhoodtype, int route) const
+bool AuxiliaryStructures::neighborhoodStatus(INTERROUTETYPES neighborhoodtype, int routeId) const
 {
+	/*
+	* TODO consertar isso aqui
 	int rel = (int) neighborhoodtype;
-	auto neigh = m_neighborhoodStatus[rel].at(route);
+	auto neigh = m_neighborhoodStatus[rel].at(routeId);
 	return neigh.improvementStatus && neigh.routeAltered;
+	*/
+	return true;
 }
 
 void AuxiliaryStructures::calculateSumDelivery(const std::vector<Route>& routes)
@@ -84,9 +85,9 @@ void AuxiliaryStructures::calculateSumDelivery(const std::vector<Route>& routes)
 		for (int iRoute = 0; iRoute < routeSize; iRoute++) {
 			const Route r = routes[iRoute];
 			int sum = 0;
-			int demandsListSize = r.demands.size();
+			int demandsListSize = r.clientsList.size();
 			for (int iClient = 0; iClient < demandsListSize; iClient++) {
-				sum += r.demands[iClient];
+				sum += r.clientsList[iClient].demand;
 			}
 			m_sumDelivery.push_back(sum);
 		}
@@ -102,9 +103,9 @@ void AuxiliaryStructures::calculateMinDelivery(const std::vector<Route>& routes)
 		for (int iRoute = 0; iRoute < routeSize; iRoute++) {
 			const Route r = routes[iRoute];
 			int minDel = INT_MAX;
-			int demandsListSize = r.demands.size();
+			int demandsListSize = r.clientsList.size();
 			for (int iClient = 0; iClient < demandsListSize; iClient++) {
-				int currDemand = r.demands[iClient];
+				int currDemand = r.clientsList[iClient].demand;
 				if (currDemand < minDel) {
 					minDel = currDemand;
 				}
@@ -123,9 +124,9 @@ void AuxiliaryStructures::calculateMaxDelivery(const std::vector<Route>& routes)
 		for (int iRoute = 0; iRoute < routeSize; iRoute++) {
 			const Route r = routes[iRoute];
 			int maxDel = INT_MIN;
-			int demandsListSize = r.demands.size();
+			int demandsListSize = r.clientsList.size();
 			for (int iClient = 0; iClient < demandsListSize; iClient++) {
-				int currDemand = r.demands[iClient];
+				int currDemand = r.clientsList[iClient].demand;
 				if (currDemand > maxDel) {
 					maxDel = currDemand;
 				}
@@ -142,14 +143,14 @@ void AuxiliaryStructures::calculateMinPairDelivery(const std::vector<Route>& rou
 	m_minPairDelivery.reserve(routes.size());
 	for (int iRoute = 0; iRoute < routesSize; iRoute++) {
 		int routeLeastSum = INT_MAX;
-		const std::vector<int> clientsInRoute = routes[iRoute].clientsList;
+		const std::vector<Client> clientsInRoute = routes[iRoute].clientsList;
 		for (int iClient1 = 0; iClient1 < clientsInRoute.size(); iClient1++) {
-			int currClient1 = clientsInRoute[iClient1];
+			int currClient1Id = clientsInRoute[iClient1].id;
 			for (int iClient2 = 0; iClient2 < clientsInRoute.size(); iClient2++) {
-				int currClient2 = clientsInRoute[iClient2];
-				auto client1Adjacencies = m_adjacencyMatrix->at(currClient1);
-				if (client1Adjacencies.at(currClient2) > 0) {
-					int pairDemand = routes[iRoute].demands[currClient1] + routes[iRoute].demands[currClient2];
+				int currClient2Id = clientsInRoute[iClient2].id;
+				auto client1Adjacencies = m_adjacencyMatrix->costs.at(currClient1Id);
+				if (client1Adjacencies.at(currClient2Id) > 0) {
+					int pairDemand = routes[iRoute].clientsList[iClient1].demand + routes[iRoute].clientsList[iClient2].demand;
 					if (pairDemand < routeLeastSum) {
 						routeLeastSum = INT_MAX;
 					}
@@ -167,12 +168,12 @@ void AuxiliaryStructures::calculateMaxPairDelivery(const std::vector<Route>& rou
 	m_maxPairDelivery.reserve(routes.size());
 	for (int iRoute = 0; iRoute < routesSize; iRoute++) {
 		int routeLargestSum = INT_MAX;
-		const std::vector<int> clientsInRoute = routes[iRoute].clientsList;
+		const std::vector<Client> clientsInRoute = routes[iRoute].clientsList;
 		for (int iClient1 = 0; iClient1 < clientsInRoute.size(); iClient1++) {
 			for (int iClient2 = 0; iClient2 < clientsInRoute.size(); iClient2++) {
-				auto client1Adjacencies = m_adjacencyMatrix->at(iClient1);
+				auto client1Adjacencies = m_adjacencyMatrix->costs.at(iClient1);
 				if (client1Adjacencies.at(iClient2) > 0) {
-					int pairDemand = routes[iRoute].demands[iClient1] + routes[iRoute].demands[iClient2];
+					int pairDemand = routes[iRoute].clientsList[iClient1].demand + routes[iRoute].clientsList[iClient2].demand;
 					if (pairDemand > routeLargestSum) {
 						routeLargestSum = INT_MAX;
 					}
@@ -185,16 +186,16 @@ void AuxiliaryStructures::calculateMaxPairDelivery(const std::vector<Route>& rou
 
 void AuxiliaryStructures::calculateCumulativeDelivery(const std::vector<Route>& routes)
 {
-	int total = 0;
+	float total = 0;
 	int routeSize = routes.size();
 	m_cumulativeDelivery.clear();
 	m_cumulativeDelivery.reserve(routeSize);
 	for (int iRoute = 0; iRoute < routeSize; iRoute++) {
-		int demandsSize = routes[iRoute].demands.size();
-		std::vector<int> demand;
+		int demandsSize = routes[iRoute].clientsList.size();
+		std::vector<float> demand;
 		demand.reserve(demandsSize);
 		for (int iDemand = 0; iDemand < demandsSize; iDemand++) {
-			total += routes[iRoute].demands[iDemand];
+			total += routes[iRoute].clientsList[iDemand].demand;
 			demand.push_back(total);
 		}
 		m_cumulativeDelivery.push_back(demand);
@@ -231,12 +232,12 @@ void AuxiliaryStructures::calculateNeighborhoodStatus(const std::vector<Route>& 
 	m_neighborhoodStatus = newStatus;
 }
 
-void AuxiliaryStructures::routeAltered(NEIGHBORHOODTYPES neighborhoodType, int routeId) {
+void AuxiliaryStructures::routeAltered(INTERROUTETYPES neighborhoodType, int routeId, bool alteration) {
 	int typeInt = (int)neighborhoodType;
-		m_neighborhoodStatus[typeInt][routeId].routeAltered = true;
+	m_neighborhoodStatus[typeInt][routeId].routeAltered = alteration;
 }
 
-void AuxiliaryStructures::improvementChanged(NEIGHBORHOODTYPES neighborhoodType, int route, bool change) {
+void AuxiliaryStructures::improvementChanged(INTERROUTETYPES neighborhoodType, int route, bool change) {
 	int typeInt = (int)neighborhoodType;
 	m_neighborhoodStatus[typeInt][route].improvementStatus = change;
 }

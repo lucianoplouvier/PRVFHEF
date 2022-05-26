@@ -1,21 +1,18 @@
 #pragma once
 #include "route.h"
-#include "intrarouteStructures.h"
 #include <map>
 
 // Estruturas Auxiliares para a busca interrota.
 class AuxiliaryStructures {
 
 public:
-
-	AuxiliaryStructures();
 	
 	/*
 	* @brief Construtor.
-	* @param adjacencies - Matriz de adjacências de clientes.
+	* @param adjacencies - Matriz de custos de adjacências de clientes.
 	* @param neighborhoodTypes - Quantidade de Tipos de vizinhança interrota.
 	*/
-	AuxiliaryStructures(const std::vector<std::vector<int>>& adjacencies, int neighborhoodTypes);
+	AuxiliaryStructures(const AdjacencyCosts* adjacenciesCosts, int neighborhoodTypes);
 
 	/*
 	* @brief Estado inicial da rota.
@@ -32,34 +29,34 @@ public:
 	* @param route - Rota de interesse.
 	* @return maior custo de entrega da rota.
 	*/
-	int sumDelivery(int route) const;
+	float sumDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a menor demanda em uma dada rota.
 	* @param route - Rota de interesse.
 	* @return menor custo de entrega da rota.
 	*/
-	int minDelivery(int route) const;
+	float minDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a maior demanda em uma dada rota.
 	* @param route - Rota de interesse.
 	*/
-	int maxDelivery(int route) const;
+	float maxDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a menor demanda entre todos os pares de clientes adjacentes em uma rota.
 	* @param route - Rota de interesse.
 	* @return Valor da maior demanda entre um par de clientes na rota.
 	*/
-	int minPairDelivery(int route) const;
+	float minPairDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a maior demanda entre todos os pares de clientes adjacentes em uma rota.
 	* @param route - Rota de interesse.
 	* @return Valor da maior demanda entre um par de clientes na rota.
 	*/
-	int maxPairDelivery(int route) const;
+	float maxPairDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a demanda cumulativa dos clientes em uma rota.
@@ -67,19 +64,19 @@ public:
 	* @param customers - Número de clientes a contar a demanda, começando do primeiro cliente da rota.
 	* @return Valor de demandas acumuladas.
 	*/
-	int cumulativeDelivery(int routeIndex, int customers) const;
+	float cumulativeDelivery(int routeIndex, int customers) const;
 
 	/*
 	* @brief Recupera se a rota informada foi alterada após falhar ao tentar uma melhoria da solução.
 	* @param neighborhoodtype - Número da vizinhança.
-	* @param route - Rota de interesse.
+	* @param routeId - Id Rota de interesse.
 	* @return True se a rota foi alterada de alguma forma, false caso contrário.
 	*/
-	bool neighborhoodStatus(NEIGHBORHOODTYPES neighborhoodtype, int route) const;
+	bool neighborhoodStatus(INTERROUTETYPES neighborhoodtype, int routeId) const;
 
-	void routeAltered(NEIGHBORHOODTYPES neighborhoodType, int routeId);
+	void routeAltered(INTERROUTETYPES neighborhoodType, int routeId, bool alteration);
 
-	void improvementChanged(NEIGHBORHOODTYPES neighborhoodType, int route, bool improvementChange);
+	void improvementChanged(INTERROUTETYPES neighborhoodType, int routeId, bool improvementChange);
 
 private:
 
@@ -88,15 +85,15 @@ private:
 		bool improvementStatus = true;
 	};
 
-	std::vector<int> m_sumDelivery;
-	std::vector<int> m_minDelivery;
-	std::vector<int> m_maxDelivery;
-	std::vector<int> m_minPairDelivery;
-	std::vector<int> m_maxPairDelivery;
-	std::vector<std::vector<int>> m_cumulativeDelivery;
+	std::vector<float> m_sumDelivery;
+	std::vector<float> m_minDelivery;
+	std::vector<float> m_maxDelivery;
+	std::vector<float> m_minPairDelivery;
+	std::vector<float> m_maxPairDelivery;
+	std::vector<std::vector<float>> m_cumulativeDelivery;
 	std::vector<std::map<int, neighborhoodStatusNode>> m_neighborhoodStatus;
 
-	const std::vector<std::vector<int>>* m_adjacencyMatrix;
+	const AdjacencyCosts* m_adjacencyMatrix;
 
 	int m_neighborhoodTypes;
 

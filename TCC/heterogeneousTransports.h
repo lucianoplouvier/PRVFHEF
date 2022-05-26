@@ -6,8 +6,12 @@
 #include <Vector>
 #include "structures.h"
 #include "interrouteStructures.h"
+#include "intrarouteStructures.h"
 #include "perturbationMethods.h"
 #include "auxiliaryStructures.h"
+#include "Route.h"
+
+using namespace RouteDefs;
 
 class PRVFHEF {
 
@@ -20,7 +24,7 @@ public:
 	* @param vehicleTypes - Lista de tipos de veículos disponíveis.
 	* @param vehicles - Quantidade de veículos iniciais.
 	*/
-	PRVFHEF(std::vector<int> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, int vehicles = -1);
+	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles = -1);
 
 	~PRVFHEF();
 
@@ -28,13 +32,17 @@ public:
 	* @brief Avalia uma solução dada.
 	* @return valor da avaliação. O Quanto menor, melhor.
 	*/
-	int evaluate(std::vector<Route> solution) const;
+	float evaluate(std::vector<Route>& solution) const;
 
 private:
 
+	int m_maxVehicles; // Kmin
+
 	RouteCreator m_routeCreator;
 
-	AuxiliaryStructures m_auxiliaryStructures;
+	AuxiliaryStructures* m_auxiliaryStructures;
+
+	std::vector<float> m_clientsOriginalDemands;
 
 	std::vector<Client> m_allClients; // Lista de clientes, com id e demanda.
 
@@ -42,7 +50,7 @@ private:
 
 	int m_clientsCount; // Quantidade de clientes.
 
-	std::vector<std::vector<int>> m_adjacencyCosts; // matriz como i * m_clientsCount + j
+	AdjacencyCosts m_adjacencyCosts; // matriz como i * m_clientsCount + j
 
 	/*
 	* @brief Cria uma solução inicial.
@@ -69,6 +77,8 @@ private:
 	*/
 	int estimateVehicles(const std::vector<Client>& allClients) const;
 
+	void addClientToRoute(Route& r, int candidateId, float demandAmount);
+
 	/*
 	* @brief Executa o ILS.
 	* @param initialVehicles - quantidade de veículos iniciais.
@@ -81,22 +91,25 @@ private:
 	* @brief Cria a matriz de adjacencias, guardando o resultado em m_adjacencyCosts.
 	* @param clientsCount - Quantidade de clientes.
 	* @param clientAdjacencies - Adjacencias dos clientes.
+	* @param depotTravelCost - Custo de viagem entre o depósito e o cliente de indice x.
 	*/
-	void createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies);
+	void createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<float> depotTravelCost);
 
 	/*
 	* @brief Executa o RVND.
 	* @param currSol - Solução atual.
+	* @parm evaluation - Avaliação atual.
 	*/
-	std::vector<Route> rvnd(std::vector<Route>& currSol);
+	std::vector<Route> rvnd(std::vector<Route>& currSol, float evaluation);
 
 	/*
 	* @brief Faz a inserção paralela.
 	* @param route - Rotas.
 	* @param candidatesList - Lista de candidatos.
 	* @param insertionCriteria - Critério de inserção.
+	* @return rotas preenchidas.
 	*/
-	void paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria);
+	std::vector<Route> paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria);
 
 	/*
 	* @brief Recupera o custo de inserção para o cliente mais próximo na rota route do cliente de id informado.
@@ -104,20 +117,41 @@ private:
 	* @param candidateId - Id do cliente a ser inserido.
 	* @return custo.
 	*/
-	int getClosestInsertionCost(const Route& route, int candidateId) const;
-
-	/*
-	* @brief Recupera os custos de adjacência entre dois clientes.
-	* @param client1 - Id do cliente 1.
-	* @param client2 - Id do cliente 2.
-	* @return custo de adjacência entre os dois clientes.
-	*/
-	int getAdjacencyCosts(int client1, int client2) const;
+	float getClosestInsertionCost(const Route& route, int candidateId) const;
 
 	//s, i, , rTraço;
-	std::vector<Route> splitReinsertion(const std::vector<Route>& solution, int clientIndex, int clientDemand, int forbiddenRouteId);
+	std::vector<Route> splitReinsertion(const std::vector<Route>& solution, const Client& client, int forbiddenRouteId, bool& success);
 
-	std::vector<Route> knaapSackGreedy(const std::vector<Route>& solution, int clientIndex, int clientDemand, 
-		std::vector<int>& routesIndexWithResidual, std::vector<int>& residualsList, std::vector<int>& leastInsertionCosts);
+	/*
+	* @brief Resolver o problema da mochila para a solução atual.
+	*/
+	std::vector<Route> knaapSackGreedy(std::vector<Route>& solution, const Client& client,
+		std::vector<int>& routesIndexWithResidual, std::vector<float>& residualsList, std::vector<float>& leastInsertionCosts, bool& success);
+
+	/*
+	* @brief 
+	*/
+	std::vector<Route> emptyRoutes(const std::vector<Route>& solution);
+
+	std::vector<Route> reinsertSingleCustomer(std::vector<Route>& solution);
+
+	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
+
+	void printSolution(float eval, const std::vector<Route>& solution);
+
+	bool verifySolutionValid(const std::vector<Route>& solution);
+
+	/*
+	* @brief Verifica se é possivel adicionar um candidado da lista à rota.
+	*/
+	bool canAddAnyToARoute(const std::vector<Route>& routes, const std::list<int>& candidatesList);
+
+	/*
+	* @brief Redimensiona o Veículo de forma a tentar trocar o veículo de uma rota por outro mais econômico.
+	* @param routes - Rotas.
+	* @param currEval - Avaliação atual
+	* @param resultEval - Avaliação retornada.
+	*/
+	void vehicleRedimension(std::vector<Route>& routes, float currEval, float& resultEval);
 
 };

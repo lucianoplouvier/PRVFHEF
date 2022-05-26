@@ -18,7 +18,18 @@ std::vector<std::string> strSplit(const std::string& text, char separator) {
     return result;
 }
 
-bool readProblem(std::string input, std::vector<int>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies) {
+bool readProblem(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<float>& depotTravelCosts) {
+    /*
+    * Formato do arquivo
+    * -> numero de clientes
+    * -> lista de demandas de cada cliente
+    * -> numero de veiculos
+    * ->(repete para cada veiculo) capacidade veiculo, tipo veiculo, custo veiculo, custo por km andado
+    * -> lista de adjacencias ao depot
+    * -> numero de adjacencias
+    * ->(repete para cada adjacencia) idCliente1 idCliente2 custoAdjacencia. Come�a no 1 pois 0 = depot
+    */
+
     string line;
 
     int clients = 0;
@@ -55,15 +66,25 @@ bool readProblem(std::string input, std::vector<int>& demands, std::vector<Vehic
                     std::vector<std::string> lineSplit = strSplit(line, ' ');
                     Vehicle newVehicleType;
                     newVehicleType.id = i;
-                    newVehicleType.cost = atoi(lineSplit[0].c_str());
+                    newVehicleType.capacity = atoi(lineSplit[0].c_str());
                     newVehicleType.type = atoi(lineSplit[1].c_str());
-                    newVehicleType.capacity = atoi(lineSplit[2].c_str());
+                    newVehicleType.cost = atoi(lineSplit[2].c_str());
+                    newVehicleType.travelCost = atoi(lineSplit[3].c_str());
                     vehicleTypes.push_back(newVehicleType);
                 }
                 else {
                     return false;
                 }
             }
+        }
+        if (getline(myfile, line)) {
+            std::vector<std::string> lineSplit = strSplit(line, ' ');
+            for (int i = 0; i < lineSplit.size(); i++) {
+                depotTravelCosts.push_back(atoi(lineSplit.at(i).c_str()));
+            }
+        }
+        else {
+            return false;
         }
         if (getline(myfile, line)) {
             numberAdjacencies = stoi(line);
@@ -89,24 +110,14 @@ bool readProblem(std::string input, std::vector<int>& demands, std::vector<Vehic
 
 int main()
 {
-    std::vector<int> demands;
+    std::vector<float> demands;
     std::vector<ClientAdjacency> adjacencies;
     std::vector<Vehicle> vehicleTypes;
+    std::vector<float> depotTravelCosts;
 
     std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     
-    readProblem(filepath, demands, vehicleTypes, adjacencies);
+    readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    PRVFHEF transport(demands, adjacencies, vehicleTypes);
+    PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts);
 }
-
-// Executar programa: Ctrl + F5 ou Menu Depurar > Iniciar Sem Depuração
-// Depurar programa: F5 ou menu Depurar > Iniciar Depuração
-
-// Dicas para Começar: 
-//   1. Use a janela do Gerenciador de Soluções para adicionar/gerenciar arquivos
-//   2. Use a janela do Team Explorer para conectar-se ao controle do código-fonte
-//   3. Use a janela de Saída para ver mensagens de saída do build e outras mensagens
-//   4. Use a janela Lista de Erros para exibir erros
-//   5. Ir Para o Projeto > Adicionar Novo Item para criar novos arquivos de código, ou Projeto > Adicionar Item Existente para adicionar arquivos de código existentes ao projeto
-//   6. No futuro, para abrir este projeto novamente, vá para Arquivo > Abrir > Projeto e selecione o arquivo. sln

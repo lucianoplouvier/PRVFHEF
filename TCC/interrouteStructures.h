@@ -1,39 +1,46 @@
 #pragma once
+#include <stdlib.h>
+#include <iostream>
+#include <stdio.h>
 #include "structures.h"
-#include "structures.h"
-#include "Route.h"
+#include "auxiliaryStructures.h"
+#include "route.h"
 #include <vector>
-
-enum class INTERROUTETYPES {
-	SHIFT1_0,
-	SHIFT2_0,
-	SWAP1_1,
-	SWAP2_1,
-	SWAP1_1S,
-	SWAP2_1S,
-	ROUTEADDITION,
-	KSPLIT
-};
 
 namespace interrouteStructures {
 
-	void shift1_0();
+	/*
+	* @brief Executa shift1_0, o qual passa o cliente de uma rota para outra.
+	* @param solution - Solução atual.
+	* @param evaluation - avaliação atual.
+	* @param auxStruct - Struturas auxiliares.
+	* @param adjCosts - custos de adjacência.
+	*/
+	std::vector<Route> shift1_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	void shift2_0();
+	std::vector<Route> shift2_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	void swap1_1();
+	std::vector<Route> swap1_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	void swap2_1();
+	std::vector<Route> swap2_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	void swap1_1S();
+	std::vector<Route> swap1_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	void swap2_1S();
+	std::vector<Route> swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	void routeAddition();
+	std::vector<Route> routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	void kSplit();
+	std::vector<Route> kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
 	std::list<INTERROUTETYPES> getAll();
 
-	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& current);
+	/*
+	* @brief Executa o movimento de interrota respectivo.
+	* @param type - Tipo de interrota.
+	* @param solution - Solução atual.
+	* @param evaluation - avaliação atual.
+	* @param auxStruct - Struturas auxiliares.
+	* @param adjCosts - custos de adjacência.
+	*/
+	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 }

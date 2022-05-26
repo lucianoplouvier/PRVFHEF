@@ -5,19 +5,35 @@
 struct ClientAdjacency {
 	int clientFromId;
 	int clientToId;
-	int travelCost;
+	float travelCost;
 };
 
 struct Client {
 	int id;
-	int demand;
+	float demand;
+	Client() {
+		id = -1;
+		demand = -1;
+	}
+	Client(const Client& other) {
+		this->id = other.id;
+		this->demand = other.demand;
+	}
 };
 
 struct Vehicle {
 	int id;
 	int type;
-	int capacity;
-	int cost;
-	int travelCost;
+	float capacity;
+	float cost;
+	float travelCost;
+
+	bool operator==(const Vehicle& other) {
+		return this->id = other.id;
+	}
+
+	bool operator!=(const Vehicle& other) {
+		return this->id != other.id;
+	}
 };
 
