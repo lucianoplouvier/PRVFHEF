@@ -11,20 +11,20 @@ enum class PERTURBATIONTYPES {
 	MERGE
 };
 
-namespace perturbationMethods {
-
-	std::vector<Route> multipleSwap1_1(std::vector<Route>& solution);
-
-	std::vector<Route> multiShift1_1(std::vector<Route>& solution);
-
-	std::vector<Route> split(std::vector<Route>& solution);
-
-	std::vector<Route> merge(std::vector<Route>& solution);
+namespace perturbationMethods { // Não retorna nada pois ele verifica antes de fazer movimentos inválidos, aí altera diretamente.
 
 	std::vector<PERTURBATIONTYPES> getAll();
 
-	std::vector<Route> perturbate(std::vector<Route>& solution);
+	void multipleSwap1_1(std::vector<Route>& solution);
 
-	std::vector<Route> executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type);
+	void multiShift1_1(std::vector<Route>& solution);
+
+	void split(std::vector<Route>& solution);
+
+	void merge(std::vector<Route>& solution);
+
+	void perturbate(std::vector<Route>& solution);
+
+	void executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type);
 
 };

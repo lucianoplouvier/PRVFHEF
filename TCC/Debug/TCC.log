@@ -160,6 +160,11 @@ F:\TCC\TCC\TCC\Route.h(48,21): warning C4244: 'inicializando': conversão de 'in
 F:\TCC\TCC\TCC\Route.h(58,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\Route.h(81,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\Route.h(147,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(8,12): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(75,23): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(76,23): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(110,23): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(111,23): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
   route.cpp
 F:\TCC\TCC\TCC\route.h(48,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\route.h(58,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
@@ -176,6 +181,9 @@ F:\TCC\TCC\TCC\route.cpp(258,59): warning C4244: '+=': conversão de 'const floa
           [
               _Ty=int
           ]
+  structuralMethods.cpp
+  Utils.cpp
+F:\TCC\TCC\TCC\Utils.cpp(8,12): warning C4244: 'argumento': conversão de 'time_t' para 'unsigned int', possível perda de dados
   Gerando Código...
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(471): warning C4715: 'PRVFHEF::emptyRoutes': nem todos os caminhos de controle retornam um valor
-  TCC.vcxproj -> F:\TCC\TCC\Debug\TCC.exe
+F:\TCC\TCC\TCC\perturbationMethods.cpp(57): warning C4715: 'getRandomPair': nem todos os caminhos de controle retornam um valor
+F:\TCC\TCC\TCC\main.cpp : fatal error C1090: Falha na chamada à API PDB, código de erro '3': F:\TCC\TCC\TCC\Debug\vc142.pdb

@@ -193,7 +193,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 		oldEval = evaluate(solutionOptimized);
 		finalSolution = solutionOptimized;
 		for (int ilsIters = 0; ilsIters < maxItersNoImprove; ilsIters++) {
-			solutionOptimized = perturbationMethods::perturbate(solutionOptimized);
+			perturbationMethods::perturbate(solutionOptimized);
 			m_auxiliaryStructures->recalculate(solutionOptimized);
 			solutionOptimized = rvnd(solutionOptimized, oldEval);
 			float evaluation = evaluate(solutionOptimized);
