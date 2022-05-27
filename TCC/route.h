@@ -60,6 +60,25 @@ struct Route {
 		}
 		return canAdd;
 	}
+
+	// Junta a demanda do cliente caso o cliente já exista na rota.
+	bool addClientOrMerge(int clientId, int demand) {
+		bool canAdd = this->canAddClient(demand);
+		if (canAdd) {
+			bool done = false;
+			for (int i = 0; i < clientsList.size(); i++) {
+				if (clientsList[i].id == clientId) {
+					clientsList[i].demand += demand;
+					done = true;
+					break;
+				}
+			}
+			if (!done) {
+				addClient(clientId, demand);
+			}
+		}
+		return canAdd;
+	}
 	/*
 	bool insertClient(int clientIndex, int demand, int position) {
 		bool canAdd = this->canAddClient(demand);
@@ -205,6 +224,12 @@ namespace RouteDefs {
 	std::vector<Route> copy(const std::vector<Route>& other);
 
 	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList);
+
+	/*
+	* @brief Recupera o maior veículo disponível.
+	* @return Maior veículo na lista de veículos.
+	*/
+	Vehicle getBiggestVehicle(const std::vector<Vehicle>& vehiclesList);
 }
 
 class RouteCreator {
@@ -216,6 +241,10 @@ public:
 	~RouteCreator();
 
 	Route createRoute(Vehicle v);
+
+	void reset() {
+		m_lastId = 0;
+	}
 
 private:
 

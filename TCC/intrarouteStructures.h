@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "route.h"
 #include "auxiliaryStructures.h"
+#include "Utils.h"
 
 
 /*
@@ -15,14 +16,16 @@ namespace intrarouteStructures {
 
 	static int intrarrouteCount() { return getAll().size(); }
 
-	static std::vector<Route> shift(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
+	static std::vector<Route> shift(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
-	static std::vector<Route> swap(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
+	static std::vector<Route> swap(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
-	static std::vector<Route> orOpt2(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
+	static std::vector<Route> orOpt2(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
-	static std::vector<Route> orOpt3(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts);
+	static std::vector<Route> orOpt3(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
-	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
+	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts);
+
+	std::vector<Route> executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts);
 
 }

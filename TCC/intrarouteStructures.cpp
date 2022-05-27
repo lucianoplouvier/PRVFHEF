@@ -13,27 +13,36 @@ std::list<INTRAROUTETYPES> intrarouteStructures::getAll() {
 	return all;
 }
 
-std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts) {
+std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	switch (type)
 	{
 	case INTRAROUTETYPES::EXCHANGE:
-		result = shift(solution, auxStruct, adjCosts);
+		result = shift(solution, adjCosts);
 		break;
 	case INTRAROUTETYPES::REINSERTION:
-		result = swap(solution, auxStruct, adjCosts);
+		result = swap(solution, adjCosts);
 		break;
 	case INTRAROUTETYPES::OR_OPT2:
-		result = orOpt2(solution, auxStruct, adjCosts);
+		result = orOpt2(solution, adjCosts);
 		break;
 	case INTRAROUTETYPES::OR_OPT3:
-		result = orOpt2(solution, auxStruct, adjCosts);
+		result = orOpt2(solution, adjCosts);
 		break;
 	default:
 		cout << "ERROR. intrarouteStructures::execute , tipo de vizinhança não reconhecido.";
 		break;
 	}
 	return result;
+}
+
+std::vector<Route> intrarouteStructures::executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts) {
+	std::list<INTRAROUTETYPES> intrarouteList = intrarouteStructures::getAll();
+	std::list<INTRAROUTETYPES>::iterator iterator = intrarouteList.begin();
+	int selectedIntrarouteIndex = Utils::getRandomInt(0, intrarouteList.size());
+	std::advance(iterator, selectedIntrarouteIndex);
+	INTRAROUTETYPES selectedIntraroute = *iterator;
+	return intrarouteStructures::execute(selectedIntraroute, solution, adjCosts);
 }
 
 Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& evalResult) {
@@ -60,7 +69,7 @@ Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& 
 	return bestRoute;
 }
 
-static std::vector<Route> intrarouteStructures::shift(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts) {
+static std::vector<Route> intrarouteStructures::shift(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
@@ -112,7 +121,7 @@ Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& a
 }
 
 // Tem que inverter a direção entre um cliente e o outro trocados
-static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts) {
+static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 
 	for (int i = 0; i < solution.size(); i++) {
@@ -156,7 +165,7 @@ Route executeOP2(const Route& route, float initialEval, const AdjacencyCosts& ad
 	return bestRoute;
 }
 
-static std::vector<Route> intrarouteStructures::orOpt2(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts) {
+static std::vector<Route> intrarouteStructures::orOpt2(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
@@ -204,7 +213,7 @@ Route executeOP3(const Route& route, float initialEval, const AdjacencyCosts& ad
 	return bestRoute;
 }
 
-static std::vector<Route> intrarouteStructures::orOpt3(std::vector<Route>& solution, const AuxiliaryStructures* auxStruct, AdjacencyCosts& adjacencyCosts) {
+static std::vector<Route> intrarouteStructures::orOpt3(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {

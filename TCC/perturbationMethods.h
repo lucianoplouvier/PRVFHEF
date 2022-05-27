@@ -21,10 +21,16 @@ namespace perturbationMethods { // Não retorna nada pois ele verifica antes de f
 
 	void split(std::vector<Route>& solution);
 
-	void merge(std::vector<Route>& solution);
+	/*
+	* @brief Junta duas Rotas. A primeira rota é selecionada aleatóriamente. A segunda rota é a rota com o cliente mais próximo a qualquer cliente da primeira rota.
+	* Somente pares de rotas que usam um veículo que não seja o maior veículo podem ser escolhidas.
+	* @param solution - Solução.
+	* @param adjacencyCosts - Custos de adjacencia.
+	*/
+	void merge(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
 
-	void perturbate(std::vector<Route>& solution);
+	void perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
 
-	void executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type);
+	void executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
 
 };

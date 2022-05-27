@@ -16,25 +16,15 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	}
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
-	execute(vehicles, 100, 50);
+	execute(vehicles, 50, 25);
 }
 
 PRVFHEF::~PRVFHEF() {
 
 }
 
-Vehicle PRVFHEF::getBiggestVehicle() const {
-	Vehicle biggestVehicle = m_vehicleTypes[0];
-	for (auto iVels = 1; iVels < m_vehicleTypes.size(); iVels++) {
-		if (m_vehicleTypes[iVels].capacity > biggestVehicle.capacity) {
-			biggestVehicle = m_vehicleTypes[iVels];
-		}
-	}
-	return biggestVehicle;
-}
-
 int PRVFHEF::estimateVehicles(const std::vector<Client>& allClients) const {
-	Vehicle biggestVehicle = getBiggestVehicle();
+	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(m_vehicleTypes);
 
 	float totalDemands = 0;
 	for (auto iCli = 0; iCli < allClients.size(); iCli++) {
@@ -128,7 +118,7 @@ std::vector<Route> PRVFHEF::intraroute(const std::vector<Route>& solution, float
 		int selectedIntrarouteIndex = Utils::getRandomInt(0, intrarouteList.size());
 		std::advance(iterator, selectedIntrarouteIndex);
 		INTRAROUTETYPES selectedIntraroute = *iterator;
-		std::vector<Route> roundResult = intrarouteStructures::execute(selectedIntraroute, result, m_auxiliaryStructures, m_adjacencyCosts);
+		std::vector<Route> roundResult = intrarouteStructures::execute(selectedIntraroute, result, m_adjacencyCosts);
 		float eval = RouteDefs::evaluate(roundResult, m_adjacencyCosts);
 		if (eval < bestEval) {
 			bestEval = eval;
@@ -184,16 +174,18 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 	}
 	std::vector<Route> finalSolution;
 	float finalEval = std::numeric_limits<float>::max();
-	for (int algItrs = 0; algItrs < iterations; algItrs) {
+	for (int algItrs = 0; algItrs < iterations; algItrs++) {
 		// Executa cada rodada do algoritmo, onde uma nova solução é procurada a partir do 0.
 		m_auxiliaryStructures = new AuxiliaryStructures(&m_adjacencyCosts, interrouteStructures::getAll().size());
+		m_routeCreator.reset();
 		std::vector<Route> solution = createInitialSolution(vehicles);
 		float oldEval = evaluate(solution);
 		std::vector<Route> solutionOptimized = rvnd(solution, oldEval);
 		oldEval = evaluate(solutionOptimized);
 		finalSolution = solutionOptimized;
 		for (int ilsIters = 0; ilsIters < maxItersNoImprove; ilsIters++) {
-			perturbationMethods::perturbate(solutionOptimized);
+			perturbationMethods::perturbate(solutionOptimized, m_adjacencyCosts, m_routeCreator, m_vehicleTypes);
+			verifySolutionValid(solutionOptimized);
 			m_auxiliaryStructures->recalculate(solutionOptimized);
 			solutionOptimized = rvnd(solutionOptimized, oldEval);
 			float evaluation = evaluate(solutionOptimized);

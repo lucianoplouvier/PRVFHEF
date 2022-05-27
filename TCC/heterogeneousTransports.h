@@ -66,12 +66,6 @@ private:
 	std::list<int> initializeCandidatesList(const std::vector<Client>& allClients) const;
 
 	/*
-	* @brief Recupera o maior veículo disponível.
-	* @return Maior veículo na lista de veículos.
-	*/
-	Vehicle getBiggestVehicle() const;
-
-	/*
 	* @brief Faz a estimativa de veículos necessários para atender a demanda de todos os clientes de um problema.
 	* @param allClients - Todos os clientes.
 	*/

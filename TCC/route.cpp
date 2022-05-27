@@ -270,3 +270,13 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 
 	return true;
 }
+
+Vehicle RouteDefs::getBiggestVehicle(const std::vector<Vehicle>& vehiclesList) {
+	Vehicle biggestVehicle = vehiclesList[0];
+	for (auto iVels = 1; iVels < vehiclesList.size(); iVels++) {
+		if (vehiclesList[iVels].capacity > biggestVehicle.capacity) {
+			biggestVehicle = vehiclesList[iVels];
+		}
+	}
+	return biggestVehicle;
+}
