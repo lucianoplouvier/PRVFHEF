@@ -6,6 +6,7 @@
 #include "auxiliaryStructures.h"
 #include "route.h"
 #include <vector>
+#include "fraction.h"
 
 namespace interrouteStructures {
 
@@ -32,7 +33,7 @@ namespace interrouteStructures {
 
 	std::vector<Route> routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	std::vector<Route> kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
+	std::vector<Route> kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
 	std::list<INTERROUTETYPES> getAll();
 

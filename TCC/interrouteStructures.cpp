@@ -273,16 +273,60 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, flo
 }
 
 std::vector<Route> interrouteStructures::routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts) {
+	std::vector<Route> result = RouteDefs::copy(solution);
 	exit(1);
 }
 
-std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts) {
-	exit(1);
+std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+	std::vector<int> resolvedClients;
+	std::vector<Route> result = RouteDefs::copy(solution);
+	float resultEval = evaluation;
+	for (int i = 0; i < solution.size(); i++) {
+		const Route& currRoute = solution[i];
+		int currentRouteId = currRoute.id;
+		for (int j = 0; j < currRoute.clientsList.size(); j++) {
+			bool hasExplored = false;
+			for (int resolvedClientsId : resolvedClients) {
+				if (resolvedClientsId == solution[i].clientsList[j].id) {
+					hasExplored = true;
+					break;
+				}
+			}
+			if (!hasExplored) {
+				std::vector<Route> step = RouteDefs::copy(solution);
+				Client client = step[i].takeClient(j);
+				resolvedClients.push_back(client.id);
+				bool foundInMore = false;
+				for (Route& r : step) {
+					if (r.id != currentRouteId) {
+						bool found = r.removeClient(client.id);
+						foundInMore = (foundInMore || found);
+					}
+				}
+				bool success = false;
+				std::vector<Route> stepResult;
+				if (foundInMore) {
+					stepResult = fractionRoute::splitReinsertion(step, originalClients[client.id], currentRouteId, success, adjCosts);
+				}
+				else {
+					stepResult = fractionRoute::splitReinsertion(step, Client(originalClients[client.id]), -1, success, adjCosts);
+				}
+				if (success) {
+					float eval = RouteDefs::evaluate(stepResult, adjCosts);
+					if (eval < resultEval && RouteDefs::isSolutionValid(stepResult, originalClients)) {
+						resultEval = eval;
+						result = stepResult;
+					}
+				}
+			}
+		}
+	}
+	return result;
 }
 
 std::list<INTERROUTETYPES> interrouteStructures::getAll() {
 	std::list<INTERROUTETYPES> all;
-	//all.push_back(INTERROUTETYPES::KSPLIT);
+	all.push_back(INTERROUTETYPES::KSPLIT);
 	//all.push_back(INTERROUTETYPES::ROUTEADDITION);
 	all.push_back(INTERROUTETYPES::SHIFT1_0);
 	all.push_back(INTERROUTETYPES::SHIFT2_0);
@@ -319,7 +363,7 @@ std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type,
 		return routeAddition(solution, evaluation, auxStruct, adjCosts);
 		break;
 	case INTERROUTETYPES::KSPLIT:
-		return kSplit(solution, evaluation, auxStruct, adjCosts);
+		return kSplit(solution, evaluation, auxStruct, adjCosts, originalClients);
 		break;
 	case INTERROUTETYPES::CROSS:
 		return cross(solution, evaluation, auxStruct, adjCosts, originalClients);

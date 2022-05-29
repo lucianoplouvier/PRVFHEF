@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="auxiliaryStructures.cpp" />
+    <ClCompile Include="fraction.cpp" />
     <ClCompile Include="heterogeneousTransports.cpp" />
     <ClCompile Include="interrouteStructures.cpp" />
     <ClCompile Include="intrarouteStructures.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auxiliaryStructures.h" />
+    <ClInclude Include="fraction.h" />
     <ClInclude Include="heterogeneousTransports.h" />
     <ClInclude Include="ils.h" />
     <ClInclude Include="intrarouteStructures.h" />

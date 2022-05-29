@@ -113,22 +113,6 @@ private:
 	*/
 	float getClosestInsertionCost(const Route& route, int candidateId) const;
 
-	//s, i, , rTraço;
-	std::vector<Route> splitReinsertion(const std::vector<Route>& solution, const Client& client, int forbiddenRouteId, bool& success);
-
-	/*
-	* @brief Resolver o problema da mochila para a solução atual.
-	*/
-	std::vector<Route> knaapSackGreedy(std::vector<Route>& solution, const Client& client,
-		std::vector<int>& routesIndexWithResidual, std::vector<float>& residualsList, std::vector<float>& leastInsertionCosts, bool& success);
-
-	/*
-	* @brief 
-	*/
-	std::vector<Route> emptyRoutes(const std::vector<Route>& solution);
-
-	std::vector<Route> reinsertSingleCustomer(std::vector<Route>& solution);
-
 	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
 
 	void printSolution(float eval, const std::vector<Route>& solution);

@@ -134,7 +134,7 @@ struct Route {
 		return c;
 	}
 
-	void removeClient(const Client& client) {
+	bool removeClient(const Client& client) { // Retorna true se obteve sucesso, false caso contário.
 		if (clientsList.size() > 0) {
 			auto iterator = clientsList.begin();
 			while (iterator != clientsList.end()) {
@@ -145,9 +145,29 @@ struct Route {
 			}
 			if (iterator != clientsList.end()) {
 				clientsList.erase(iterator);
+				return true;
 			}
 		}
+		return false;
 	}
+
+	bool removeClient(int clientId) { // Retorna true se obteve sucesso, false caso contário.
+		if (clientsList.size() > 0) {
+			auto iterator = clientsList.begin();
+			while (iterator != clientsList.end()) {
+				if (iterator->id == clientId) {
+					break;
+				}
+				iterator++;
+			}
+			if (iterator != clientsList.end()) {
+				clientsList.erase(iterator);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/*
 	void removeClient(int clientId, int clientDemand) {
 		if (clientsList.size() > 0) {
@@ -257,6 +277,14 @@ namespace RouteDefs {
 	* @return Maior veículo na lista de veículos.
 	*/
 	Vehicle getBiggestVehicle(const std::vector<Vehicle>& vehiclesList);
+
+	std::vector<Route> splitReinsertion(const std::vector<Route>& solution);
+
+	std::vector<Route> knaapSackGreedy(const std::vector<Route>& solution);
+
+	std::vector<Route> emptyRoutes(const std::vector<Route>& solution, int maxVels);
+
+	std::vector<Route> reinsertSingleCustomer(const std::vector<Route>& solution);
 }
 
 class RouteCreator {

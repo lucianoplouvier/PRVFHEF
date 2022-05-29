@@ -4,7 +4,7 @@ F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'flo
 F:\TCC\TCC\TCC\route.h(72,22): warning C4018: '<': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\route.h(103,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\route.h(122,16): warning C4018: '>=': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(185,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\route.h(205,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\interrouteStructures.cpp(8,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\interrouteStructures.cpp(9,20): warning C4018: '<': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\interrouteStructures.cpp(11,21): warning C4018: '<': incompatibilidade de signed/unsigned
@@ -27,4 +27,6 @@ F:\TCC\TCC\TCC\interrouteStructures.cpp(179,39): warning C4018: '<': incompatibi
 F:\TCC\TCC\TCC\interrouteStructures.cpp(185,24): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\interrouteStructures.cpp(216,30): warning C4018: '<': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\interrouteStructures.cpp(218,31): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(284,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(287,21): warning C4018: '<': incompatibilidade de signed/unsigned
   TCC.vcxproj -> F:\TCC\TCC\Debug\TCC.exe

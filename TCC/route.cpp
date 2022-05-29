@@ -247,7 +247,7 @@ std::vector<Route> RouteDefs::copy(const std::vector<Route>& other) {
 bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList) {
 	std::vector<int> demandsApplied;
 	for (int i = 0; i < completeClientList.size(); i++) {
-		demandsApplied.push_back(0);
+		demandsApplied.push_back(completeClientList[i].demand);
 	}
 	for (int i = 0; i < solution.size(); i++) {
 		if (solution[i].getTotalDemand() > solution[i].vehicle.capacity) {
@@ -255,14 +255,12 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 		}
 		for (int j = 0; j < solution[i].clientsList.size(); j++) {
 			int id = solution[i].clientsList[j].id;
-			demandsApplied[id] += solution[i].clientsList[j].demand;
+			demandsApplied[id] -= solution[i].clientsList[j].demand;
 		}
 	}
 
 	for (int i = 0; i < completeClientList.size(); i++) {
-		int id = completeClientList[i].id;
-		float dim = completeClientList[i].demand - demandsApplied[id];
-		if (dim < 0 || dim > 0) {
+		if (demandsApplied[i] > 0 || demandsApplied[i] < 0) {
 			return false;
 		}
 	}
