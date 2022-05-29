@@ -258,7 +258,7 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 			demandsApplied[id] += solution[i].clientsList[j].demand;
 		}
 	}
-	/*
+
 	for (int i = 0; i < completeClientList.size(); i++) {
 		int id = completeClientList[i].id;
 		float dim = completeClientList[i].demand - demandsApplied[id];
@@ -266,7 +266,6 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 			return false;
 		}
 	}
-	*/
 
 	return true;
 }

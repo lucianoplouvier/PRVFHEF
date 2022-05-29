@@ -28,6 +28,8 @@ namespace interrouteStructures {
 
 	std::vector<Route> swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
+	std::vector<Route> cross(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+
 	std::vector<Route> routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
 	std::vector<Route> kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);

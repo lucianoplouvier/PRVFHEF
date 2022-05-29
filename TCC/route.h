@@ -14,6 +14,7 @@ enum class INTERROUTETYPES {
 	SHIFT2_0,
 	SWAP1_1,
 	SWAP2_1,
+	CROSS,
 	SWAP1_1S,
 	SWAP2_1S,
 	ROUTEADDITION,
@@ -188,6 +189,14 @@ struct Route {
 
 	inline bool operator==(const Route& other) {
 		return other.id == this->id;
+	}
+
+	float getDemand(int indexStart, int indexEnd) {
+		float result = 0;
+		for (int i = indexStart; i <= indexEnd; i++) {
+			result += clientsList[i].demand;
+		}
+		return result;
 	}
 };
 
