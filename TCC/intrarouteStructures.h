@@ -28,4 +28,6 @@ namespace intrarouteStructures {
 
 	std::vector<Route> executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts);
 
+	static std::vector<Route> twoOPT(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
+
 }

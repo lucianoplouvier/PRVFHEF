@@ -7,6 +7,8 @@
 #include <iostream>
 #include <stdio.h>
 
+using namespace std;
+
 enum class INTERROUTETYPES {
 	SHIFT1_0,
 	SHIFT2_0,
@@ -113,6 +115,22 @@ struct Route {
 			}
 		}
 		return canAdd;
+	}
+
+	Client takeClient(int position) {
+		if (position >= this->clientsList.size()) {
+			cout << "Erro no index de takeClient";
+			exit(1);
+		}
+		auto iterator = clientsList.begin();
+		int i = 0;
+		while (iterator != clientsList.end() && i < position) {
+			i++;
+			iterator++;
+		}
+		Client c = clientsList[i];
+		clientsList.erase(iterator);
+		return c;
 	}
 
 	void removeClient(const Client& client) {
