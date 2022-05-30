@@ -3,8 +3,8 @@
 
 using namespace std;
 
-int EXECUTIONTIMES = 1;
-int MAXITERSNOIMPROVE = 200;
+int EXECUTIONTIMES = 10;
+int MAXITERSNOIMPROVE = 5000;
 
 PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles) {
 	m_clientsCount = clientsDemands.size();
@@ -19,7 +19,8 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	}
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
-	execute(vehicles, EXECUTIONTIMES, MAXITERSNOIMPROVE);
+	int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount;
+	execute(vehicles, EXECUTIONTIMES, std::min(itrsToExecute, MAXITERSNOIMPROVE));
 }
 
 PRVFHEF::~PRVFHEF() {
