@@ -74,10 +74,10 @@ bool randomSwapping(Route& a, Route& b) {
 			Client rCA = a.clientsList[selectedA];
 			Client rCB = b.clientsList[selectedB];
 			if (!b.findClient(rCA.id) && !a.findClient(rCB.id)) {
-				float aTotalDemand = a.getTotalDemand();
-				float bTotalDemand = b.getTotalDemand();
-				float aDemand = rCA.demand;
-				float bDemand = rCB.demand;
+				int aTotalDemand = a.getTotalDemand();
+				int bTotalDemand = b.getTotalDemand();
+				int aDemand = rCA.demand;
+				int bDemand = rCB.demand;
 				if (((aTotalDemand - aDemand + bDemand) < a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) < b.vehicle.capacity)) {
 					valid = true;
 					cA = rCA;
@@ -111,10 +111,10 @@ bool randomShifting(Route& a, Route& b) {
 			Client rCA = a.clientsList[selectedA];
 			Client rCB = b.clientsList[selectedB];
 			if (!b.findClient(rCA.id) && !a.findClient(rCB.id)) {
-				float aTotalDemand = a.getTotalDemand();
-				float bTotalDemand = b.getTotalDemand();
-				float aDemand = rCA.demand;
-				float bDemand = rCB.demand;
+				int aTotalDemand = a.getTotalDemand();
+				int bTotalDemand = b.getTotalDemand();
+				int aDemand = rCA.demand;
+				int bDemand = rCB.demand;
 				if (((aTotalDemand - aDemand + bDemand) < a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) < b.vehicle.capacity)) {
 					valid = true;
 					cA = rCA;
@@ -182,16 +182,16 @@ void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& ad
 
 int findClosestRoute(std::vector<Route>& solution, Route* selected, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList) {
 	int closestRouteId = -1;
-	float avgRouteDist = std::numeric_limits<float>::max();
+	int avgRouteDist = std::numeric_limits<int>::max();
 	int indexResult = -1;
 	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
 	for (int i = 0; i < solution.size(); i++) {
 		Route& r = solution[i];
 		if (r.id != selected->id) {
-			float totalDemand = r.getTotalDemand() + selected->getTotalDemand();
+			int totalDemand = r.getTotalDemand() + selected->getTotalDemand();
 			if (totalDemand <= biggestVehicle.capacity) { // Senão não dá pra fazer o merge das rotas.
 				int index = -1;
-				float dist = 0;
+				int dist = 0;
 				for (const Client& c : selected->clientsList) {
 					for (const Client& cOther : r.clientsList) {
 						dist += adjacencyCosts.getAdjacencyCosts(c.id, cOther.id);

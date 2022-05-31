@@ -17,23 +17,23 @@ namespace interrouteStructures {
 	* @param auxStruct - Struturas auxiliares.
 	* @param adjCosts - custos de adjacência.
 	*/
-	std::vector<Route> shift1_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> shift1_0(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	std::vector<Route> shift2_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> shift2_0(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	std::vector<Route> swap1_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> swap1_1(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	std::vector<Route> swap2_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> swap2_1(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	std::vector<Route> swap1_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
+	std::vector<Route> swap1_1S(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	std::vector<Route> swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
+	std::vector<Route> swap2_1S(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	std::vector<Route> cross(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> cross(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
-	std::vector<Route> routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
+	std::vector<Route> routeAddition(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts);
 
-	std::vector<Route> kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> kSplit(std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 
 	std::list<INTERROUTETYPES> getAll();
 
@@ -45,5 +45,5 @@ namespace interrouteStructures {
 	* @param auxStruct - Struturas auxiliares.
 	* @param adjCosts - custos de adjacência.
 	*/
-	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
+	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, int evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients);
 }

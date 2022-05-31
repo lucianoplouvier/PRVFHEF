@@ -18,7 +18,7 @@ std::vector<std::string> strSplit(const std::string& text, char separator) {
     return result;
 }
 
-bool readProblem(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<float>& depotTravelCosts) {
+bool readProblem(std::string input, std::vector<int>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& depotTravelCosts) {
     /*
     * Formato do arquivo
     * -> numero de clientes
@@ -110,10 +110,10 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
 
 int main()
 {
-    std::vector<float> demands;
+    std::vector<int> demands;
     std::vector<ClientAdjacency> adjacencies;
     std::vector<Vehicle> vehicleTypes;
-    std::vector<float> depotTravelCosts;
+    std::vector<int> depotTravelCosts;
 
     std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     

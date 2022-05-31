@@ -9,7 +9,7 @@ using namespace std;
 int EXECUTIONTIMES = 10;
 int MAXITERSNOIMPROVE = 5000;
 
-PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles) {
+PRVFHEF::PRVFHEF(std::vector<int> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<int> depotTravelCost, int vehicles) {
 	m_clientsCount = clientsDemands.size();
 	m_allClients.resize(m_clientsCount);
 	m_vehicleTypes = vehicleTypes;
@@ -36,7 +36,7 @@ PRVFHEF::~PRVFHEF() {
 int PRVFHEF::estimateVehicles(const std::vector<Client>& allClients) const {
 	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(m_vehicleTypes);
 
-	float totalDemands = 0;
+	int totalDemands = 0;
 	for (auto iCli = 0; iCli < allClients.size(); iCli++) {
 		totalDemands += allClients[iCli].demand;
 	}
@@ -44,7 +44,7 @@ int PRVFHEF::estimateVehicles(const std::vector<Client>& allClients) const {
 	return (1 + ((totalDemands - 1) / biggestVehicle.capacity));
 }
 
-void PRVFHEF::addClientToRoute(Route& r, int candidateId, float demandAmount) {
+void PRVFHEF::addClientToRoute(Route& r, int candidateId, int demandAmount) {
 	if (demandAmount > m_allClients[candidateId].demand) {
 		cout << "WARN . PRVFHEF::addClientToRoute, Demanda a tirar do client maior do que a demanda que ele tem.";
 	}
@@ -102,14 +102,14 @@ std::list<int> PRVFHEF::initializeCandidatesList(const std::vector<Client>& allC
 	return list;
 }
 
-void PRVFHEF::createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<float> depotTravelCost) {
+void PRVFHEF::createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<int> depotTravelCost) {
 	// Custo de cliente a -> b = a * clientCount + b 
 	AdjacencyCosts adjCosts;
 	adjCosts.depotTravel = depotTravelCost;
 	adjCosts.costs.reserve(clientsCount);
 	m_adjacencyCosts = adjCosts;
 	for (auto i = 0; i < clientsCount; i++) {
-		m_adjacencyCosts.costs.push_back(std::vector<float>(m_clientsCount));
+		m_adjacencyCosts.costs.push_back(std::vector<int>(m_clientsCount));
 		m_adjacencyCosts.costs[i][i] = 0;
 	}
 	for (auto j = 0; j < clientAdjacencies.size(); j++) {
@@ -121,17 +121,17 @@ void PRVFHEF::createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacenc
 	}
 }
 
-std::vector<Route> PRVFHEF::intraroute(const std::vector<Route>& solution, float evaluation) {
+std::vector<Route> PRVFHEF::intraroute(const std::vector<Route>& solution, int evaluation) {
 	std::list<INTRAROUTETYPES> intrarouteList = intrarouteStructures::getAll();
 	std::vector<Route> result = RouteDefs::copy(solution);
-	float bestEval = evaluation;
+	int bestEval = evaluation;
 	while (!intrarouteList.empty()) {
 		std::list<INTRAROUTETYPES>::iterator iterator = intrarouteList.begin();
 		int selectedIntrarouteIndex = Utils::getRandomInt(0, intrarouteList.size());
 		std::advance(iterator, selectedIntrarouteIndex);
 		INTRAROUTETYPES selectedIntraroute = *iterator;
 		std::vector<Route> roundResult = intrarouteStructures::execute(selectedIntraroute, result, m_adjacencyCosts);
-		float eval = RouteDefs::evaluate(roundResult, m_adjacencyCosts);
+		int eval = RouteDefs::evaluate(roundResult, m_adjacencyCosts);
 		if (eval < bestEval) {
 			bestEval = eval;
 			result = roundResult;
@@ -143,12 +143,12 @@ std::vector<Route> PRVFHEF::intraroute(const std::vector<Route>& solution, float
 	return result;
 }
 
-std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, float evaluation) {
+std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, int evaluation) {
 	// Cria lista de vizinhança
 	m_auxiliaryStructures->recalculate(currSol);
 	std::list<INTERROUTETYPES> neighborhoodList = interrouteStructures::getAll();
 	std::vector<Route> finalResult = RouteDefs::copy(currSol);
-	float finalEval = evaluate(finalResult);
+	int finalEval = evaluate(finalResult);
 	// Atualizar estruturas de dados auxiliares
 	int interroutesLeft = neighborhoodList.size();
 	while (!neighborhoodList.empty()) {
@@ -164,7 +164,7 @@ std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, float evaluation) 
 		cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Entrando interrota\n";
 		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, roundResult, evaluation, m_auxiliaryStructures, m_adjacencyCosts, m_allClients);
 		cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Saindo interrota\n";
-		float roundEval = evaluate(interrouteResult);
+		int roundEval = evaluate(interrouteResult);
 		if (roundEval < finalEval) {
 			cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Entrando intrarota\n";
 			finalResult = intraroute(interrouteResult, roundEval);
@@ -192,14 +192,14 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 		vehicles = estimateVehicles(m_allClients);
 	}
 	std::vector<Route> finalSolution;
-	float finalEval = std::numeric_limits<float>::max();
+	int finalEval = std::numeric_limits<int>::max();
 	for (int algItrs = 0; algItrs < iterations; algItrs++) {
 		m_currIteration = algItrs;
 		// Executa cada rodada do algoritmo, onde uma nova solução é procurada a partir do 0.
 		m_auxiliaryStructures = new AuxiliaryStructures(&m_adjacencyCosts, interrouteStructures::getAll().size());
 		m_routeCreator.reset();
 		std::vector<Route> solution = createInitialSolution(vehicles);
-		float oldEval = evaluate(solution);
+		int oldEval = evaluate(solution);
 		std::vector<Route> solutionOptimized = rvnd(solution, oldEval);
 		oldEval = evaluate(solutionOptimized);
 		finalSolution = solutionOptimized;
@@ -211,7 +211,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 			verifySolutionValid(solutionOptimized);
 			m_auxiliaryStructures->recalculate(solutionOptimized);
 			solutionOptimized = rvnd(solutionOptimized, oldEval);
-			float evaluation = evaluate(solutionOptimized);
+			int evaluation = evaluate(solutionOptimized);
 			if (evaluation < oldEval) {
 				oldEval = evaluation;
 				solution = RouteDefs::copy(solutionOptimized);
@@ -220,7 +220,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 			}
 		}
 		if (oldEval < finalEval) {
-			float redimensionedEval = oldEval;
+			int redimensionedEval = oldEval;
 			vehicleRedimension(solution, oldEval, redimensionedEval);
 			finalEval = redimensionedEval;
 			finalSolution = RouteDefs::copy(solution);
@@ -251,16 +251,16 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 }
 
 bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
-	std::vector<float> clientDemands;
+	std::vector<int> clientDemands;
 	bool error = true;
 	for (int i = 0; i < m_allClients.size(); i++) {
 		clientDemands.push_back(m_allClients[i].demand);
 	}
 
 	for (int i = 0; i < solution.size(); i++) {
-		float velCap = solution[i].vehicle.capacity;
-		float totalDemand = solution[i].getTotalDemand();
-		float rest = velCap - totalDemand;
+		int velCap = solution[i].vehicle.capacity;
+		int totalDemand = solution[i].getTotalDemand();
+		int rest = velCap - totalDemand;
 		if (rest < 0) {
 			cout << "ERROR. Usando mais espaco do veiculo que aceitavel. " << velCap << " - " << totalDemand << " = " << rest << "\n";
 			error = false;
@@ -285,15 +285,15 @@ bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 	return error;
 }
 
-void PRVFHEF::printSolution(float eval, const  std::vector<Route>& solution, ofstream& stream) {
+void PRVFHEF::printSolution(int eval, const  std::vector<Route>& solution, ofstream& stream) {
 	stream << "\n--------------------------\n";
 	stream << "Resultado iteracao. EVAL: " << eval << "\n";
 	stream << "Rota: ";
 	for (const Route& r : solution) {
 		if (r.clientsList.size() > 0) {
-			float velCap = r.vehicle.capacity;
-			float totalDemand = r.getTotalDemand();
-			float rest = velCap - totalDemand;
+			int velCap = r.vehicle.capacity;
+			int totalDemand = r.getTotalDemand();
+			int rest = velCap - totalDemand;
 			if (rest < 0) {
 				stream << "ERROR. Usando mais espaço do veiculo que aceitavel. " << velCap << " - " << totalDemand << " = " << rest << "\n";
 			}
@@ -313,7 +313,7 @@ void PRVFHEF::printSolution(float eval, const  std::vector<Route>& solution, ofs
 	}
 }
 
-float PRVFHEF::evaluate(std::vector<Route>& solution) const {
+int PRVFHEF::evaluate(std::vector<Route>& solution) const {
 	return RouteDefs::evaluate(solution, m_adjacencyCosts);
 }
 
@@ -339,13 +339,13 @@ std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::li
 			advance(itCandidate, candidateIndex);
 			int currentCandidateId = *itCandidate;
 			int closestRouteIndex = -1;
-			float bestClosestCost = std::numeric_limits<float>::max();
+			int bestClosestCost = std::numeric_limits<int>::max();
 			bool canInsert = false;
 			for (int iRoute = 0; iRoute < routes.size(); iRoute++) {
 				bool currCanInsert = routes[iRoute].canAddClient(m_allClients[currentCandidateId].demand);
 				if (currCanInsert) {
 					canInsert = true;
-					float cost = getClosestInsertionCost(routes[iRoute], currentCandidateId);
+					int cost = getClosestInsertionCost(routes[iRoute], currentCandidateId);
 					if (cost < bestClosestCost) {
 						bestClosestCost = cost;
 						closestRouteIndex = iRoute;
@@ -375,12 +375,12 @@ std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::li
 	return result;
 }
 
-float PRVFHEF::getClosestInsertionCost(const Route& route, int candidateId) const {
+int PRVFHEF::getClosestInsertionCost(const Route& route, int candidateId) const {
 	//int cost = INT_MAX;
-	float cost = 0;
+	int cost = 0;
 	for (int iCand = 0; iCand < route.clientsList.size(); iCand++) {
 		int currClientId = route.clientsList[iCand].id;
-		float currCost = m_adjacencyCosts.getAdjacencyCosts(candidateId, currClientId);
+		int currCost = m_adjacencyCosts.getAdjacencyCosts(candidateId, currClientId);
 		if (currCost < cost) {
 			cost = currCost;
 		}
@@ -389,15 +389,15 @@ float PRVFHEF::getClosestInsertionCost(const Route& route, int candidateId) cons
 	return cost;
 }
 
-void PRVFHEF::vehicleRedimension(std::vector<Route>& routes, float currEval, float& resultEval) {
-	float eval = currEval;
+void PRVFHEF::vehicleRedimension(std::vector<Route>& routes, int currEval, int& resultEval) {
+	int eval = currEval;
 	for (Route& r : routes) {
 		if (r.clientsList.size() > 0) {
 			for (const Vehicle& v : m_vehicleTypes) {
 				if (r.vehicle != v && v.capacity >= r.getTotalDemand()) {
 					Vehicle oldVel = r.vehicle;
 					r.vehicle = v;
-					float ev = evaluate(routes);
+					int ev = evaluate(routes);
 					if (ev < eval) {
 						eval = ev;
 					}

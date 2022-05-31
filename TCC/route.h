@@ -48,8 +48,8 @@ struct Route {
 	}
 
 	bool canAddClient(int demand) const {
-		float totalDemand = getTotalDemand();
-		float left = vehicle.capacity - totalDemand;
+		int totalDemand = getTotalDemand();
+		int left = vehicle.capacity - totalDemand;
 		return demand <= left;
 	}
 
@@ -199,7 +199,7 @@ struct Route {
 		}
 	}
 
-	float getTotalDemand() const {
+	int getTotalDemand() const {
 		int totalDemand = 0;
 		for (int i = 0; i < (int)clientsList.size(); i++) {
 			totalDemand += clientsList[i].demand;
@@ -211,8 +211,8 @@ struct Route {
 		return other.id == this->id;
 	}
 
-	float getDemand(int indexStart, int indexEnd) {
-		float result = 0;
+	int getDemand(int indexStart, int indexEnd) {
+		int result = 0;
 		for (int i = indexStart; i <= indexEnd; i++) {
 			result += clientsList[i].demand;
 		}
@@ -221,18 +221,18 @@ struct Route {
 };
 
 struct AdjacencyCosts {
-	std::vector<std::vector<float>> costs;
-	std::vector<float> depotTravel;
-	float getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
+	std::vector<std::vector<int>> costs;
+	std::vector<int> depotTravel;
+	int getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
 };
 
 namespace RouteDefs {
 
-	float calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
+	int calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
 
-	float evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
+	int evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
 
-	float evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
+	int evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
 
 	void printRoute(const Route& route);
 
@@ -247,7 +247,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	std::pair<float, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts);
+	std::pair<int, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -256,7 +256,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<float, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<int, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -266,7 +266,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<float, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<int, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
 
 	std::vector<Route> copy(const std::vector<Route>& other);
 

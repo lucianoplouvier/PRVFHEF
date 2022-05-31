@@ -5,12 +5,12 @@
 struct ClientAdjacency {
 	int clientFromId;
 	int clientToId;
-	float travelCost;
+	int travelCost;
 };
 
 struct Client {
 	int id;
-	float demand;
+	int demand;
 	Client() {
 		id = -1;
 		demand = -1;
@@ -24,9 +24,9 @@ struct Client {
 struct Vehicle {
 	int id;
 	int type;
-	float capacity;
-	float cost;
-	float travelCost;
+	int capacity;
+	int cost;
+	int travelCost;
 
 	bool operator==(const Vehicle& other) {
 		return this->id = other.id;
