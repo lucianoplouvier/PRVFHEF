@@ -115,7 +115,7 @@ private:
 
 	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
 
-	void printSolution(float eval, const std::vector<Route>& solution);
+	void printSolution(float eval, const std::vector<Route>& solution, ofstream& stream);
 
 	bool verifySolutionValid(const std::vector<Route>& solution);
 
@@ -131,5 +131,8 @@ private:
 	* @param resultEval - Avaliação retornada.
 	*/
 	void vehicleRedimension(std::vector<Route>& routes, float currEval, float& resultEval);
+
+	int m_currIteration;
+	int m_currIterationsWithoutImprove;
 
 };

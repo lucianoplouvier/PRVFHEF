@@ -1,0 +1,37 @@
+﻿  heterogeneousTransports.cpp
+F:\TCC\TCC\TCC\route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\route.h(72,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\route.h(103,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\route.h(122,16): warning C4018: '>=': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\route.h(205,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(17,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(40,27): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(44,12): warning C4244: 'return': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(51,52): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(66,66): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(87,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(97,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(113,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(254,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(258,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(260,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(267,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(273,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(293,22): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(301,23): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(303,16): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(319,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(320,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(323,57): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(342,32): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(343,86): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(354,93): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(368,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(379,28): warning C4018: '<': incompatibilidade de signed/unsigned
+  Gerando código
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+F:\TCC\TCC\TCC\perturbationMethods.cpp(57): warning C4715: 'getRandomPair': nem todos os caminhos de controle retornam um valor
+  All 1623 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finalizada a geração de código
+  TCC.vcxproj -> F:\TCC\TCC\Release\TCC.exe

@@ -1,0 +1,101 @@
+Tempo de execução: 328 segundos.
+FINAL: 
+10,15,1,
+
+4,
+6,3,
+
+
+7,10,
+4,9,6,10,
+4,
+12,10,
+
+16,10,
+19,4,
+8,
+18,
+10,6,13,14,2,
+
+5,0,17,10,
+
+
+
+11,4,
+
+
+
+
+
+--------------------------
+Resultado iteracao. EVAL: 3927
+Rota: Veiculo: 0 Capacidade: 40
+Clientes:
+(I:10, D:3), (I:15, D:25), (I:1, D:12)
+Sobrou do veiculo: 0
+
+Veiculo: 5 Capacidade: 33
+Clientes:
+(I:4, D:25)
+Sobrou do veiculo: 8
+
+Veiculo: 3 Capacidade: 17
+Clientes:
+(I:6, D:12), (I:3, D:5)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:7, D:33), (I:10, D:2)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:4, D:10), (I:9, D:21), (I:6, D:3), (I:10, D:1)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:4, D:35)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:12, D:30), (I:10, D:5)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:16, D:33), (I:10, D:2)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:19, D:25), (I:4, D:10)
+Sobrou do veiculo: 0
+
+Veiculo: 0 Capacidade: 40
+Clientes:
+(I:8, D:40)
+Sobrou do veiculo: 0
+
+Veiculo: 7 Capacidade: 45
+Clientes:
+(I:18, D:45)
+Sobrou do veiculo: 0
+
+Veiculo: 4 Capacidade: 100
+Clientes:
+(I:10, D:7), (I:6, D:5), (I:13, D:57), (I:14, D:23), (I:2, D:7)
+Sobrou do veiculo: 1
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:5, D:10), (I:0, D:4), (I:17, D:18), (I:10, D:2)
+Sobrou do veiculo: 1
+
+Veiculo: 5 Capacidade: 33
+Clientes:
+(I:11, D:12), (I:4, D:20)
+Sobrou do veiculo: 1
+

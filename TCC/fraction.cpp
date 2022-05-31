@@ -91,30 +91,37 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 	return solution;
 }
 
-std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, AuxiliaryStructures* auxStruct, const AdjacencyCosts& adjacencyCosts) {
+std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts) {
 	std::vector<Route> resultSolution = solution;
 	int tries = 0;
-	while (solution.size() > maxVels && tries < solution.size()) {
+	while (resultSolution.size() > maxVels && tries < resultSolution.size()) {
 		int mostEmptyRouteIndex = -1;
-		int cargo = INT_MAX;
-		for (int i = 0; i < solution.size(); i++) {
-			int currCargo = auxStruct->cumulativeDelivery(i, solution[i].clientsList.size());
-		}
-		Route& chosen = resultSolution[mostEmptyRouteIndex];
-		for (int i = 0; i < chosen.clientsList.size(); i++) {
-			bool success = false;
-			resultSolution = splitReinsertion(resultSolution, chosen.clientsList[i], mostEmptyRouteIndex, success, adjacencyCosts);
-			if (success) {
-				chosen.removeClient(chosen.clientsList[i]);
-				i--;
+		float cargo = std::numeric_limits<float>::max();
+		for (int i = 0; i < resultSolution.size(); i++) {
+			int currCargo = resultSolution[i].getTotalDemand();
+			if (currCargo < cargo) {
+				cargo = currCargo;
+				mostEmptyRouteIndex = i;
 			}
 		}
-		tries++;
+		if (mostEmptyRouteIndex != -1) {
+			Route& chosen = resultSolution[mostEmptyRouteIndex];
+			for (int i = 0; i < chosen.clientsList.size(); i++) {
+				bool success = false;
+				resultSolution = splitReinsertion(resultSolution, chosen.clientsList[i], mostEmptyRouteIndex, success, adjacencyCosts);
+				if (success) {
+					chosen.removeClient(chosen.clientsList[i]);
+					i--;
+				}
+			}
+			tries++;
+		}
+		else {
+			cout << "ERROR. fractionRoute::emptyRoutes , não encontrou o índice de menor conteúdo.";
+			exit(1);
+		}
 	}
-	if (tries >= solution.size()) {
-		cout << "emptyRoutes, TOO MANY TRIES";
-		exit(1);
-	}
+	return resultSolution;
 }
 
 std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {

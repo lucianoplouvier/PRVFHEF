@@ -277,3 +277,19 @@ Vehicle RouteDefs::getBiggestVehicle(const std::vector<Vehicle>& vehiclesList) {
 	}
 	return biggestVehicle;
 }
+
+int RouteDefs::removeClientFromSolution(std::vector<Route>& solution, int clientId, int& routeIdSingleRemoval) {
+	int count = 0;
+	for (int i = 0; i < solution.size(); i++) {
+		Route& r = solution[i];
+		bool success = r.removeClient(clientId);
+		if (success) {
+			count++;
+			routeIdSingleRemoval = i;
+		}
+	}
+	if (count > 1) {
+		routeIdSingleRemoval = -1;
+	}
+	return count;
+}

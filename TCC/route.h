@@ -199,7 +199,7 @@ struct Route {
 		}
 	}
 
-	int getTotalDemand() const {
+	float getTotalDemand() const {
 		int totalDemand = 0;
 		for (int i = 0; i < (int)clientsList.size(); i++) {
 			totalDemand += clientsList[i].demand;
@@ -278,13 +278,14 @@ namespace RouteDefs {
 	*/
 	Vehicle getBiggestVehicle(const std::vector<Vehicle>& vehiclesList);
 
-	std::vector<Route> splitReinsertion(const std::vector<Route>& solution);
-
-	std::vector<Route> knaapSackGreedy(const std::vector<Route>& solution);
-
-	std::vector<Route> emptyRoutes(const std::vector<Route>& solution, int maxVels);
-
-	std::vector<Route> reinsertSingleCustomer(const std::vector<Route>& solution);
+	/*
+	* @brief Remove um cliente da solução.
+	* @param solution - Solução.
+	* @param clientId - Id do cliente a se remover.
+	* @param routeIdSingleRemoval - Retorna a posição da rota na solução que o cliente foi removido, ou -1 se for removido em mais de uma rota.
+	* @return quantidade de vezes que ele foi removido.
+	*/
+	int removeClientFromSolution(std::vector<Route>& solution, int clientId, int& routeIndexSingleRemoval);
 }
 
 class RouteCreator {

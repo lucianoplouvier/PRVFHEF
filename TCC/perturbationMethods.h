@@ -7,8 +7,8 @@
 enum class PERTURBATIONTYPES {
 	MULTISWAP,
 	MULTISHIFT,
-	SPLIT,
-	MERGE
+	MERGE,
+	KSPLIT
 };
 
 namespace perturbationMethods { // Não retorna nada pois ele verifica antes de fazer movimentos inválidos, aí altera diretamente.
@@ -19,7 +19,7 @@ namespace perturbationMethods { // Não retorna nada pois ele verifica antes de f
 
 	void multiShift1_1(std::vector<Route>& solution);
 
-	void split(std::vector<Route>& solution);
+	void split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList);
 
 	/*
 	* @brief Junta duas Rotas. A primeira rota é selecionada aleatóriamente. A segunda rota é a rota com o cliente mais próximo a qualquer cliente da primeira rota.
@@ -27,10 +27,10 @@ namespace perturbationMethods { // Não retorna nada pois ele verifica antes de f
 	* @param solution - Solução.
 	* @param adjacencyCosts - Custos de adjacencia.
 	*/
-	void merge(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
+	void merge(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList);
 
-	void perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
+	void perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList);
 
-	void executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, std::vector<Vehicle>& vehiclesList);
+	void executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList);
 
 };

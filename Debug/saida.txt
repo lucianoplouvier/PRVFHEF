@@ -1,0 +1,78 @@
+Tempo de execução: 7 segundos.
+FINAL: 
+
+12,11,
+
+4,
+
+
+8,7,
+
+
+
+7,19,0,3,
+10,13,6,2,
+10,17,18,15,2,
+
+14,1,
+
+7,11,5,
+
+7,9,5,
+
+10,16,7,
+
+
+
+--------------------------
+Resultado iteracao. EVAL: 4236
+Rota: Veiculo: 1 Capacidade: 35
+Clientes:
+
+Sobrou do veiculo: 0
+
+Veiculo: 4 Capacidade: 100
+Clientes:
+
+Sobrou do veiculo: 0
+
+Veiculo: 7 Capacidade: 45
+Clientes:
+
+Sobrou do veiculo: 2
+
+Veiculo: 7 Capacidade: 45
+Clientes:
+
+Sobrou do veiculo: 2
+
+Veiculo: 4 Capacidade: 100
+Clientes:
+
+Sobrou do veiculo: 2
+
+Veiculo: 4 Capacidade: 100
+Clientes:
+
+Sobrou do veiculo: 6
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+
+Sobrou do veiculo: 0
+
+Veiculo: 3 Capacidade: 17
+Clientes:
+
+Sobrou do veiculo: 0
+
+Veiculo: 5 Capacidade: 33
+Clientes:
+
+Sobrou do veiculo: 1
+
+Veiculo: 7 Capacidade: 45
+Clientes:
+
+Sobrou do veiculo: 0
+
