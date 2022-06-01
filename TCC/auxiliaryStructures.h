@@ -29,34 +29,34 @@ public:
 	* @param route - Rota de interesse.
 	* @return maior custo de entrega da rota.
 	*/
-	int sumDelivery(int routeIndex) const;
+	float sumDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a menor demanda em uma dada rota.
 	* @param route - Rota de interesse.
 	* @return menor custo de entrega da rota.
 	*/
-	int minDelivery(int routeIndex) const;
+	float minDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a maior demanda em uma dada rota.
 	* @param route - Rota de interesse.
 	*/
-	int maxDelivery(int routeIndex) const;
+	float maxDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a menor demanda entre todos os pares de clientes adjacentes em uma rota.
 	* @param route - Rota de interesse.
 	* @return Valor da maior demanda entre um par de clientes na rota.
 	*/
-	int minPairDelivery(int routeIndex) const;
+	float minPairDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a maior demanda entre todos os pares de clientes adjacentes em uma rota.
 	* @param route - Rota de interesse.
 	* @return Valor da maior demanda entre um par de clientes na rota.
 	*/
-	int maxPairDelivery(int routeIndex) const;
+	float maxPairDelivery(int routeIndex) const;
 
 	/*
 	* @brief Recupera a demanda cumulativa dos clientes em uma rota.
@@ -64,7 +64,7 @@ public:
 	* @param customers - Número de clientes a contar a demanda, começando do primeiro cliente da rota.
 	* @return Valor de demandas acumuladas.
 	*/
-	int cumulativeDelivery(int routeIndex, int customers) const;
+	float cumulativeDelivery(int routeIndex, int customers) const;
 
 	/*
 	* @brief Recupera se a rota informada foi alterada após falhar ao tentar uma melhoria da solução.
@@ -85,12 +85,12 @@ private:
 		bool improvementStatus = true;
 	};
 
-	std::vector<int> m_sumDelivery;
-	std::vector<int> m_minDelivery;
-	std::vector<int> m_maxDelivery;
-	std::vector<int> m_minPairDelivery;
-	std::vector<int> m_maxPairDelivery;
-	std::vector<std::vector<int>> m_cumulativeDelivery;
+	std::vector<float> m_sumDelivery;
+	std::vector<float> m_minDelivery;
+	std::vector<float> m_maxDelivery;
+	std::vector<float> m_minPairDelivery;
+	std::vector<float> m_maxPairDelivery;
+	std::vector<std::vector<float>> m_cumulativeDelivery;
 	std::vector<std::map<int, neighborhoodStatusNode>> m_neighborhoodStatus;
 
 	const AdjacencyCosts* m_adjacencyMatrix;

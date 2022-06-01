@@ -24,8 +24,8 @@ Route RouteCreator::createRoute(Vehicle v) {
 	return r;
 }
 
-int RouteDefs::calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts) {
-	int total = 0;
+float RouteDefs::calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts) {
+	float total = 0;
 	if (clients.size() > 0) {
 		int firstClientIndex = clients[0].id;
 		int lastClientIndex = clients[clients.size() - 1].id;
@@ -38,18 +38,18 @@ int RouteDefs::calculateTravelCost(const std::vector<Client>& clients, const Adj
 	return total;
 }
 
-int RouteDefs::evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
-	int total = 0;
+float RouteDefs::evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
+	float total = 0;
 	for (int iRoute = 0; iRoute < solution.size(); iRoute++) {
 		Route& route = solution[iRoute];
 		total += route.vehicle.cost;
-		int totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
+		float totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
 		total = total + (route.vehicle.travelCost * totalTravel);
 	}
 	return total;
 }
 
-int RouteDefs::evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts) {
+float RouteDefs::evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts) {
 	return calculateTravelCost(route.clientsList, adjacencyCosts) * route.vehicle.travelCost + route.vehicle.cost;
 }
 
@@ -94,13 +94,13 @@ void RouteDefs::swapClients(Route& r1, int r1ClientId1, int r1ClientId2, Route& 
 	printRoute(r2);
 }
 
-std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts) {
+std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts) {
 	int firstClientId = clientsList.front().id;
-	int firstClientdemand = clientsList.front().demand;
+	float firstClientdemand = clientsList.front().demand;
 	int lastClientId = clientsList.back().id;
-	int lastClientDemand = clientsList.back().demand;
-	std::pair<int, int> result;
-	int cost = 0;
+	float lastClientDemand = clientsList.back().demand;
+	std::pair<float, int> result;
+	float cost = 0;
 	int pos = 0;
 	// Se colocar na primeira posição.
 	cost = adjacencyCosts.depotTravel[firstClientId];
@@ -119,7 +119,7 @@ std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const std::
 			if (i != clients) {
 				currClientId = route.clientsList[i].id;
 			}
-			int currCost = 0;
+			float currCost = 0;
 			if (i == 0) { // Colocar um cliente no inicio
 				currCost = adjacencyCosts.depotTravel[firstClientId] + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId);
 			}
@@ -143,11 +143,11 @@ std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const std::
 }
 
 /*
-std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts) {
+std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts) {
 	int clientIndex = client.id;
-	int demand = client.demand;
-	std::pair<int, int> result;
-	int cost = 0;
+	float demand = client.demand;
+	std::pair<float, int> result;
+	float cost = 0;
 	int pos = 0;
 	// Se colocar na primeira posição.
 	cost = adjacencyCosts.depotTravel[clientIndex];
@@ -166,7 +166,7 @@ std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const Clien
 		if (i != clients) {
 			currClientIndex = route.clientsList[i].id;
 		}
-		int currCost = 0;
+		float currCost = 0;
 		if (i == 0) { // Colocar um cliente no inicio
 			currCost = adjacencyCosts.depotTravel[clientIndex] + adjacencyCosts.getAdjacencyCosts(clientIndex, currClientIndex);
 		}
@@ -187,13 +187,13 @@ std::pair<int, int> RouteDefs::findBestInsertion(const Route& route, const Clien
 	return result;
 }
 
-std::pair<int, int> RouteDefs::findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts) {
+std::pair<float, int> RouteDefs::findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts) {
 	int clientIndex = client.id;
-	int demand = client.demand;
+	float demand = client.demand;
 	int nextIndex = next.id;
-	int nextDemand = next.demand;
-	std::pair<int, int> result;
-	int cost = 0;
+	float nextDemand = next.demand;
+	std::pair<float, int> result;
+	float cost = 0;
 	int pos = 0;
 	// Se colocar na primeira posição.
 	cost = adjacencyCosts.depotTravel[clientIndex];
@@ -212,7 +212,7 @@ std::pair<int, int> RouteDefs::findBestInsertion(Route& route, Client& client, C
 		if (i != clients) {
 			currClientIndex = route.clientsList[i].id;
 		}
-		int currCost = 0;
+		float currCost = 0;
 		if (i == 0) { // Colocar um cliente no inicio
 			currCost = adjacencyCosts.depotTravel[clientIndex] + adjacencyCosts.getAdjacencyCosts(nextIndex, currClientIndex);
 		}
@@ -253,8 +253,15 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 		if (solution[i].getTotalDemand() > solution[i].vehicle.capacity) {
 			return false;
 		}
+		std::vector<int> idsVisited; // Ver se não tem o mesmo cliente duas vezes.
 		for (int j = 0; j < solution[i].clientsList.size(); j++) {
 			int id = solution[i].clientsList[j].id;
+			for (int idVisited : idsVisited) {
+				if (idVisited == id) {
+					return false;
+				}
+			}
+			idsVisited.push_back(id);
 			demandsApplied[id] -= solution[i].clientsList[j].demand;
 		}
 	}
@@ -278,18 +285,36 @@ Vehicle RouteDefs::getBiggestVehicle(const std::vector<Vehicle>& vehiclesList) {
 	return biggestVehicle;
 }
 
-int RouteDefs::removeClientFromSolution(std::vector<Route>& solution, int clientId, int& routeIdSingleRemoval) {
+bool RouteDefs::fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList) {
+	Vehicle biggest = RouteDefs::getBiggestVehicle(vehiclesList);
+	for (Vehicle v : vehiclesList) {
+		if (v.id != biggest.id && demand <= v.capacity) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int RouteDefs::removeClientFromSolution(std::vector<Route>& solution, int clientId, int& routeIndexSingleRemoval) {
 	int count = 0;
 	for (int i = 0; i < solution.size(); i++) {
 		Route& r = solution[i];
 		bool success = r.removeClient(clientId);
 		if (success) {
 			count++;
-			routeIdSingleRemoval = i;
+			routeIndexSingleRemoval = i;
 		}
 	}
 	if (count > 1) {
-		routeIdSingleRemoval = -1;
+		routeIndexSingleRemoval = -1;
 	}
 	return count;
+}
+
+Client RouteDefs::getOriginalClient(int clientId, const std::vector<Client>& clientList) {
+	for (Client c : clientList) {
+		if (c.id == clientId) return c;
+	}
+	cout << "ERROR. Cliente " << clientId << " não encontrado.";
+	exit(1);
 }

@@ -24,9 +24,9 @@ namespace intrarouteStructures {
 
 	static std::vector<Route> orOpt3(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
-	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts);
+	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
 
-	std::vector<Route> executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts);
+	std::vector<Route> executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
 
 	static std::vector<Route> twoOPT(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 

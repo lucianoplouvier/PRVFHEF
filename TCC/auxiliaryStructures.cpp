@@ -26,32 +26,32 @@ void AuxiliaryStructures::recalculate(const std::vector<Route>& routes)
 	calculateSumDelivery(routes);
 }
 
-int AuxiliaryStructures::sumDelivery(int routeIndex) const
+float AuxiliaryStructures::sumDelivery(int routeIndex) const
 {
 	return m_sumDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::minDelivery(int routeIndex) const
+float AuxiliaryStructures::minDelivery(int routeIndex) const
 {
 	return m_minDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::maxDelivery(int routeIndex) const
+float AuxiliaryStructures::maxDelivery(int routeIndex) const
 {
 	return m_maxDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::minPairDelivery(int routeIndex) const
+float AuxiliaryStructures::minPairDelivery(int routeIndex) const
 {
 	return m_minPairDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::maxPairDelivery(int routeIndex) const
+float AuxiliaryStructures::maxPairDelivery(int routeIndex) const
 {
 	return m_maxPairDelivery[routeIndex];
 }
 
-int AuxiliaryStructures::cumulativeDelivery(int routeIndex, int customers) const
+float AuxiliaryStructures::cumulativeDelivery(int routeIndex, int customers) const
 {
 	int total = 0;
 	int size = m_cumulativeDelivery[routeIndex].size();
@@ -186,13 +186,13 @@ void AuxiliaryStructures::calculateMaxPairDelivery(const std::vector<Route>& rou
 
 void AuxiliaryStructures::calculateCumulativeDelivery(const std::vector<Route>& routes)
 {
-	int total = 0;
+	float total = 0;
 	int routeSize = routes.size();
 	m_cumulativeDelivery.clear();
 	m_cumulativeDelivery.reserve(routeSize);
 	for (int iRoute = 0; iRoute < routeSize; iRoute++) {
 		int demandsSize = routes[iRoute].clientsList.size();
-		std::vector<int> demand;
+		std::vector<float> demand;
 		demand.reserve(demandsSize);
 		for (int iDemand = 0; iDemand < demandsSize; iDemand++) {
 			total += routes[iRoute].clientsList[iDemand].demand;

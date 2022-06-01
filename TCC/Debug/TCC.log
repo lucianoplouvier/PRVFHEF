@@ -1,25 +1,34 @@
-﻿  fraction.cpp
+﻿  heterogeneousTransports.cpp
+F:\TCC\TCC\TCC\route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\route.h(72,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(103,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\route.h(122,16): warning C4018: '>=': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(205,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\route.h(207,10): warning C4244: 'return': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(24,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(53,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(56,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(59,13): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(65,29): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(75,33): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(76,38): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(85,8): warning C4018: '>=': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(97,31): warning C4018: '>': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(97,50): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(100,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(101,18): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(103,13): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(109,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(134,18): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(136,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(142,18): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\route.h(68,37): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\route.h(80,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\route.h(111,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\route.h(130,16): warning C4018: '>=': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\route.h(211,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(17,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(41,27): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(45,12): warning C4244: 'return': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(52,52): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(67,66): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(85,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(90,20): warning C4018: '>': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(99,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(115,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(262,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(266,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(268,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(275,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(281,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(306,22): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(314,23): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(316,16): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(332,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(333,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(336,57): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(355,32): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(356,86): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(367,93): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(381,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(392,28): warning C4018: '<': incompatibilidade de signed/unsigned
   TCC.vcxproj -> F:\TCC\TCC\Debug\TCC.exe

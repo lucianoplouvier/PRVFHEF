@@ -1,10 +1,10 @@
 #include "Utils.h"
 
-// Não precisa do -1
+// Precisa do -1
 int Utils::getRandomInt(int minPossibleValue, int maxPossibleValue) {
-	if (minPossibleValue == 0 && maxPossibleValue == 0) {
-		return 0;
-	}
-	srand(time(NULL));
-	return (rand() % maxPossibleValue) + minPossibleValue;
+
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_int_distribution<int> dist(minPossibleValue, std::nextafter(maxPossibleValue, INT_MAX));
+	return dist(mt);
 }

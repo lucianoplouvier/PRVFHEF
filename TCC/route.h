@@ -48,8 +48,8 @@ struct Route {
 	}
 
 	bool canAddClient(int demand) const {
-		int totalDemand = getTotalDemand();
-		int left = vehicle.capacity - totalDemand;
+		float totalDemand = getTotalDemand();
+		float left = vehicle.capacity - totalDemand;
 		return demand <= left;
 	}
 
@@ -59,6 +59,14 @@ struct Route {
 			Client c;
 			c.id = clientIndex;
 			c.demand = demand;
+			clientsList.push_back(c);
+		}
+		return canAdd;
+	}
+
+	bool addClient(Client c) {
+		bool canAdd = this->canAddClient(c.demand);
+		if (canAdd) {
 			clientsList.push_back(c);
 		}
 		return canAdd;
@@ -187,16 +195,14 @@ struct Route {
 	int findClient(int clientId) {
 		int index = 0;
 		auto iterator = this->clientsList.begin();
-		while (iterator != clientsList.end() && iterator->id != clientId) {
+		while (iterator != clientsList.end()) {
+			if (iterator->id == clientId) {
+				return index;
+			}
 			iterator++;
 			index++;
 		}
-		if (iterator < clientsList.end()) {
-			return index;
-		}
-		else {
-			return -1;
-		}
+		return -1;
 	}
 
 	int getTotalDemand() const {
@@ -211,8 +217,8 @@ struct Route {
 		return other.id == this->id;
 	}
 
-	int getDemand(int indexStart, int indexEnd) {
-		int result = 0;
+	float getDemand(int indexStart, int indexEnd) {
+		float result = 0;
 		for (int i = indexStart; i <= indexEnd; i++) {
 			result += clientsList[i].demand;
 		}
@@ -221,18 +227,18 @@ struct Route {
 };
 
 struct AdjacencyCosts {
-	std::vector<std::vector<int>> costs;
-	std::vector<int> depotTravel;
-	int getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
+	std::vector<std::vector<float>> costs;
+	std::vector<float> depotTravel;
+	float getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
 };
 
 namespace RouteDefs {
 
-	int calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
+	float calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
 
-	int evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
+	float evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
 
-	int evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
+	float evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
 
 	void printRoute(const Route& route);
 
@@ -247,7 +253,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	std::pair<int, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts);
+	std::pair<float, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -256,7 +262,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<int, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<float, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -266,7 +272,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<int, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<float, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
 
 	std::vector<Route> copy(const std::vector<Route>& other);
 
@@ -286,6 +292,10 @@ namespace RouteDefs {
 	* @return quantidade de vezes que ele foi removido.
 	*/
 	int removeClientFromSolution(std::vector<Route>& solution, int clientId, int& routeIndexSingleRemoval);
+
+	Client getOriginalClient(int clientId, const std::vector<Client>& clientList);
+
+	bool fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList);
 }
 
 class RouteCreator {

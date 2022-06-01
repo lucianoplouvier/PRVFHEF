@@ -24,7 +24,7 @@ public:
 	* @param vehicleTypes - Lista de tipos de veículos disponíveis.
 	* @param vehicles - Quantidade de veículos iniciais.
 	*/
-	PRVFHEF(std::vector<int> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<int> depotTravelCost, int vehicles = -1);
+	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles = -1);
 
 	~PRVFHEF();
 
@@ -32,7 +32,7 @@ public:
 	* @brief Avalia uma solução dada.
 	* @return valor da avaliação. O Quanto menor, melhor.
 	*/
-	int evaluate(std::vector<Route>& solution) const;
+	float evaluate(std::vector<Route>& solution) const;
 
 private:
 
@@ -42,7 +42,7 @@ private:
 
 	AuxiliaryStructures* m_auxiliaryStructures;
 
-	std::vector<int> m_clientsOriginalDemands;
+	std::vector<float> m_clientsOriginalDemands;
 
 	std::vector<Client> m_allClients; // Lista de clientes, com id e demanda.
 
@@ -71,7 +71,7 @@ private:
 	*/
 	int estimateVehicles(const std::vector<Client>& allClients) const;
 
-	void addClientToRoute(Route& r, int candidateId, int demandAmount);
+	void addClientToRoute(Route& r, int candidateId, float demandAmount);
 
 	/*
 	* @brief Executa o ILS.
@@ -87,14 +87,14 @@ private:
 	* @param clientAdjacencies - Adjacencias dos clientes.
 	* @param depotTravelCost - Custo de viagem entre o depósito e o cliente de indice x.
 	*/
-	void createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<int> depotTravelCost);
+	void createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<float> depotTravelCost);
 
 	/*
 	* @brief Executa o RVND.
 	* @param currSol - Solução atual.
 	* @parm evaluation - Avaliação atual.
 	*/
-	std::vector<Route> rvnd(std::vector<Route>& currSol, int evaluation);
+	std::vector<Route> rvnd(std::vector<Route>& currSol, float evaluation);
 
 	/*
 	* @brief Faz a inserção paralela.
@@ -111,11 +111,11 @@ private:
 	* @param candidateId - Id do cliente a ser inserido.
 	* @return custo.
 	*/
-	int getClosestInsertionCost(const Route& route, int candidateId) const;
+	float getClosestInsertionCost(const Route& route, int candidateId) const;
 
-	std::vector<Route> intraroute(const std::vector<Route>& solution, int evaluation);
+	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
 
-	void printSolution(int eval, const std::vector<Route>& solution, ofstream& stream);
+	void printSolution(float eval, const std::vector<Route>& solution, ofstream& stream);
 
 	bool verifySolutionValid(const std::vector<Route>& solution);
 
@@ -128,11 +128,11 @@ private:
 	* @brief Redimensiona o Veículo de forma a tentar trocar o veículo de uma rota por outro mais econômico.
 	* @param routes - Rotas.
 	* @param currEval - Avaliação atual
-	* @param resultEval - Avaliação retornada.
+	* @return avaliação final.
 	*/
-	void vehicleRedimension(std::vector<Route>& routes, int currEval, int& resultEval);
+	float vehicleRedimension(std::vector<Route>& routes, float currEval);
 
-	int m_currIteration;
+	int m_currIteration; // Começa do 1.
 	int m_currIterationsWithoutImprove;
 
 };
