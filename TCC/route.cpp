@@ -94,7 +94,7 @@ void RouteDefs::swapClients(Route& r1, int r1ClientId1, int r1ClientId2, Route& 
 	printRoute(r2);
 }
 
-std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts) {
+std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts, int forbiddenIndex) {
 	int firstClientId = clientsList.front().id;
 	float firstClientdemand = clientsList.front().demand;
 	int lastClientId = clientsList.back().id;
@@ -116,24 +116,26 @@ std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std
 	else {
 		for (int i = 0; i <= clients; i++) {
 			int currClientId = -1;
-			if (i != clients) {
-				currClientId = route.clientsList[i].id;
-			}
-			float currCost = 0;
-			if (i == 0) { // Colocar um cliente no inicio
-				currCost = adjacencyCosts.depotTravel[firstClientId] + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId);
-			}
-			else if (i == clients) { // Colocar um cliente no fim
-				currCost = adjacencyCosts.getAdjacencyCosts(firstClientId, route.clientsList[i - 1].id) + adjacencyCosts.depotTravel[lastClientId];
-			}
-			else {
-				// Consertar
-				int prevId = route.clientsList[i-1].id;
-				currCost = adjacencyCosts.getAdjacencyCosts(prevId, firstClientId) + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId); // Colocar um cliente entre dois é somar as duas viagems que isso envolve.
-			}
-			if (currCost < cost) {
-				cost = currCost;
-				pos = i;
+			if (i != forbiddenIndex) {
+				if (i != clients) {
+					currClientId = route.clientsList[i].id;
+				}
+				float currCost = 0;
+				if (i == 0) { // Colocar um cliente no inicio
+					currCost = adjacencyCosts.depotTravel[firstClientId] + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId);
+				}
+				else if (i == clients) { // Colocar um cliente no fim
+					currCost = adjacencyCosts.getAdjacencyCosts(firstClientId, route.clientsList[i - 1].id) + adjacencyCosts.depotTravel[lastClientId];
+				}
+				else {
+					// Consertar
+					int prevId = route.clientsList[i - 1].id;
+					currCost = adjacencyCosts.getAdjacencyCosts(prevId, firstClientId) + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId); // Colocar um cliente entre dois é somar as duas viagems que isso envolve.
+				}
+				if (currCost < cost) {
+					cost = currCost;
+					pos = i;
+				}
 			}
 		}
 		result.first = cost;

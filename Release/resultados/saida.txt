@@ -1,92 +1,77 @@
-Tempo de execução: 360 segundos.
+Tempo de execução: 391 segundos.
 FINAL: 
-4,15,5,
-4,11,3,1,
+5,19,7,
+9,8,7,
+8,
+17,13,9,
 
-4,8,6,10,
-9,4,
-7,4,
-14,17,4,
-16,4,
+7,12,1,
 
-19,4,
-2,
-4,13,
-12,4,
+14,13,
 
+13,
+2,13,16,18,0,
+11,6,7,
+3,13,7,
 
-18,
-
-18,0,
-
-
+4,15,10,
 
 
 
 --------------------------
-Resultado iteracao. EVAL: 4082
+Resultado iteracao. EVAL: 3379
 Rota: Veiculo: 0 Capacidade: 40
 Clientes:
-(I:4, D:3), (I:15, D:25), (I:5, D:10)
-Sobrou do veiculo: 2
+(I:5, D:10), (I:19, D:25), (I:7, D:5)
+Sobrou do veiculo: 0
 
 Veiculo: 1 Capacidade: 35
 Clientes:
-(I:4, D:5), (I:11, D:12), (I:3, D:5), (I:1, D:12)
-Sobrou do veiculo: 1
-
-Veiculo: 4 Capacidade: 100
-Clientes:
-(I:4, D:13), (I:8, D:40), (I:6, D:20), (I:10, D:22)
-Sobrou do veiculo: 5
-
-Veiculo: 5 Capacidade: 33
-Clientes:
-(I:9, D:21), (I:4, D:12)
+(I:9, D:9), (I:8, D:3), (I:7, D:23)
 Sobrou do veiculo: 0
-
-Veiculo: 7 Capacidade: 45
-Clientes:
-(I:7, D:33), (I:4, D:9)
-Sobrou do veiculo: 3
-
-Veiculo: 7 Capacidade: 45
-Clientes:
-(I:14, D:23), (I:17, D:18), (I:4, D:4)
-Sobrou do veiculo: 0
-
-Veiculo: 7 Capacidade: 45
-Clientes:
-(I:16, D:33), (I:4, D:12)
-Sobrou do veiculo: 0
-
-Veiculo: 7 Capacidade: 45
-Clientes:
-(I:19, D:25), (I:4, D:20)
-Sobrou do veiculo: 0
-
-Veiculo: 4 Capacidade: 100
-Clientes:
-(I:2, D:7)
-Sobrou do veiculo: 93
-
-Veiculo: 4 Capacidade: 100
-Clientes:
-(I:4, D:13), (I:13, D:57)
-Sobrou do veiculo: 30
 
 Veiculo: 0 Capacidade: 40
 Clientes:
-(I:12, D:30), (I:4, D:9)
-Sobrou do veiculo: 1
+(I:8, D:37)
+Sobrou do veiculo: 3
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:17, D:18), (I:13, D:5), (I:9, D:12)
+Sobrou do veiculo: 0
+
+Veiculo: 2 Capacidade: 43
+Clientes:
+(I:7, D:1), (I:12, D:30), (I:1, D:12)
+Sobrou do veiculo: 0
+
+Veiculo: 1 Capacidade: 35
+Clientes:
+(I:14, D:23), (I:13, D:12)
+Sobrou do veiculo: 0
 
 Veiculo: 3 Capacidade: 17
 Clientes:
-(I:18, D:17)
+(I:13, D:17)
+Sobrou do veiculo: 0
+
+Veiculo: 4 Capacidade: 100
+Clientes:
+(I:2, D:7), (I:13, D:11), (I:16, D:33), (I:18, D:45), (I:0, D:4)
 Sobrou do veiculo: 0
 
 Veiculo: 5 Capacidade: 33
 Clientes:
-(I:18, D:28), (I:0, D:4)
-Sobrou do veiculo: 1
+(I:11, D:12), (I:6, D:20), (I:7, D:1)
+Sobrou do veiculo: 0
+
+Veiculo: 6 Capacidade: 20
+Clientes:
+(I:3, D:5), (I:13, D:12), (I:7, D:3)
+Sobrou do veiculo: 0
+
+Veiculo: 8 Capacidade: 400
+Clientes:
+(I:4, D:100), (I:15, D:25), (I:10, D:22)
+Sobrou do veiculo: 253
 

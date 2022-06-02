@@ -250,9 +250,6 @@ void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& ad
 			bool fitsInVehicle = true;
 			for (Client& c : r.clientsList) { // Verifica se todos os clientes cabem em pelo menos um veículo que não seja o maior.
 				int cDemand = c.demand;
-				if (cDemand > 50) {
-					int asjdkasd = 0;
-				}
 				if (!RouteDefs::fitsInNonBiggestVehicle(cDemand, vehiclesList)) {
 					fitsInVehicle = false;
 				}

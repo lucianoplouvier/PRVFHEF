@@ -192,7 +192,7 @@ struct Route {
 		}
 	}
 	*/
-	int findClient(int clientId) {
+	int findClient(int clientId) const {
 		int index = 0;
 		auto iterator = this->clientsList.begin();
 		while (iterator != clientsList.end()) {
@@ -251,9 +251,10 @@ namespace RouteDefs {
 	* @param route - Rota.
 	* @param clientsList - cadeia de clientes adjacentes.
 	* @param adjacencyCosts - Lista de adjacencias.
+	* @param indice proibido, por padrão nenhum (-1).
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	std::pair<float, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts);
+	std::pair<float, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts, int forbiddenIndex = -1);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.

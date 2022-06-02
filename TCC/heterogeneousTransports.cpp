@@ -22,8 +22,8 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	}
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
-	int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount;
-	//int itrsToExecute = MAXITERSNOIMPROVE;
+	//int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount;
+	int itrsToExecute = MAXITERSNOIMPROVE;
 	m_currIteration = 0;
 	m_currIterationsWithoutImprove = 0;
 
