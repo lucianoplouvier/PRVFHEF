@@ -12,6 +12,24 @@
 */
 namespace intrarouteStructures {
 
+	static int shiftImprove = 0;
+	static int swapImprove = 0;
+	static int orOpt2Improve = 0;
+	static int orOpt3Improve = 0;
+	static int twoOptImprove = 0;
+
+	int getIntrarrouteSumImprove();
+
+	int getShiftImprove();
+
+	int getSwapImprove();
+
+	int getorOpt2Improve();
+
+	int getorOpt3Improve();
+
+	int getTwoOptImprove();
+
 	std::list<INTRAROUTETYPES> getAll();
 
 	static int intrarrouteCount() { return getAll().size(); }

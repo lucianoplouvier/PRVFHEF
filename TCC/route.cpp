@@ -30,7 +30,7 @@ float RouteDefs::calculateTravelCost(const std::vector<Client>& clients, const A
 		int firstClientIndex = clients[0].id;
 		int lastClientIndex = clients[clients.size() - 1].id;
 		total += adjacencyCosts.depotTravel[firstClientIndex]; // Sair do deposito.
-		total += adjacencyCosts.depotTravel[lastClientIndex]; // Voltar do depósito.
+		total += adjacencyCosts.depotTravel[lastClientIndex]; // Voltar ao depósito.
 		for (int iClient = 0; iClient < clients.size() - 1; iClient++) {
 			total += adjacencyCosts.costs[iClient][iClient + 1];
 		}

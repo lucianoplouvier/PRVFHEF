@@ -81,30 +81,30 @@ F:\TCC\TCC\TCC\route.h(111,42): warning C4244: 'argumento': conversão de 'const
 F:\TCC\TCC\TCC\route.h(130,16): warning C4018: '>=': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\route.h(211,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\heterogeneousTransports.cpp(17,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(41,27): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(45,12): warning C4244: 'return': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(52,52): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(67,66): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(85,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(90,20): warning C4018: '>': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(99,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(115,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(262,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(266,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(268,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(275,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(281,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(306,22): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(314,23): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(316,16): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(332,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(333,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(336,57): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(355,32): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(356,86): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(367,93): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(381,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(392,28): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(40,27): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(44,12): warning C4244: 'return': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(51,52): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(66,66): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(84,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(89,20): warning C4018: '>': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(98,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(114,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(261,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(265,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(267,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(274,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(280,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(334,22): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(342,23): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(344,16): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(360,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(361,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(364,57): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(383,32): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(384,86): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(395,93): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(409,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(420,28): warning C4018: '<': incompatibilidade de signed/unsigned
   interrouteStructures.cpp
 F:\TCC\TCC\TCC\route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
@@ -113,41 +113,41 @@ F:\TCC\TCC\TCC\route.h(80,22): warning C4018: '<': incompatibilidade de signed/u
 F:\TCC\TCC\TCC\route.h(111,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\route.h(130,16): warning C4018: '>=': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\route.h(211,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(21,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(22,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(24,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(34,36): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(49,24): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(73,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(74,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(77,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(84,37): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(103,26): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(126,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(127,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(129,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(144,39): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(154,27): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(179,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(180,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(182,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(198,39): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(209,26): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(233,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(234,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(236,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(250,38): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(271,28): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(295,28): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(321,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(322,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(324,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(339,38): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(363,29): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\interrouteStructures.cpp(418,30): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(420,31): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(486,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\interrouteStructures.cpp(488,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(58,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(59,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(61,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(71,36): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(86,24): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(111,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(112,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(115,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(122,37): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(141,26): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(165,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(166,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(168,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(183,39): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(193,27): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(219,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(220,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(222,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(238,39): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(249,26): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(274,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(275,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(277,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(291,38): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(312,28): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(336,28): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(363,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(364,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(366,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(381,38): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(405,29): warning C4244: '=': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\interrouteStructures.cpp(437,30): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(439,31): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(513,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\interrouteStructures.cpp(515,21): warning C4018: '<': incompatibilidade de signed/unsigned
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(242,16): warning C4244: 'inicializando': conversão de '_Ty' para '_Ty1', possível perda de dados
           with
           [
@@ -157,8 +157,8 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.2
           [
               _Ty1=int
           ]
-F:\TCC\TCC\TCC\interrouteStructures.cpp(40): message : consulte a referência à instanciação 'std::pair<int,int>::pair<float,int,0>(std::pair<float,int> &&) noexcept' do modelo que está sendo compilada
-F:\TCC\TCC\TCC\interrouteStructures.cpp(40): message : consulte a referência à instanciação 'std::pair<int,int>::pair<float,int,0>(std::pair<float,int> &&) noexcept' do modelo que está sendo compilada
+F:\TCC\TCC\TCC\interrouteStructures.cpp(77): message : consulte a referência à instanciação 'std::pair<int,int>::pair<float,int,0>(std::pair<float,int> &&) noexcept' do modelo que está sendo compilada
+F:\TCC\TCC\TCC\interrouteStructures.cpp(77): message : consulte a referência à instanciação 'std::pair<int,int>::pair<float,int,0>(std::pair<float,int> &&) noexcept' do modelo que está sendo compilada
   intrarouteStructures.cpp
 F:\TCC\TCC\TCC\route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
@@ -167,22 +167,22 @@ F:\TCC\TCC\TCC\route.h(80,22): warning C4018: '<': incompatibilidade de signed/u
 F:\TCC\TCC\TCC\route.h(111,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\route.h(130,16): warning C4018: '>=': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\route.h(211,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(60,33): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(63,34): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(91,30): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(125,33): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(127,34): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(129,27): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(152,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(174,33): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(176,34): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(205,30): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(227,33): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(229,34): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(262,30): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(285,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(286,26): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\intrarouteStructures.cpp(306,30): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(84,33): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(87,34): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(115,30): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(153,33): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(155,34): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(157,27): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(180,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(206,33): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(208,34): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(237,30): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(263,33): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(265,34): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(298,30): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(325,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(326,26): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\intrarouteStructures.cpp(347,30): warning C4018: '<': incompatibilidade de signed/unsigned
   main.cpp
 F:\TCC\TCC\TCC\route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
@@ -207,6 +207,22 @@ F:\TCC\TCC\TCC\main.cpp(83,48): warning C4244: 'argumento': conversão de 'int' 
               _Ty=float
           ]
 F:\TCC\TCC\TCC\main.cpp(98,48): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\main.cpp(146,39): warning C4244: 'argumento': conversão de 'int' para '_Ty', possível perda de dados
+          with
+          [
+              _Ty=float
+          ]
+F:\TCC\TCC\TCC\main.cpp(161,51): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\main.cpp(163,47): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\main.cpp(165,57): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\main.cpp(182,23): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\main.cpp(184,27): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\main.cpp(190,96): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\main.cpp(195,36): warning C4244: 'argumento': conversão de 'int' para '_Ty', possível perda de dados
+          with
+          [
+              _Ty=float
+          ]
   perturbationMethods.cpp
 F:\TCC\TCC\TCC\Route.h(51,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
 F:\TCC\TCC\TCC\Route.h(61,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
@@ -261,8 +277,8 @@ F:\TCC\TCC\TCC\route.cpp(271,20): warning C4018: '<': incompatibilidade de signe
 F:\TCC\TCC\TCC\route.cpp(282,29): warning C4018: '<': incompatibilidade de signed/unsigned
 F:\TCC\TCC\TCC\route.cpp(302,20): warning C4018: '<': incompatibilidade de signed/unsigned
   Gerando código
-  36 of 1677 functions ( 2.1%) were compiled, the rest were copied from previous compilation.
-    10 functions were new in current compilation
-    67 functions had inline decision re-evaluated but remain unchanged
+  96 of 1696 functions ( 5.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    11 functions had inline decision re-evaluated but remain unchanged
   Finalizada a geração de código
   TCC.vcxproj -> F:\TCC\TCC\Release\TCC.exe

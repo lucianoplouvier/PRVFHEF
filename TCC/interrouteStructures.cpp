@@ -2,6 +2,43 @@
 
 using namespace std;
 
+int interrouteStructures::getInterrouteSumImprove() {
+	int total = shift10Improve + shift20Improve + swap11Improve + swap21Improve + swap11SImprove + swap21SImprove + crossImprove + kSplitImprove;
+	return total;
+}
+
+int interrouteStructures::getShift10Improve() {
+	return shift10Improve;
+}
+
+int interrouteStructures::getShift20Improve() {
+	return shift20Improve;
+}
+
+int interrouteStructures::getSwap11Improve() {
+	return swap11Improve;
+}
+
+int interrouteStructures::getSwap21Improve() {
+	return swap21Improve;
+}
+
+int interrouteStructures::getSwap11SImprove() {
+	return swap11SImprove;
+}
+
+int interrouteStructures::getSwap21SImprove() {
+	return swap21SImprove;
+}
+
+int interrouteStructures::getCrossImprove() {
+	return crossImprove;
+}
+
+int interrouteStructures::getKSplitImprove() {
+	return kSplitImprove;
+}
+
 std::list<INTERROUTETYPES> interrouteStructures::getAll() {
 	std::list<INTERROUTETYPES> all;
 	all.push_back(INTERROUTETYPES::KSPLIT);
@@ -60,6 +97,7 @@ std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, 
 		}
 	}
 	if (resultEval < evaluation) {
+		shift10Improve++;
 		//auxStruct->improvementChanged(INTERROUTETYPES::SHIFT1_0, )
 		return result;
 	}
@@ -113,6 +151,7 @@ std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, 
 		}
 	}
 	if (resultEval < evaluation) {
+		shift20Improve++;
 		//auxStruct->improvementChanged(INTERROUTETYPES::SHIFT1_0, )
 		return result;
 	}
@@ -166,6 +205,7 @@ std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, f
 		}
 	}
 	if (resultEval < evaluation) {
+		swap11Improve++;
 		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
 		return result;
 	}
@@ -220,6 +260,7 @@ std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, f
 		}
 	}
 	if (resultEval < evaluation) {
+		swap21Improve++;
 		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
 		return result;
 	}
@@ -308,6 +349,7 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 		}
 	}
 	if (resultEval < evaluation) {
+		swap11SImprove++;
 		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
 		return result;
 	}
@@ -368,33 +410,9 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 											}
 										}
 									}
-									/*
-									else if (client.demand < other.demand) {
-										std::vector<Route> newResult = RouteDefs::copy(solution);
-										if ((newResult[i].getTotalDemand() - client.demand + other.demand) < newResult[i].vehicle.capacity &&
-											(newResult[j].getTotalDemand() + client.demand) < newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
-											Client copyI(client);
-											Client copyJ(other);
-											copyJ.demand = client.demand;
-											newResult[j].clientsList[jClient].demand -= client.demand; // Se não tiver isso fica em excesso
-											std::vector<Client> cList;
-											cList.push_back(copyI);
-											int indexToInsert = RouteDefs::findBestInsertion(newResult[j], cList, adjCosts, iClient).second;
-											if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
-												newResult[j].insertClient(client, indexToInsert);
-												newResult[i].clientsList[iClient] = copyJ;
-												newResult[i].removeClient(client.id);
-												if (RouteDefs::isSolutionValid(newResult, originalClients)) {
-													float eval = RouteDefs::evaluate(newResult, adjCosts);
-													if (eval < resultEval) {
-														resultEval = eval;
-														result = newResult;
-													}
-												}
-											}
-										}
+									else {
+										// TODO fazer isso aqui
 									}
-									*/
 								}
 							}
 						}
@@ -405,6 +423,7 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 	}
 	if (resultEval < evaluation) {
 		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
+		swap21SImprove++;
 		return result;
 	}
 	else {
@@ -463,6 +482,7 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, flo
 								if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients)) {
 									resultEval = eval;
 									result = newResult;
+									crossImprove++;
 								}
 							}
 						}
@@ -471,7 +491,14 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, flo
 			}
 		}
 	}
-	return result;
+	if (resultEval < evaluation) {
+		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
+		crossImprove++;
+		return result;
+	}
+	else {
+		return solution;
+	}
 }
 
 std::vector<Route> interrouteStructures::routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts) {
@@ -515,6 +542,14 @@ std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, fl
 				}
 			}
 		}
+	}
+	if (resultEval < evaluation) {
+		//auxStruct->improvementChanged(INTERROUTETYPES::SWAP1_1, )
+		kSplitImprove++;
+		return result;
+	}
+	else {
+		return solution;
 	}
 	return result;
 }

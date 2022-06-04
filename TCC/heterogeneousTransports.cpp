@@ -22,8 +22,7 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	}
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
-	//int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount;
-	int itrsToExecute = MAXITERSNOIMPROVE;
+	int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount * 10;
 	m_currIteration = 0;
 	m_currIterationsWithoutImprove = 0;
 
@@ -297,9 +296,38 @@ bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 }
 
 void PRVFHEF::printSolution(float eval, const  std::vector<Route>& solution, ofstream& stream) {
+	int totalMelhoriasInterroute = interrouteStructures::getInterrouteSumImprove(); 
+	int totalMelhoriasIntrarroute = intrarouteStructures::getIntrarrouteSumImprove();
 	stream << "\n--------------------------\n";
 	stream << "Resultado iteracao. EVAL: " << eval << "\n";
-	stream << "Rota: ";
+	stream << "\n";
+	if (totalMelhoriasInterroute > 0) {
+		stream << "Melhorias Interrotas:" << "\n";
+		stream << "shift10Improve: " << interrouteStructures::getShift10Improve() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "shift20Improve: " << interrouteStructures::getShift20Improve() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "swap11Improve: " << interrouteStructures::getSwap11Improve() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "swap21Improve: " << interrouteStructures::getSwap21Improve() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "swap11SImprove: " << interrouteStructures::getSwap11SImprove() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "swap21SImprove: " << interrouteStructures::getSwap21SImprove() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "crossImprove: " << interrouteStructures::getCrossImprove() * 100 / totalMelhoriasInterroute << "%" << "\n";
+		stream << "kSplitImprove: " << interrouteStructures::getKSplitImprove() * 100 / totalMelhoriasInterroute << "%" << "\n";
+	}
+	else {
+		stream << "WARN: Não houve melhorias interroute!\n";
+	}
+	stream << "\n";
+	if (totalMelhoriasIntrarroute > 0) {
+		stream << "Melhorias Intrarrotas:" << "\n";
+		stream << "shiftImprove: " << intrarouteStructures::getShiftImprove() * 100 / totalMelhoriasIntrarroute << "%" << "\n";
+		stream << "swapImprove: " << intrarouteStructures::getSwapImprove() * 100 / totalMelhoriasIntrarroute << "%" << "\n";
+		stream << "orOpt2Improve: " << intrarouteStructures::getorOpt2Improve() * 100 / totalMelhoriasIntrarroute << "%" << "\n";
+		stream << "orOpt3Improve: " << intrarouteStructures::getorOpt3Improve() * 100 / totalMelhoriasIntrarroute << "%" << "\n";
+		stream << "twoOptImprove: " << intrarouteStructures::getTwoOptImprove() * 100 / totalMelhoriasIntrarroute << "%" << "\n";
+	}
+	else {
+		stream << "WARN: Não houve melhorias intraroute!\n";
+	}
+	stream << "Rota: \n";
 	for (const Route& r : solution) {
 		if (r.clientsList.size() > 0) {
 			float velCap = r.vehicle.capacity;

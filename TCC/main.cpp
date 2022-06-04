@@ -108,6 +108,96 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
     return true;
 }
 
+bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<float>& depotTravelCosts) {
+
+    string line;
+
+    int clients = 0;
+
+    int vehicles = 0;
+
+    int depotX, depotY;
+
+    std::vector<std::pair<int, int>> clientCoords;
+
+    ifstream myfile;
+    myfile.open(input.c_str());
+
+    if (myfile.is_open()) {
+        if (getline(myfile, line)) {
+            clients = stoi(line);
+            demands.reserve(clients);
+        }
+        else {
+            return false;
+        }
+        if (getline(myfile, line)) {
+            std::vector<std::string> lineSplit = strSplit(line, ' ');
+            depotX = (atoi(lineSplit.at(1).c_str()));
+            depotY = (atoi(lineSplit.at(2).c_str()));
+        }
+        for (int i = 0; i < clients; i++) {
+            if (getline(myfile, line)) {
+                std::vector<std::string> lineSplit = strSplit(line, ' ');
+                int x = atoi(lineSplit.at(1).c_str());
+                int y = atoi(lineSplit.at(2).c_str());
+                std::pair<int, int> coord(x, y);
+                clientCoords.push_back(coord);
+                demands.push_back(atoi(lineSplit.at(3).c_str()));
+            }
+            else {
+                return false;
+            }
+        }
+        getline(myfile, line); // pulac comentario
+        if (getline(myfile, line)) {
+            vehicles = stoi(line);
+            vehicleTypes.reserve(vehicles);
+            for (int i = 0; i < vehicles; i++) {
+                if (getline(myfile, line)) {
+                    std::vector<std::string> lineSplit = strSplit(line, ' ');
+                    Vehicle newVehicleType;
+                    newVehicleType.id = i;
+                    newVehicleType.capacity = atoi(lineSplit[1].c_str());
+                    newVehicleType.type = atoi(lineSplit[0].c_str());
+                    newVehicleType.cost = atoi(lineSplit[2].c_str());
+                    if (lineSplit.size() > 3) {
+                        newVehicleType.travelCost = atoi(lineSplit[3].c_str());
+                    }
+                    else {
+                        newVehicleType.travelCost = 1;
+                    }
+                    vehicleTypes.push_back(newVehicleType);
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    for (int i = 0; i < clientCoords.size(); i++) {
+        auto cCoord = clientCoords[i];
+        for (int j = 0; j < clientCoords.size(); j++) {
+            if (i != j) {
+                auto otherCoord = clientCoords[j];
+                ClientAdjacency adj;
+                adj.clientFromId = i;
+                adj.clientToId = j;
+                adj.travelCost = std::abs(std::abs(cCoord.first) - std::abs(otherCoord.first)) + std::abs(std::abs(cCoord.second) - std::abs(otherCoord.second));
+                adjacencies.push_back(adj);
+            }
+        }
+        int depotCost = std::abs(std::abs(cCoord.first) - std::abs(depotX)) + std::abs(std::abs(cCoord.second) - std::abs(depotY));
+        depotTravelCosts.push_back(depotCost);
+    }
+
+    return true;
+}
+
 int main()
 {
     std::vector<float> demands;
@@ -115,9 +205,13 @@ int main()
     std::vector<Vehicle> vehicleTypes;
     std::vector<float> depotTravelCosts;
 
-    std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
+    //std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     
-    readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
+    //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
+
+    std::string filepath = "C:/Users/frien/Documents/c20_3.txt";
+
+    readProblemText(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
     PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts);
 }

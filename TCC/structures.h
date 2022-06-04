@@ -26,7 +26,7 @@ struct Vehicle {
 	int type;
 	float capacity;
 	float cost;
-	float travelCost;
+	float travelCost; // Como multiplica, tem que ser pelo menos 1
 
 	bool operator==(const Vehicle& other) {
 		return this->id = other.id;

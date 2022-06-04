@@ -10,6 +10,33 @@
 
 namespace interrouteStructures {
 
+	static int shift10Improve = 0;
+	static int shift20Improve = 0;
+	static int swap11Improve = 0;
+	static int swap21Improve = 0;
+	static int swap11SImprove = 0;
+	static int swap21SImprove = 0;
+	static int crossImprove = 0;
+	static int kSplitImprove = 0;
+
+	int getInterrouteSumImprove();
+
+	int getShift10Improve();
+
+	int getShift20Improve();
+
+	int getSwap11Improve();
+
+	int getSwap21Improve();
+
+	int getSwap11SImprove();
+
+	int getSwap21SImprove();
+
+	int getCrossImprove();
+
+	int getKSplitImprove();
+
 	/*
 	* @brief Executa shift1_0, o qual passa o cliente de uma rota para outra.
 	* @param solution - Solução atual.
