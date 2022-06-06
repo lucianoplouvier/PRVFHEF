@@ -248,7 +248,9 @@ std::vector<Route> RouteDefs::copy(const std::vector<Route>& other) {
 	return result;
 }
 
-bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList) {
+bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels) {
+	int availableVelsSize = availableVels.size();
+	bool hasLimitedVels = availableVelsSize > 0;
 	std::vector<int> demandsApplied;
 	for (int i = 0; i < completeClientList.size(); i++) {
 		demandsApplied.push_back(completeClientList[i].demand);
@@ -256,6 +258,12 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 	for (int i = 0; i < solution.size(); i++) {
 		if (solution[i].getTotalDemand() > solution[i].vehicle.capacity) {
 			return false;
+		}
+		if (hasLimitedVels) {
+			int velLeft = availableVels[solution[i].vehicle.id]--;
+			if (velLeft < 0) {
+				return false;
+			}
 		}
 		std::vector<int> idsVisited; // Ver se não tem o mesmo cliente duas vezes.
 		for (int j = 0; j < solution[i].clientsList.size(); j++) {
@@ -321,4 +329,11 @@ Client RouteDefs::getOriginalClient(int clientId, const std::vector<Client>& cli
 	}
 	cout << "ERROR. Cliente " << clientId << " não encontrado.";
 	exit(1);
+}
+
+std::vector<int> RouteDefs::calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels) {
+	for (const Route& r : solution) {
+		availableVels[r.vehicle.id] = availableVels[r.vehicle.id] - 1;
+	}
+	return availableVels;
 }

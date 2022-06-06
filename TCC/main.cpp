@@ -107,7 +107,7 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
     return true;
 }
 
-bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<float>& depotTravelCosts) {
+bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& availableVels, std::vector<float>& depotTravelCosts, int& vels) {
 
     string line;
 
@@ -118,8 +118,6 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
     int depotX, depotY;
 
     std::vector<std::pair<int, int>> clientCoords;
-
-    std::vector<int> availableVels;
 
     ifstream myfile;
     myfile.open(input.c_str());
@@ -168,7 +166,9 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                         newVehicleType.travelCost = 1;
                     }
                     if (lineSplit.size() > 3) {
-                        availableVels.push_back(atoi(lineSplit[3].c_str()));
+                        int vCount = atoi(lineSplit[3].c_str());
+                        availableVels.push_back(vCount);
+                        vels += vCount;
                     }
                     vehicleTypes.push_back(newVehicleType);
                 }
@@ -207,6 +207,9 @@ int main()
     std::vector<ClientAdjacency> adjacencies;
     std::vector<Vehicle> vehicleTypes;
     std::vector<float> depotTravelCosts;
+    std::vector<int> availableVels;
+    int vels = 0;
+
 
     //std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     
@@ -220,7 +223,12 @@ int main()
 
     //std::string filepath = "C:/Users/frien/Documents/c20_6mix.txt";
 
-    readProblemText(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
+    readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels);
 
-    PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts);
+    if (availableVels.size() > 0) {
+        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, availableVels, vels);
+    }
+    else {
+        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts);
+    }
 }

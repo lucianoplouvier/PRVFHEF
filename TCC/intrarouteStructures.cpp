@@ -60,7 +60,6 @@ std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vect
 		cout << "ERROR. intrarouteStructures::execute , tipo de vizinhança não reconhecido.";
 		break;
 	}
-	RouteDefs::isSolutionValid(solution, clientList);
 	return result;
 }
 

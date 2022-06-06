@@ -53,7 +53,7 @@ std::list<INTERROUTETYPES> interrouteStructures::getAll() {
 	return all;
 }
 
-std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
@@ -81,7 +81,7 @@ std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, 
 								bool ok = newResult[j].insertClient(client, pos);
 								if (ok) {
 									float eval = RouteDefs::evaluate(newResult, adjCosts);
-									if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients)) {
+									if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 										result = newResult;
 										resultEval = eval;
 									}
@@ -106,7 +106,7 @@ std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, 
 	}
 }
 
-std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < result.size(); i++) {
@@ -136,7 +136,7 @@ std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, 
 										ok = newResult[j].insertClient(client, pos);
 										if (ok) {
 											float eval = RouteDefs::evaluate(newResult, adjCosts);
-											if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients)) {
+											if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 												result = newResult;
 												resultEval = eval;
 											}
@@ -160,7 +160,7 @@ std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, 
 	}
 }
 
-std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
@@ -187,7 +187,7 @@ std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, f
 										if ((newResult[i].getTotalDemand() - client.demand + other.demand) < newResult[i].vehicle.capacity &&
 											(newResult[j].getTotalDemand() + client.demand - other.demand) < newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
 											RouteDefs::swapClients(newResult[i], client.id, newResult[j], other.id);
-											if (RouteDefs::isSolutionValid(newResult, originalClients)) {
+											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 												float eval = RouteDefs::evaluate(newResult, adjCosts);
 												if (eval < resultEval) {
 													resultEval = eval;
@@ -214,7 +214,7 @@ std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, f
 	}
 }
 
-std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
@@ -245,7 +245,7 @@ std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, f
 											newResult[i].removeClient(client.id);
 											newResult[j].insertClient(Client(client), jClient);
 											float eval = RouteDefs::evaluate(newResult, adjCosts);
-											if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients)) {
+											if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 												resultEval = eval;
 												result = newResult;
 											}
@@ -269,7 +269,7 @@ std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, f
 	}
 }
 
-std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
@@ -306,7 +306,7 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 												newResult[i].insertClient(other, indexToInsert);
 												newResult[j].clientsList[jClient] = copyI;
 												newResult[j].removeClient(other.id);
-												if (RouteDefs::isSolutionValid(newResult, originalClients)) {
+												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 													float eval = RouteDefs::evaluate(newResult, adjCosts);
 													if (eval < resultEval) {
 														resultEval = eval;
@@ -330,7 +330,7 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 												newResult[j].insertClient(client, indexToInsert);
 												newResult[i].clientsList[iClient] = copyJ;
 												newResult[i].removeClient(client.id);
-												if (RouteDefs::isSolutionValid(newResult, originalClients)) {
+												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 													float eval = RouteDefs::evaluate(newResult, adjCosts);
 													if (eval < resultEval) {
 														resultEval = eval;
@@ -358,7 +358,7 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 	}
 }
 
-std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	int resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
@@ -399,7 +399,7 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 												newResult[i].removeClient(copyI1.id);
 												//newResult[i].removeClient(copyI2.id);
 												newResult[i].insertClient(copyJ, indexToInsert);
-												if (RouteDefs::isSolutionValid(newResult, originalClients)) {
+												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 													float eval = RouteDefs::evaluate(newResult, adjCosts);
 													if (eval < resultEval) {
 														resultEval = eval;
@@ -430,7 +430,7 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 	}
 }
 
-std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	float resultEval = evaluation;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
@@ -478,7 +478,7 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, flo
 								newResult[iRoute].clientsList = newClientIList;
 								newResult[jRoute].clientsList = newClientJList;
 								float eval = RouteDefs::evaluate(newResult, adjCosts);
-								if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients)) {
+								if (eval < resultEval && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
 									resultEval = eval;
 									result = newResult;
 									crossImprove++;
@@ -500,12 +500,12 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, flo
 	}
 }
 
-std::vector<Route> interrouteStructures::routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts) {
+std::vector<Route> interrouteStructures::routeAddition(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, std::vector<int>& availableVels) {
 	std::vector<Route> result = RouteDefs::copy(solution);
 	exit(1);
 }
 
-std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<int> resolvedClients;
 	std::vector<Route> result = RouteDefs::copy(solution);
 	float resultEval = evaluation;
@@ -534,7 +534,7 @@ std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, fl
 				stepResult = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(client.id, originalClients), forbiddenIndex, success, adjCosts);
 				if (success) {
 					float eval = RouteDefs::evaluate(stepResult, adjCosts);
-					if (eval < resultEval && RouteDefs::isSolutionValid(stepResult, originalClients)) {
+					if (eval < resultEval && RouteDefs::isSolutionValid(stepResult, originalClients, availableVels)) {
 						resultEval = eval;
 						result = stepResult;
 					}
@@ -553,40 +553,40 @@ std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, fl
 	return result;
 }
 
-std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients) {
+std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	switch (type)
 	{
 	case INTERROUTETYPES::SHIFT1_0:
-		return shift1_0(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return shift1_0(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::SHIFT2_0:
-		return shift2_0(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return shift2_0(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::SWAP1_1:
-		return swap1_1(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return swap1_1(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::SWAP2_1:
-		return swap2_1(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return swap2_1(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::SWAP1_1S:
-		return swap1_1S(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return swap1_1S(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::SWAP2_1S:
-		return swap2_1S(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return swap2_1S(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::ROUTEADDITION:
-		return routeAddition(solution, evaluation, auxStruct, adjCosts);
+		return routeAddition(solution, evaluation, auxStruct, adjCosts, availableVels);
 		break;
 	case INTERROUTETYPES::KSPLIT:
-		return kSplit(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return kSplit(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::CROSS:
-		return cross(solution, evaluation, auxStruct, adjCosts, originalClients);
+		return cross(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	default:
 		cout << "Erro ao escolher interrota.";
 		exit(1);
 		break;
 	}
-	RouteDefs::isSolutionValid(solution, originalClients);
+	RouteDefs::isSolutionValid(solution, originalClients, availableVels);
 }

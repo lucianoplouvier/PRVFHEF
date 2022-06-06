@@ -24,7 +24,7 @@ public:
 	* @param vehicleTypes - Lista de tipos de veículos disponíveis.
 	* @param vehicles - Quantidade de veículos iniciais.
 	*/
-	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles = -1);
+	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::vector<int> availableVels = std::vector<int>(), int vehicles = -1);
 
 	~PRVFHEF();
 
@@ -51,6 +51,8 @@ private:
 	int m_clientsCount; // Quantidade de clientes.
 
 	AdjacencyCosts m_adjacencyCosts; // matriz como i * m_clientsCount + j
+
+	std::vector<int> m_availableVels;
 
 	/*
 	* @brief Cria uma solução inicial.
@@ -103,7 +105,7 @@ private:
 	* @param insertionCriteria - Critério de inserção.
 	* @return rotas preenchidas.
 	*/
-	std::vector<Route> paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria);
+	std::vector<Route> paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria, std::vector<int> availableVels);
 
 	/*
 	* @brief Recupera o custo de inserção para o cliente mais próximo na rota route do cliente de id informado.
@@ -128,9 +130,10 @@ private:
 	* @brief Redimensiona o Veículo de forma a tentar trocar o veículo de uma rota por outro mais econômico.
 	* @param routes - Rotas.
 	* @param currEval - Avaliação atual
+	* @param lista de veículos disponíveis.
 	* @return avaliação final.
 	*/
-	float vehicleRedimension(std::vector<Route>& routes, float currEval);
+	float vehicleRedimension(std::vector<Route>& routes, float currEval, const std::vector<int>& availableVels);
 
 	int m_currIteration; // Começa do 1.
 	int m_currIterationsWithoutImprove;

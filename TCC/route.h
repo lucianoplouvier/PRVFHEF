@@ -277,7 +277,7 @@ namespace RouteDefs {
 
 	std::vector<Route> copy(const std::vector<Route>& other);
 
-	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList);
+	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels);
 
 	/*
 	* @brief Recupera o maior veículo disponível.
@@ -297,6 +297,8 @@ namespace RouteDefs {
 	Client getOriginalClient(int clientId, const std::vector<Client>& clientList);
 
 	bool fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList);
+
+	std::vector<int> calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels);
 }
 
 class RouteCreator {

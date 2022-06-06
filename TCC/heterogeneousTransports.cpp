@@ -9,10 +9,11 @@ using namespace std;
 int EXECUTIONTIMES = 10;
 int MAXITERSNOIMPROVE = 5000;
 
-PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, int vehicles) {
+PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::vector<int> availableVels, int vehicles) {
 	m_clientsCount = clientsDemands.size();
 	m_allClients.resize(m_clientsCount);
 	m_vehicleTypes = vehicleTypes;
+	m_availableVels = availableVels;
 	createAdjacencyMatrix(m_clientsCount, clientAdjacencies, depotTravelCost);
 	for (auto i = 0; i < clientsDemands.size(); i++) {
 		Client c;
@@ -72,7 +73,7 @@ std::vector<Route> PRVFHEF::createInitialSolution(int vehiclesCount) {
 		}
 	}
 
-	routes = paralelInsertion(routes, candidates, 0);
+	routes = paralelInsertion(routes, candidates, 0, m_availableVels);
 
 	int countClients = 0;
 	for (Route r : routes) {
@@ -163,7 +164,7 @@ std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, float evaluation) 
 		std::vector<Route> roundResult = RouteDefs::copy(finalResult);
 		//RouteDefs::isSolutionValid(roundResult, m_allClients);
 		//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Entrando interrota\n";
-		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, roundResult, evaluation, m_auxiliaryStructures, m_adjacencyCosts, m_allClients);
+		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, roundResult, evaluation, m_auxiliaryStructures, m_adjacencyCosts, m_allClients, m_availableVels);
 		//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Saindo interrota\n";
 		float roundEval = evaluate(interrouteResult);
 		if (roundEval < finalEval) {
@@ -211,7 +212,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 			//RouteDefs::isSolutionValid(solutionOptimized, m_allClients);
 			//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Entrando perturbar\n";
 			float evalPrePerturbate = evaluate(solutionOptimized);
-			perturbationMethods::perturbate(solutionOptimized, m_adjacencyCosts, m_routeCreator, m_vehicleTypes, m_allClients);
+			perturbationMethods::perturbate(solutionOptimized, m_adjacencyCosts, m_routeCreator, m_vehicleTypes, m_allClients, m_availableVels);
 			//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Saindo perturbar\n";
 			//RouteDefs::isSolutionValid(solutionOptimized, m_allClients);
 			//verifySolutionValid(solutionOptimized);
@@ -229,7 +230,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 			finalEval = oldEval;
 			finalSolution = RouteDefs::copy(solution);
 		}
-		finalEval = vehicleRedimension(finalSolution, finalEval);
+		finalEval = vehicleRedimension(finalSolution, finalEval, m_availableVels);
 		cout << "Fim It: " << algItrs << ". Melhor Eval Ate agora:" << finalEval << " \n";
 		delete m_auxiliaryStructures;
 		m_auxiliaryStructures = NULL;
@@ -288,7 +289,7 @@ bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 			error = false;
 		}
 	}
-	bool solutionValid = RouteDefs::isSolutionValid(solution, m_allClients);
+	bool solutionValid = RouteDefs::isSolutionValid(solution, m_allClients, m_availableVels);
 	if (!solutionValid) {
 		error = true;
 		cout << "PRVFHEF::verifySolutionValid, Solução não válida.";
@@ -371,7 +372,11 @@ bool PRVFHEF::canAddAnyToARoute(const std::vector<Route>& routes, const std::lis
 	return false;
 }
 
-std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria) {
+std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::list<int>& candidatesList, bool insertionCriteria, std::vector<int> availableVels) {
+	std::vector<int> avalVels; 
+	if (availableVels.size() > 0) {
+		avalVels = RouteDefs::calculateAvailableVels(routes, availableVels);
+	}
 	std::vector<Route> result;
 	while (candidatesList.size() > 0) {
 		int candidateIndex = 0;
@@ -402,10 +407,36 @@ std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::li
 			}
 		}
 		if (candidatesList.size() > 0) {
-			int randomVehicleType = Utils::getRandomInt(0, m_vehicleTypes.size() - 1);
-			Vehicle randomVehicle = m_vehicleTypes[randomVehicleType];
-			Route routeToAdd = m_routeCreator.createRoute(randomVehicle);
-			routes.push_back(routeToAdd);
+			if (availableVels.size() == 0) {
+				int randomVehicleType = Utils::getRandomInt(0, m_vehicleTypes.size() - 1);
+				Vehicle randomVehicle = m_vehicleTypes[randomVehicleType];
+				Route routeToAdd = m_routeCreator.createRoute(randomVehicle);
+				routes.push_back(routeToAdd);
+			}
+			else {
+				std::vector<int> currentAvalVels;
+				for (int i = 0; i < avalVels.size(); i++) {
+					if (avalVels[i] > 0) {
+						currentAvalVels.push_back(i);
+					}
+				}
+				if (currentAvalVels.size() > 0) {
+					int randomVehicleType = Utils::getRandomInt(0, currentAvalVels.size() - 1);
+					Vehicle randomVehicle = m_vehicleTypes[currentAvalVels[randomVehicleType]];
+					Route routeToAdd = m_routeCreator.createRoute(randomVehicle);
+					routes.push_back(routeToAdd);
+					avalVels[currentAvalVels[randomVehicleType]] = avalVels[currentAvalVels[randomVehicleType]] - 1;
+				}
+				else { // Insere um veículo ficticio
+					Vehicle ficticious;
+					ficticious.capacity = numeric_limits<float>::max();
+					ficticious.cost = numeric_limits<float>::max();
+					ficticious.id = currentAvalVels.size() + 3;
+					ficticious.travelCost = 0;
+					Route routeToAdd = m_routeCreator.createRoute(ficticious);
+					routes.push_back(routeToAdd);
+				}
+			}
 		}
 	}
 	for (int i = 0; i < routes.size(); i++) {
@@ -430,20 +461,29 @@ float PRVFHEF::getClosestInsertionCost(const Route& route, int candidateId) cons
 	return cost;
 }
 
-float PRVFHEF::vehicleRedimension(std::vector<Route>& routes, float currEval) {
+float PRVFHEF::vehicleRedimension(std::vector<Route>& routes, float currEval, const std::vector<int>& availableVels) {
+	std::vector<int> currAvalVels;
+	bool limitedVels = availableVels.size() > 0;
+	if (availableVels.size() > 0) {
+		std::vector<int> currAvalVels = RouteDefs::calculateAvailableVels(routes, availableVels);
+	}
 	float eval = currEval;
 	for (Route& r : routes) {
 		if (r.clientsList.size() > 0) {
-			for (const Vehicle& v : m_vehicleTypes) {
-				if (r.vehicle != v && v.capacity >= r.getTotalDemand()) {
-					Vehicle oldVel = r.vehicle;
-					r.vehicle = v;
-					float ev = evaluate(routes);
-					if (ev < eval) {
-						eval = ev;
-					}
-					else {
-						r.vehicle = oldVel;
+			for (int i = 0; i < m_vehicleTypes.size(); i++) {
+				if (!limitedVels || currAvalVels[i] > 0) {
+					const Vehicle& v = m_vehicleTypes[i];
+					if (r.vehicle != v && v.capacity >= r.getTotalDemand()) {
+						Vehicle oldVel = r.vehicle;
+						r.vehicle = v;
+						float ev = evaluate(routes);
+						if (ev < eval) {
+							eval = ev;
+							currAvalVels[i] = currAvalVels[i] - 1;
+						}
+						else {
+							r.vehicle = oldVel;
+						}
 					}
 				}
 			}

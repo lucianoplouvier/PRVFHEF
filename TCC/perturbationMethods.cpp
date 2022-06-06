@@ -232,7 +232,12 @@ void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& a
 	solution = result;
 }
 
-void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator) {
+void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels) {
+	bool limitedVels = availableVels.size() > 0;
+	std::vector<int> currentAvalVels; 
+	if (limitedVels) {
+		currentAvalVels = RouteDefs::calculateAvailableVels(solution, availableVels);
+	}
 	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
 	int routeIndex = 0;
 	bool found = false;
@@ -277,7 +282,7 @@ void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& ad
 			std::vector<Vehicle> possibleVels = vehiclesList;
 			do {
 				int randomVel = Utils::getRandomInt(0, possibleVels.size() - 1);
-				if (vehiclesList[randomVel].capacity >= clients[iClient].demand && vehiclesList[randomVel].id != biggestVehicle.id) {
+				if ((!limitedVels || currentAvalVels[randomVel] > 0) && vehiclesList[randomVel].capacity >= clients[iClient].demand && vehiclesList[randomVel].id != biggestVehicle.id) {
 					randomVehicle = &vehiclesList[randomVel];
 				}
 				auto velIt = possibleVels.begin();
@@ -329,7 +334,12 @@ int findClosestRoute(std::vector<Route>& solution, Route* selected, AdjacencyCos
 	return indexResult;
 }
 
-void perturbationMethods::merge(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList) {
+void perturbationMethods::merge(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
+	bool limitedVels = availableVels.size() > 0;
+	std::vector<int> currentAvalVels;
+	if (limitedVels) {
+		currentAvalVels = RouteDefs::calculateAvailableVels(solution, availableVels);
+	}
 	if (solution.size() > 2) {
 		Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
 		int solutionSize = solution.size();
@@ -363,7 +373,7 @@ void perturbationMethods::merge(std::vector<Route>& solution, AdjacencyCosts& ad
 					int randomVehicleIndex = Utils::getRandomInt(0, possibleVehicles.size() - 1);
 					auto it = possibleVehicles.begin();
 					std::advance(it, randomVehicleIndex);
-					if (randomRoute->getTotalDemand() + solution[otherRouteIndex].getTotalDemand() <= vehiclesList[randomVehicleIndex].capacity) {
+					if ((!limitedVels || currentAvalVels[randomVehicleIndex] > 0) && randomRoute->getTotalDemand() + solution[otherRouteIndex].getTotalDemand() <= vehiclesList[randomVehicleIndex].capacity) {
 						randomVehicle = &vehiclesList[randomVehicleIndex];
 					}
 					possibleVehicles.erase(it);
@@ -397,7 +407,7 @@ void perturbationMethods::merge(std::vector<Route>& solution, AdjacencyCosts& ad
 	}
 }
 
-void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList) {
+void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERTURBATIONTYPES type, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
 	switch (type)
 	{
 	case PERTURBATIONTYPES::MULTISWAP:
@@ -410,19 +420,18 @@ void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERT
 		ksplit(solution, adjacencyCosts, vehiclesList, clientList);
 		break;
 	case PERTURBATIONTYPES::SPLIT:
-		split(solution, adjacencyCosts, vehiclesList, creator);
+		split(solution, adjacencyCosts, vehiclesList, creator, availableVels);
 		break;
 	case PERTURBATIONTYPES::MERGE:
-		merge(solution, adjacencyCosts, creator, vehiclesList, clientList);
+		merge(solution, adjacencyCosts, creator, vehiclesList, clientList, availableVels);
 		break;
 	default:
 		break;
 	}
-	RouteDefs::isSolutionValid(solution, clientList);
 }
 
-void perturbationMethods::perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList) {
+void perturbationMethods::perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
 	std::vector<PERTURBATIONTYPES> pert = getAll();
 	int selectedPerturbation = Utils::getRandomInt(0, pert.size() - 1);
-	executePerturbation(solution, pert[selectedPerturbation], adjacencyCosts, creator, vehiclesList, clientList);
+	executePerturbation(solution, pert[selectedPerturbation], adjacencyCosts, creator, vehiclesList, clientList, availableVels);
 }
