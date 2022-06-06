@@ -42,9 +42,11 @@ float RouteDefs::evaluate(std::vector<Route>& solution, const AdjacencyCosts& ad
 	float total = 0;
 	for (int iRoute = 0; iRoute < solution.size(); iRoute++) {
 		Route& route = solution[iRoute];
-		total += route.vehicle.cost;
-		float totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
-		total = total + (route.vehicle.travelCost * totalTravel);
+		if (!route.clientsList.empty()) {
+			total += route.vehicle.cost;
+			float totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
+			total = total + (route.vehicle.travelCost * totalTravel);
+		}
 	}
 	return total;
 }

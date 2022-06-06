@@ -385,33 +385,32 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 									if (clientI1.demand + clientI2.demand > other.demand && clientI1.demand < other.demand) {  // i > j
 										if (routeI.findClient(other.id) < 0 && routeJ.findClient(clientI1.id) < 0 && routeJ.findClient(clientI2.id) < 0) { // TODO só presseguir se não existe.
 											std::vector<Route> newResult = RouteDefs::copy(solution);
-											if ((newResult[i].getTotalDemand() + other.demand) < newResult[i].vehicle.capacity &&
-												(newResult[j].getTotalDemand() + clientI1.demand + clientI2.demand - other.demand) < newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
-												Client copyI1(clientI1);
-												Client copyI2(clientI2);
-												Client copyJ(other);
-												copyI1.demand = other.demand - clientI1.demand;
-												//newResult[i].clientsList[iClient].demand -= other.demand; // Se não tiver isso fica em excesso
-												std::vector<Client> cList;
-												cList.push_back(copyJ);
-												int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
-												if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
-													RouteDefs::swapClients(newResult[i], clientI2.id, newResult[j], other.id);
-													newResult[i].removeClient(clientI1.id);
-													newResult[j].insertClient(Client(clientI1), jClient);
-													if (RouteDefs::isSolutionValid(newResult, originalClients)) {
-														float eval = RouteDefs::evaluate(newResult, adjCosts);
-														if (eval < resultEval) {
-															resultEval = eval;
-															result = newResult;
-														}
+											Client copyI1(clientI1);// dI
+											Client copyI2(clientI2);// dJ
+											Client copyJ(other);
+											copyI2.demand = other.demand - clientI1.demand;
+											newResult[i].clientsList[iClient + 1].demand -= copyI2.demand; // Se não tiver isso fica em excesso
+											std::vector<Client> cList;
+											cList.push_back(copyJ);
+											int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
+											if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
+												newResult[j].clientsList[jClient] = copyI2;
+												newResult[j].insertClient(copyI1, jClient);
+												newResult[i].removeClient(copyI1.id);
+												//newResult[i].removeClient(copyI2.id);
+												newResult[i].insertClient(copyJ, indexToInsert);
+												if (RouteDefs::isSolutionValid(newResult, originalClients)) {
+													float eval = RouteDefs::evaluate(newResult, adjCosts);
+													if (eval < resultEval) {
+														resultEval = eval;
+														result = newResult;
 													}
 												}
 											}
 										}
 									}
-									else {
-										// TODO fazer isso aqui
+									else if (clientI1.demand + clientI2.demand < other.demand){
+										
 									}
 								}
 							}

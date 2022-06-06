@@ -23,7 +23,6 @@ struct Client {
 
 struct Vehicle {
 	int id;
-	int type;
 	float capacity;
 	float cost;
 	float travelCost; // Como multiplica, tem que ser pelo menos 1

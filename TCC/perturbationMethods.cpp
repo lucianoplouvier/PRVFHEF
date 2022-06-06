@@ -6,7 +6,7 @@ int MINSHIFTEXECS = 1;
 int MAXSHIFTEXECS = 3;
 
 int MINSWAPEXECS = 1;
-int MAXSWAPEXECS = 3;
+int MAXSWAPEXECS = 4;
 
 std::vector<PERTURBATIONTYPES> perturbationMethods::getAll() {
 	std::vector<PERTURBATIONTYPES> all;

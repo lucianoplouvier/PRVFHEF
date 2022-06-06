@@ -67,7 +67,6 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
                     Vehicle newVehicleType;
                     newVehicleType.id = i;
                     newVehicleType.capacity = atoi(lineSplit[0].c_str());
-                    newVehicleType.type = atoi(lineSplit[1].c_str());
                     newVehicleType.cost = atoi(lineSplit[2].c_str());
                     newVehicleType.travelCost = atoi(lineSplit[3].c_str());
                     vehicleTypes.push_back(newVehicleType);
@@ -120,6 +119,8 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
 
     std::vector<std::pair<int, int>> clientCoords;
 
+    std::vector<int> availableVels;
+
     ifstream myfile;
     myfile.open(input.c_str());
 
@@ -158,14 +159,16 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                     std::vector<std::string> lineSplit = strSplit(line, ' ');
                     Vehicle newVehicleType;
                     newVehicleType.id = i;
-                    newVehicleType.capacity = atoi(lineSplit[1].c_str());
-                    newVehicleType.type = atoi(lineSplit[0].c_str());
-                    newVehicleType.cost = atoi(lineSplit[2].c_str());
-                    if (lineSplit.size() > 3) {
+                    newVehicleType.capacity = atoi(lineSplit[0].c_str());
+                    newVehicleType.cost = atoi(lineSplit[1].c_str());
+                    if (lineSplit.size() > 2) {
                         newVehicleType.travelCost = atoi(lineSplit[3].c_str());
                     }
                     else {
                         newVehicleType.travelCost = 1;
+                    }
+                    if (lineSplit.size() > 3) {
+                        availableVels.push_back(atoi(lineSplit[3].c_str()));
                     }
                     vehicleTypes.push_back(newVehicleType);
                 }
@@ -210,6 +213,12 @@ int main()
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
     std::string filepath = "C:/Users/frien/Documents/c20_3.txt";
+
+    //std::string filepath = "C:/Users/frien/Documents/c20_4mix.txt";
+
+    //std::string filepath = "C:/Users/frien/Documents/c20_5mix.txt";
+
+    //std::string filepath = "C:/Users/frien/Documents/c20_6mix.txt";
 
     readProblemText(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 

@@ -23,6 +23,7 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
 	int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount * 10;
+	//int itrsToExecute = 5000;
 	m_currIteration = 0;
 	m_currIterationsWithoutImprove = 0;
 
@@ -160,7 +161,7 @@ std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, float evaluation) 
 
 		// Execução da interrota.
 		std::vector<Route> roundResult = RouteDefs::copy(finalResult);
-		RouteDefs::isSolutionValid(roundResult, m_allClients);
+		//RouteDefs::isSolutionValid(roundResult, m_allClients);
 		//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Entrando interrota\n";
 		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, roundResult, evaluation, m_auxiliaryStructures, m_adjacencyCosts, m_allClients);
 		//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Saindo interrota\n";
@@ -213,7 +214,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 			perturbationMethods::perturbate(solutionOptimized, m_adjacencyCosts, m_routeCreator, m_vehicleTypes, m_allClients);
 			//cout << "IlsIters = " << m_currIteration << ", itWithoutImprove " << m_currIterationsWithoutImprove << " Saindo perturbar\n";
 			//RouteDefs::isSolutionValid(solutionOptimized, m_allClients);
-			verifySolutionValid(solutionOptimized);
+			//verifySolutionValid(solutionOptimized);
 			m_auxiliaryStructures->recalculate(solutionOptimized);
 			float evalPostPerturbate = evaluate(solutionOptimized);
 			solutionOptimized = rvnd(solutionOptimized, oldEval);
@@ -327,6 +328,7 @@ void PRVFHEF::printSolution(float eval, const  std::vector<Route>& solution, ofs
 	else {
 		stream << "WARN: Não houve melhorias intraroute!\n";
 	}
+	stream << "\n";
 	stream << "Rota: \n";
 	for (const Route& r : solution) {
 		if (r.clientsList.size() > 0) {
