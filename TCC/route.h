@@ -236,7 +236,7 @@ namespace RouteDefs {
 
 	float calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
 
-	float evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
+	float evaluate(const std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
 
 	float evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
 
@@ -274,8 +274,6 @@ namespace RouteDefs {
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
 	//std::pair<float, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
-
-	std::vector<Route> copy(const std::vector<Route>& other);
 
 	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels);
 

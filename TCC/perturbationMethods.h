@@ -14,7 +14,7 @@ enum class PERTURBATIONTYPES {
 
 namespace perturbationMethods { // Não retorna nada pois ele verifica antes de fazer movimentos inválidos, aí altera diretamente.
 
-	std::vector<PERTURBATIONTYPES> getAll();
+	std::vector<PERTURBATIONTYPES> getAll(bool hasLimitedVels);
 
 	void multipleSwap1_1(std::vector<Route>& solution);
 

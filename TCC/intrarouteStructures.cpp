@@ -31,14 +31,14 @@ std::list<INTRAROUTETYPES> intrarouteStructures::getAll() {
 	std::list<INTRAROUTETYPES> all;
 	all.push_back(INTRAROUTETYPES::REINSERTION);
 	all.push_back(INTRAROUTETYPES::EXCHANGE);
-	all.push_back(INTRAROUTETYPES::TWO_OPT);
 	all.push_back(INTRAROUTETYPES::OR_OPT2);
 	all.push_back(INTRAROUTETYPES::OR_OPT3);
+	all.push_back(INTRAROUTETYPES::TWO_OPT);
 	return all;
 }
 
 std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	switch (type)
 	{
 	case INTRAROUTETYPES::EXCHANGE:
@@ -109,7 +109,7 @@ Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& 
 }
 
 static std::vector<Route> intrarouteStructures::shift(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute(result[iRoute]);
@@ -174,7 +174,7 @@ Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& a
 
 // Tem que inverter a direção entre um cliente e o outro trocados
 static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int i = 0; i < solution.size(); i++) {
 		Route currentRoute(result[i]);
@@ -231,7 +231,7 @@ Route executeOP2(const Route& route, float initialEval, const AdjacencyCosts& ad
 }
 
 static std::vector<Route> intrarouteStructures::orOpt2(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];
@@ -292,7 +292,7 @@ Route executeOP3(const Route& route, float initialEval, const AdjacencyCosts& ad
 }
 
 static std::vector<Route> intrarouteStructures::orOpt3(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];
@@ -340,7 +340,7 @@ Route executeTwoOpt(const Route& route, float initialEval, const AdjacencyCosts&
 }
 
 static std::vector<Route> intrarouteStructures::twoOPT(std::vector<Route>& solution, AdjacencyCosts & adjacencyCosts) {
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];

@@ -28,12 +28,6 @@ public:
 
 	~PRVFHEF();
 
-	/*
-	* @brief Avalia uma solução dada.
-	* @return valor da avaliação. O Quanto menor, melhor.
-	*/
-	float evaluate(std::vector<Route>& solution) const;
-
 private:
 
 	int m_maxVehicles; // Kmin

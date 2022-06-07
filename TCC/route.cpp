@@ -27,32 +27,36 @@ Route RouteCreator::createRoute(Vehicle v) {
 float RouteDefs::calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts) {
 	float total = 0;
 	if (clients.size() > 0) {
-		int firstClientIndex = clients[0].id;
-		int lastClientIndex = clients[clients.size() - 1].id;
-		total += adjacencyCosts.depotTravel[firstClientIndex]; // Sair do deposito.
-		total += adjacencyCosts.depotTravel[lastClientIndex]; // Voltar ao depósito.
+		int firstClientId = clients[0].id;
+		int lastClientId = clients[clients.size() - 1].id;
+		float depotTravelStart = adjacencyCosts.depotTravel[firstClientId];
+		float depotTravelEnd = adjacencyCosts.depotTravel[lastClientId]; // Voltar ao depósito.
+		total += depotTravelStart; // Sair do deposito.
+		total += depotTravelEnd;
 		for (int iClient = 0; iClient < clients.size() - 1; iClient++) {
-			total += adjacencyCosts.costs[iClient][iClient + 1];
+			int currClientId = clients[iClient].id;
+			int nextClientId = clients[iClient + 1].id;
+			float cost = adjacencyCosts.costs[currClientId][nextClientId];
+			total += cost;
 		}
 	}
 	return total;
 }
 
-float RouteDefs::evaluate(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
+float RouteDefs::evaluate(const std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
 	float total = 0;
-	for (int iRoute = 0; iRoute < solution.size(); iRoute++) {
-		Route& route = solution[iRoute];
+	for (const Route& route : solution) {
 		if (!route.clientsList.empty()) {
 			total += route.vehicle.cost;
 			float totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
-			total = total + (route.vehicle.travelCost * totalTravel);
+			total += route.vehicle.travelCost * totalTravel;
 		}
 	}
 	return total;
 }
 
 float RouteDefs::evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts) {
-	return calculateTravelCost(route.clientsList, adjacencyCosts) * route.vehicle.travelCost + route.vehicle.cost;
+	return calculateTravelCost(route.clientsList, adjacencyCosts) * route.vehicle.travelCost;
 }
 
 void RouteDefs::printRoute(const Route& route) {
@@ -238,15 +242,6 @@ std::pair<float, int> RouteDefs::findBestInsertion(Route& route, Client& client,
 	return result;
 }
 */
-
-std::vector<Route> RouteDefs::copy(const std::vector<Route>& other) {
-	std::vector<Route> result;
-	result.reserve(other.size());
-	for (int i = 0; i < other.size(); i++) {
-		result.push_back(Route(other[i]));
-	}
-	return result;
-}
 
 bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels) {
 	int availableVelsSize = availableVels.size();

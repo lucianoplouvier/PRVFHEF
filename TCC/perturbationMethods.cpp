@@ -2,19 +2,21 @@
 #include "intrarouteStructures.h"
 #include "fraction.h"
 
-int MINSHIFTEXECS = 1;
-int MAXSHIFTEXECS = 3;
+int MINSHIFTEXECS = 3;
+int MAXSHIFTEXECS = 4;
 
-int MINSWAPEXECS = 1;
+int MINSWAPEXECS = 3;
 int MAXSWAPEXECS = 4;
 
-std::vector<PERTURBATIONTYPES> perturbationMethods::getAll() {
+std::vector<PERTURBATIONTYPES> perturbationMethods::getAll(bool hasLimitedVels) {
 	std::vector<PERTURBATIONTYPES> all;
 	all.push_back(PERTURBATIONTYPES::MULTISWAP);
 	all.push_back(PERTURBATIONTYPES::MULTISHIFT);
 	all.push_back(PERTURBATIONTYPES::MERGE);
 	all.push_back(PERTURBATIONTYPES::KSPLIT);
-	all.push_back(PERTURBATIONTYPES::SPLIT);
+	if (!hasLimitedVels) {
+		all.push_back(PERTURBATIONTYPES::SPLIT);
+	}
 	return all;
 }
 
@@ -119,8 +121,8 @@ bool randomSwapping(Route& a, Route& b) {
 			newA.clientsList[selectedA] = cB;
 			newB.clientsList[selectedB] = cA;
 			// Debug
-			checkDuplicated(newA);
-			checkDuplicated(newB);
+			//checkDuplicated(newA);
+			//checkDuplicated(newB);
 		}
 	}
 	return valid;
@@ -213,9 +215,9 @@ void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& a
 	}
 	int numOfClients = randomClientsToChoose.size();
 	int maxExecutions = std::min(timesToExec, numOfClients); // Não dá pra executar 7 vezes se não existirem 7 clientes.
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	for (int i = 0; i < maxExecutions; i++) {
-		std::vector<Route> step = RouteDefs::copy(result);
+		std::vector<Route> step = result;
 		numOfClients = randomClientsToChoose.size();
 		int randomClientIndex = Utils::getRandomInt(0, numOfClients - 1);
 		int positionOfSingleRemoval = -1;
@@ -431,7 +433,7 @@ void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERT
 }
 
 void perturbationMethods::perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
-	std::vector<PERTURBATIONTYPES> pert = getAll();
+	std::vector<PERTURBATIONTYPES> pert = getAll(availableVels.size() > 0);
 	int selectedPerturbation = Utils::getRandomInt(0, pert.size() - 1);
 	executePerturbation(solution, pert[selectedPerturbation], adjacencyCosts, creator, vehiclesList, clientList, availableVels);
 }

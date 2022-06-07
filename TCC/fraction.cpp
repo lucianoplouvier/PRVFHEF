@@ -5,7 +5,7 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 	std::vector<float> residualsList; // A
 	std::vector<float> leastInsertionCosts; // U
 
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 
 	int vehicles = solution.size();
 	float totalResidual = 0;
@@ -127,12 +127,12 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 
 std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts, const std::vector<Client>& clientList) {
 	bool splitApplied = false;
-	std::vector<Route> result = RouteDefs::copy(solution);
+	std::vector<Route> result = solution;
 	int resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
 	do {
 		splitApplied = false;
 
-		std::vector<Route> stepSol = RouteDefs::copy(result);
+		std::vector<Route> stepSol = result;
 		int stepEval = resultEval;
 
 		for (int i = 0; i < stepSol.size(); i++) {

@@ -107,7 +107,7 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
     return true;
 }
 
-bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& availableVels, std::vector<float>& depotTravelCosts, int& vels) {
+bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& availableVels, std::vector<float>& depotTravelCosts, int& vels, bool readVariableCost) {
 
     string line;
 
@@ -159,7 +159,7 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                     newVehicleType.id = i;
                     newVehicleType.capacity = atoi(lineSplit[0].c_str());
                     newVehicleType.cost = atoi(lineSplit[1].c_str());
-                    if (lineSplit.size() > 2) {
+                    if (lineSplit.size() > 2 && readVariableCost) {
                         newVehicleType.travelCost = atoi(lineSplit[3].c_str());
                     }
                     else {
@@ -210,12 +210,11 @@ int main()
     std::vector<int> availableVels;
     int vels = 0;
 
-
     //std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    std::string filepath = "C:/Users/frien/Documents/c20_3.txt";
+    //std::string filepath = "C:/Users/frien/Documents/c20_3.txt";
 
     //std::string filepath = "C:/Users/frien/Documents/c20_4mix.txt";
 
@@ -223,7 +222,13 @@ int main()
 
     //std::string filepath = "C:/Users/frien/Documents/c20_6mix.txt";
 
-    readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels);
+    //std::string filepath = "C:/Users/frien/Documents/c50_13mix.txt";
+
+    std::string filepath = "C:/Users/frien/Documents/c75_17mix.txt";
+
+    bool readVariableCost = false;
+
+    readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
 
     if (availableVels.size() > 0) {
         PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, availableVels, vels);
