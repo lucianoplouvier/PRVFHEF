@@ -6,7 +6,8 @@
 
 using namespace std;
 
-int EXECUTIONTIMES = 10;
+int EXECUTIONTIMES = 30;
+//int MAXITERSNOIMPROVE = 2000;
 int MAXITERSNOIMPROVE = 5000;
 
 PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::vector<int> availableVels, int vehicles) {
@@ -23,8 +24,8 @@ PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency>
 	}
 	m_clientsOriginalDemands = clientsDemands;
 	m_auxiliaryStructures = NULL;
-	//int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount * 10;
-	int itrsToExecute = 5000;
+	//int itrsToExecute = vehicles != -1 ? vehicles * m_clientsCount : estimateVehicles(m_allClients) * m_clientsCount * 20;
+	int itrsToExecute = MAXITERSNOIMPROVE;
 	m_currIteration = 0;
 	m_currIterationsWithoutImprove = 0;
 
@@ -158,19 +159,23 @@ std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, float evaluation) 
 
 		// Execução da interrota.
 		std::vector<Route> roundResult = finalResult;
+		//RouteDefs::isSolutionValid(roundResult, m_allClients, m_availableVels);
 		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, roundResult, evaluation, m_auxiliaryStructures, m_adjacencyCosts, m_allClients, m_availableVels);
+		//RouteDefs::isSolutionValid(interrouteResult, m_allClients, m_availableVels);
 		float roundEval = RouteDefs::evaluate(interrouteResult, m_adjacencyCosts);
 		if (roundEval < finalEval) {
+			//RouteDefs::isSolutionValid(interrouteResult, m_allClients, m_availableVels);
 			finalResult = intraroute(interrouteResult, roundEval);
+			//RouteDefs::isSolutionValid(interrouteResult, m_allClients, m_availableVels);
 			finalEval = RouteDefs::evaluate(finalResult, m_adjacencyCosts);
 			neighborhoodList = interrouteStructures::getAll();
 			// Reiniciar a lista de vizinhanças.
+			m_auxiliaryStructures->recalculate(currSol);
 		}
 		else {
 			// Remoção da vizinhança.
 			neighborhoodList.remove(selectedInterroute);
 		}
-		m_auxiliaryStructures->recalculate(currSol);
 	}
 	return finalResult;
 }
@@ -204,7 +209,9 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 		for (int ilsIters = 0; ilsIters < maxItersNoImprove; ilsIters++) {
 			std::vector<Route> solutionOptimized(solution);
 			m_currIterationsWithoutImprove = ilsIters;
+			//RouteDefs::isSolutionValid(solutionOptimized, m_allClients, m_availableVels);
 			perturbationMethods::perturbate(solutionOptimized, m_adjacencyCosts, m_routeCreator, m_vehicleTypes, m_allClients, m_availableVels);
+			//RouteDefs::isSolutionValid(solutionOptimized, m_allClients, m_availableVels);
 			m_auxiliaryStructures->recalculate(solutionOptimized);
 			solutionOptimized = rvnd(solutionOptimized, oldEval);
 			float evaluation = RouteDefs::evaluate(solutionOptimized, m_adjacencyCosts);
@@ -223,13 +230,16 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 		delete m_auxiliaryStructures;
 		m_auxiliaryStructures = NULL;
 	}
+	std::vector<Route> endSolution = RouteDefs::compactifySolution(finalSolution);
+	float endEval = RouteDefs::evaluate(endSolution, m_adjacencyCosts);
+	cout<< "Solução válida: " << RouteDefs::isSolutionValid(finalSolution, m_allClients, m_availableVels) << "\n";
 	time(&end);
 	double executionTime = double(end - start);
 	ofstream exitStream;
 	exitStream.open("saida.txt");
 	exitStream << "Tempo de execução: " << executionTime << " segundos." << "\n";
 	exitStream << "\n";
-	if (verifySolutionValid(finalSolution)) {
+	if (!verifySolutionValid(finalSolution)) {
 		printSolution(finalEval, finalSolution, exitStream);
 	}
 	else {
@@ -239,7 +249,7 @@ void PRVFHEF::execute(int initialVehicles, int iterations, int maxItersNoImprove
 
 bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 	std::vector<float> clientDemands;
-	bool error = true;
+	bool error = false;
 	for (int i = 0; i < m_allClients.size(); i++) {
 		clientDemands.push_back(m_allClients[i].demand);
 	}
@@ -250,7 +260,7 @@ bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 		float rest = velCap - totalDemand;
 		if (rest < 0) {
 			cout << "ERROR. Usando mais espaco do veiculo que aceitavel. " << velCap << " - " << totalDemand << " = " << rest << "\n";
-			error = false;
+			error = true;
 		}
 		else {
 			for (int j = 0; j < solution[i].clientsList.size(); j++) {
@@ -262,11 +272,11 @@ bool PRVFHEF::verifySolutionValid(const std::vector<Route>& solution) {
 	for (int i = 0; i < clientDemands.size(); i++) {
 		if (clientDemands[i] > 0) {
 			cout << "ERROR. Cliente de id" << i << " nao esta sendo totalmente atendido. Sobrou: " << clientDemands[i];
-			error = false;
+			error = true;
 		}
 		else if (clientDemands[i] < 0) {
 			cout << "ERROR. Cliente de id" << i << " com demanda negativa. Valor: " << clientDemands[i];
-			error = false;
+			error = true;
 		}
 	}
 	bool solutionValid = RouteDefs::isSolutionValid(solution, m_allClients, m_availableVels);
@@ -318,18 +328,16 @@ void PRVFHEF::printSolution(float eval, const std::vector<Route>& solution, ofst
 			if (rest < 0) {
 				stream << "ERROR. Usando mais espaço do veiculo que aceitavel. " << velCap << " - " << totalDemand << " = " << rest << "\n";
 			}
-			else {
-				stream << "Veiculo: " << r.vehicle.id << " Capacidade: " << velCap << " Custo: " << r.vehicle.cost << " Custo V: " << r.vehicle.travelCost << "\n";
-				stream << "Clientes:\n";
-				for (int j = 0; j < r.clientsList.size(); j++) {
-					stream << "(I:" << r.clientsList[j].id << ", D:" << r.clientsList[j].demand << ")";
-					if (j + 1 < r.clientsList.size()) {
-						stream << ", ";
-					}
+			stream << "Veiculo: " << r.vehicle.id << " Capacidade: " << velCap << " Custo: " << r.vehicle.cost << " Custo V: " << r.vehicle.travelCost << "\n";
+			stream << "Clientes:\n";
+			for (int j = 0; j < r.clientsList.size(); j++) {
+				stream << "(I:" << r.clientsList[j].id << ", D:" << r.clientsList[j].demand << ")";
+				if (j + 1 < r.clientsList.size()) {
+					stream << ", ";
 				}
-				stream << "\nSobrou do veiculo: " << rest << "\n";
-				stream << "Custo Viagem Rota: " << RouteDefs::evaluateRoute(r, m_adjacencyCosts) << "\n";
 			}
+			stream << "\nSobrou do veiculo: " << rest << "\n";
+			stream << "Custo Viagem Rota: " << RouteDefs::evaluateRoute(r, m_adjacencyCosts) << "\n";
 			stream << "\n";
 		}
 	}

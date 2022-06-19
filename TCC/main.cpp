@@ -116,6 +116,8 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
     int vehicles = 0;
 
     int depotX, depotY;
+    
+    std::string eof = "EOF";
 
     std::vector<std::pair<int, int>> clientCoords;
 
@@ -142,44 +144,73 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                 int y = atoi(lineSplit.at(2).c_str());
                 std::pair<int, int> coord(x, y);
                 clientCoords.push_back(coord);
-                demands.push_back(atoi(lineSplit.at(3).c_str()));
             }
             else {
                 return false;
             }
         }
         getline(myfile, line); // pulac comentario
+        getline(myfile, line); // pula a demanda do depot
+        for (int i = 0; i < clients; i++) {
+            if (getline(myfile, line)) {
+                std::vector<std::string> lineSplit = strSplit(line, ' ');
+                demands.push_back(atoi(lineSplit.at(1).c_str()));
+            }
+            else {
+                return false;
+            }
+        }
+        getline(myfile, line); // pula comentario CAPACITIES
         if (getline(myfile, line)) {
-            vehicles = stoi(line);
+            std::vector<std::string> lineSplit = strSplit(line, ' ');
+            vehicles = lineSplit.size();
             vehicleTypes.reserve(vehicles);
             for (int i = 0; i < vehicles; i++) {
-                if (getline(myfile, line)) {
-                    std::vector<std::string> lineSplit = strSplit(line, ' ');
-                    Vehicle newVehicleType;
-                    newVehicleType.id = i;
-                    newVehicleType.capacity = atoi(lineSplit[0].c_str());
-                    newVehicleType.cost = atoi(lineSplit[1].c_str());
-                    if (lineSplit.size() > 2 && readVariableCost) {
-                        newVehicleType.travelCost = atoi(lineSplit[3].c_str());
-                    }
-                    else {
-                        newVehicleType.travelCost = 1;
-                    }
-                    if (lineSplit.size() > 3) {
-                        int vCount = atoi(lineSplit[3].c_str());
-                        availableVels.push_back(vCount);
-                        vels += vCount;
-                    }
-                    vehicleTypes.push_back(newVehicleType);
-                }
-                else {
-                    return false;
-                }
+                Vehicle v;
+                v.id = i;
+                v.ficticous = false;
+                v.travelCost = 1;
+                v.capacity = atoi(lineSplit[i].c_str());
+                vehicleTypes.push_back(v);
             }
         }
         else {
             return false;
         }
+        getline(myfile, line); // pula comentario FIXED COSTS
+        if (getline(myfile, line)) {
+            std::vector<std::string> lineSplit = strSplit(line, ' ');
+            vehicles = lineSplit.size();
+            vehicleTypes.reserve(vehicles);
+            for (int i = 0; i < vehicles; i++) {
+                vehicleTypes[i].cost = atoi(lineSplit[i].c_str());
+            }
+        }
+        else {
+            return false;
+        }
+        if (getline(myfile, line)) {
+            if (line.compare(eof) != 0) {
+                getline(myfile, line);
+                std::vector<std::string> lineSplit = strSplit(line, ' ');
+                for (int i = 0; i < vehicles; i++) {
+                    vehicleTypes[i].travelCost = atoi(lineSplit[i].c_str());
+                }
+                getline(myfile, line);
+                if (line.compare(eof) != 0) {
+                    getline(myfile, line);
+                    std::vector<std::string> lineSplit = strSplit(line, ' ');
+                    for (int i = 0; i < vehicles; i++) {
+                        availableVels.push_back(atoi(lineSplit[i].c_str()));
+                    }
+                    getline(myfile, line);
+                    if (line.compare("EOF") != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        myfile.close();
     }
 
     for (int i = 0; i < clientCoords.size(); i++) {
@@ -197,7 +228,6 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
         int depotCost = std::abs(std::abs(cCoord.first) - std::abs(depotX)) + std::abs(std::abs(cCoord.second) - std::abs(depotY));
         depotTravelCosts.push_back(depotCost);
     }
-
     return true;
 }
 
@@ -214,17 +244,7 @@ int main()
     
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    //std::string filepath = "C:/Users/frien/Documents/c20_3.txt";
-
-    //std::string filepath = "C:/Users/frien/Documents/c20_4mix.txt";
-
-    //std::string filepath = "C:/Users/frien/Documents/c20_5mix.txt";
-
-    //std::string filepath = "C:/Users/frien/Documents/c20_6mix.txt";
-
-    //std::string filepath = "C:/Users/frien/Documents/c50_13mix.txt";
-
-    std::string filepath = "C:/Users/frien/Documents/c75_17mix.txt";
+    std::string filepath = "C:/Users/frien/Documents/Taillard_03.txt";
 
     bool readVariableCost = false;
 

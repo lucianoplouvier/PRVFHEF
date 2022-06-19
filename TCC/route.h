@@ -17,7 +17,6 @@ enum class INTERROUTETYPES {
 	CROSS,
 	SWAP1_1S,
 	SWAP2_1S,
-	ROUTEADDITION,
 	KSPLIT
 };
 
@@ -217,10 +216,30 @@ struct Route {
 		return other.id == this->id;
 	}
 
-	float getDemand(int indexStart, int indexEnd) {
+	float getDemand(int indexStart, int indexEnd) const {
 		float result = 0;
 		for (int i = indexStart; i <= indexEnd; i++) {
 			result += clientsList[i].demand;
+		}
+		return result;
+	}
+
+	float minDelivery() const {
+		if (clientsList.size() == 0) return 0;
+		float result = clientsList[0].demand;
+		for (int i = 1; i < clientsList.size(); i++) {
+			float d = clientsList[i].demand;
+			if (d < result) result = d;
+		}
+		return result;
+	}
+
+	float maxDelivery() const {
+		if (clientsList.size() == 0) return 0;
+		float result = clientsList[0].demand;
+		for (int i = 1; i < clientsList.size(); i++) {
+			float d = clientsList[i].demand;
+			if (d > result) result = d;
 		}
 		return result;
 	}
@@ -297,6 +316,11 @@ namespace RouteDefs {
 	bool fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList);
 
 	std::vector<int> calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels);
+
+	/*
+	* @brief Compacta uma solução, juntando clientes com pedidos divididos em uma mesma rota como apenas um cliente.
+	*/
+	std::vector<Route> compactifySolution(const std::vector<Route>& solution);
 }
 
 class RouteCreator {

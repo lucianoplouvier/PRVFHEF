@@ -17,6 +17,7 @@ AuxiliaryStructures::~AuxiliaryStructures() {
 
 void AuxiliaryStructures::recalculate(const std::vector<Route>& routes)
 {
+	return; // TODO CONSERTAR
 	calculateCumulativeDelivery(routes);
 	calculateMaxDelivery(routes);
 	calculateMaxPairDelivery(routes);
@@ -86,9 +87,7 @@ void AuxiliaryStructures::calculateSumDelivery(const std::vector<Route>& routes)
 			const Route r = routes[iRoute];
 			int sum = 0;
 			int demandsListSize = r.clientsList.size();
-			for (int iClient = 0; iClient < demandsListSize; iClient++) {
-				sum += r.clientsList[iClient].demand;
-			}
+			sum = r.getTotalDemand();
 			m_sumDelivery.push_back(sum);
 		}
 	}

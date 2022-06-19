@@ -66,14 +66,12 @@ void RouteDefs::printRoute(const Route& route) {
 	cout << "\n";
 }
 
-void RouteDefs::swapClients(Route& r1, int r1clientId, Route& r2, int r2clientId) {
+void RouteDefs::swapClients(Route& r1, int r1ClientIndex, Route& r2, int r2clientIndex) {
 	// O novo cliente é o cliente da outra rota.
-	int oldR1ClientIndex = r1.findClient(r1clientId);
-	int oldR2ClientIndex = r2.findClient(r2clientId);
-	Client newR1Client(r2.clientsList[oldR2ClientIndex]);
-	Client newR2Client(r1.clientsList[oldR1ClientIndex]);
-	r1.clientsList[oldR1ClientIndex] = newR1Client;
-	r2.clientsList[oldR2ClientIndex] = newR2Client;
+	Client newR1Client(r2.clientsList[r2clientIndex]);
+	Client newR2Client(r1.clientsList[r1ClientIndex]);
+	r1.clientsList[r1ClientIndex] = newR1Client;
+	r2.clientsList[r2clientIndex] = newR2Client;
 }
 
 void RouteDefs::swapClients(Route& r1, int r1ClientId1, int r1ClientId2, Route& r2, int r2ClientId) {
@@ -150,99 +148,6 @@ std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std
 	}
 }
 
-/*
-std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts) {
-	int clientIndex = client.id;
-	float demand = client.demand;
-	std::pair<float, int> result;
-	float cost = 0;
-	int pos = 0;
-	// Se colocar na primeira posição.
-	cost = adjacencyCosts.depotTravel[clientIndex];
-	pos = 0;
-
-	int clients = route.clientsList.size();
-
-	if (clients == 0) { // Inserir em rota  vazia.
-		result.first = cost * 2;
-		result.second = pos;
-		return result;
-	}
-
-	for (int i = 0; i <= clients; i++) {
-		int currClientIndex = -1;
-		if (i != clients) {
-			currClientIndex = route.clientsList[i].id;
-		}
-		float currCost = 0;
-		if (i == 0) { // Colocar um cliente no inicio
-			currCost = adjacencyCosts.depotTravel[clientIndex] + adjacencyCosts.getAdjacencyCosts(clientIndex, currClientIndex);
-		}
-		else if (currClientIndex == -1) { // Colocar um cliente no fim
-			currCost = adjacencyCosts.getAdjacencyCosts(clientIndex, route.clientsList[i - 1].id) + adjacencyCosts.depotTravel[clientIndex];
-		}
-		else {
-			int prevIndex = currClientIndex - 1;
-			currCost = adjacencyCosts.getAdjacencyCosts(prevIndex, clientIndex) + adjacencyCosts.getAdjacencyCosts(clientIndex, currClientIndex); // Colocar um cliente entre dois é somar as duas viagems que isso envolve.
-		}
-		if (currCost < cost) {
-			cost = currCost;
-			pos = i;
-		}
-	}
-	result.first = cost;
-	result.second = pos;
-	return result;
-}
-
-std::pair<float, int> RouteDefs::findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts) {
-	int clientIndex = client.id;
-	float demand = client.demand;
-	int nextIndex = next.id;
-	float nextDemand = next.demand;
-	std::pair<float, int> result;
-	float cost = 0;
-	int pos = 0;
-	// Se colocar na primeira posição.
-	cost = adjacencyCosts.depotTravel[clientIndex];
-	pos = 0;
-
-	int clients = route.clientsList.size();
-
-	if (clients == 0) { // Inserir em rota  vazia.
-		result.first = cost + adjacencyCosts.depotTravel[nextIndex];
-		result.second = pos;
-		return result;
-	}
-
-	for (int i = 0; i <= clients; i++) {
-		int currClientIndex = -1;
-		if (i != clients) {
-			currClientIndex = route.clientsList[i].id;
-		}
-		float currCost = 0;
-		if (i == 0) { // Colocar um cliente no inicio
-			currCost = adjacencyCosts.depotTravel[clientIndex] + adjacencyCosts.getAdjacencyCosts(nextIndex, currClientIndex);
-		}
-		else if (currClientIndex == -1) { // Colocar um cliente no fim
-			currCost = adjacencyCosts.getAdjacencyCosts(clientIndex, route.clientsList[i - 1].id) + adjacencyCosts.depotTravel[nextIndex];
-		}
-		else {
-			// Consertar
-			int prevIndex = currClientIndex - 1;
-			currCost = adjacencyCosts.getAdjacencyCosts(prevIndex, clientIndex) + adjacencyCosts.getAdjacencyCosts(nextIndex, currClientIndex); // Colocar um cliente entre dois é somar as duas viagems que isso envolve.
-		}
-		if (currCost < cost) {
-			cost = currCost;
-			pos = i;
-		}
-	}
-	result.first = cost;
-	result.second = pos;
-	return result;
-}
-*/
-
 bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels) {
 	int availableVelsSize = availableVels.size();
 	bool hasLimitedVels = availableVelsSize > 0;
@@ -251,7 +156,8 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 		demandsApplied.push_back(completeClientList[i].demand);
 	}
 	for (int i = 0; i < solution.size(); i++) {
-		if (solution[i].getTotalDemand() > solution[i].vehicle.capacity) {
+		float totalDemand = solution[i].getTotalDemand();
+		if (totalDemand > solution[i].vehicle.capacity) {
 			return false;
 		}
 		if (hasLimitedVels) {
@@ -265,7 +171,7 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 			int id = solution[i].clientsList[j].id;
 			for (int idVisited : idsVisited) {
 				if (idVisited == id) {
-					return false;
+					//return false;
 				}
 			}
 			idsVisited.push_back(id);
@@ -331,4 +237,36 @@ std::vector<int> RouteDefs::calculateAvailableVels(const std::vector<Route>& sol
 		availableVels[r.vehicle.id] = availableVels[r.vehicle.id] - 1;
 	}
 	return availableVels;
+}
+
+Route compactify(const Route& r) {
+	Route result(r);
+	result.clientsList.clear();
+	for (int i = 0; i < r.clientsList.size(); i++) {
+		const Client& currI = r.clientsList[i];
+		if (result.findClient(currI.id) < 0) {
+			Client c(currI);
+			for (int j = i + 1; j < r.clientsList.size(); j++) {
+				const Client& currJ = r.clientsList[j];
+				if (c.id == currJ.id) {
+					c.demand += currJ.demand;
+				}
+				else {
+					break;
+				}
+			}
+			result.addClient(c);
+		}
+	}
+	return result;
+}
+
+std::vector<Route> RouteDefs::compactifySolution(const std::vector<Route>& solution) {
+	std::vector<Route> newSol;
+	for (const Route& r : solution) {
+		if (!r.clientsList.empty()) {
+			newSol.push_back(compactify(r));
+		}
+	}
+	return newSol;
 }

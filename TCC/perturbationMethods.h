@@ -27,7 +27,7 @@ namespace perturbationMethods { // Não retorna nada pois ele verifica antes de f
 	* @param vehiclesList - Lista de veículos.
 	* @param clientList - Lista de clientes.
 	*/
-	void ksplit(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList);
+	void ksplit(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels);
 
 	void split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels);
 
