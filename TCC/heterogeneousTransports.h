@@ -104,10 +104,11 @@ private:
 	/*
 	* @brief Recupera o custo de inserção para o cliente mais próximo na rota route do cliente de id informado.
 	* @param route - Rota a procurar o menor custo de inserção do cliente mais próximo.
+	* @param position - Retorna a posição de inserção.
 	* @param candidateId - Id do cliente a ser inserido.
 	* @return custo.
 	*/
-	float getClosestInsertionCost(const Route& route, int candidateId) const;
+	float getClosestInsertionCost(const Route& route, int& position, int candidateId) const;
 
 	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
 
@@ -131,5 +132,6 @@ private:
 
 	int m_currIteration; // Começa do 1.
 	int m_currIterationsWithoutImprove;
+	int m_itrsToExecute;
 
 };

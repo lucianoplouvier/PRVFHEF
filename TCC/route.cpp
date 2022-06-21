@@ -111,6 +111,9 @@ std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std
 	pos = 0;
 
 	int clients = route.clientsList.size();
+	if (clients > 0) {
+		cost += adjacencyCosts.getAdjacencyCosts(lastClientId, route.clientsList[0].id);
+	}
 
 	if (clients == 0) { // Inserir em rota  vazia.
 		result.first = cost + adjacencyCosts.depotTravel[lastClientId];
@@ -132,7 +135,6 @@ std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std
 					currCost = adjacencyCosts.getAdjacencyCosts(firstClientId, route.clientsList[i - 1].id) + adjacencyCosts.depotTravel[lastClientId];
 				}
 				else {
-					// Consertar
 					int prevId = route.clientsList[i - 1].id;
 					currCost = adjacencyCosts.getAdjacencyCosts(prevId, firstClientId) + adjacencyCosts.getAdjacencyCosts(lastClientId, currClientId); // Colocar um cliente entre dois é somar as duas viagems que isso envolve.
 				}

@@ -201,7 +201,9 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                     getline(myfile, line);
                     std::vector<std::string> lineSplit = strSplit(line, ' ');
                     for (int i = 0; i < vehicles; i++) {
-                        availableVels.push_back(atoi(lineSplit[i].c_str()));
+                        int qntVels = atoi(lineSplit[i].c_str());
+                        availableVels.push_back(qntVels);
+                        vels += qntVels;
                     }
                     getline(myfile, line);
                     if (line.compare("EOF") != 0) {

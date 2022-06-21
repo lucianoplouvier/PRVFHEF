@@ -4,6 +4,8 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 	std::vector<int> routesIndexWithResidual; // L
 	std::vector<float> residualsList; // A
 	std::vector<float> leastInsertionCosts; // U
+	std::vector<int> leastInsertionPos;
+
 
 	std::vector<Route> result = solution;
 
@@ -20,12 +22,13 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 		}
 	}
 
-	if (totalResidual > client.demand) { // Então existe o espaço para o cliente.
+	if (totalResidual >= client.demand) { // Então existe o espaço para o cliente.
 		for (int i = 0; i < routesIndexWithResidual.size(); i++) {
 			std::vector<Client> clients;
 			clients.push_back(client);
-			float leastCostToInsert = RouteDefs::findBestInsertion(result[i], clients, adjacencyCosts).first;
-			leastInsertionCosts.push_back(leastCostToInsert);
+			auto bestInsert = RouteDefs::findBestInsertion(result[i], clients, adjacencyCosts);
+			leastInsertionCosts.push_back(bestInsert.first);
+			leastInsertionPos.push_back(bestInsert.second);
 		}
 
 		if (residualsList.size() != leastInsertionCosts.size()) {
@@ -33,12 +36,12 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 			exit(1);
 		}
 
-		return knaapSackGreedy(result, client, routesIndexWithResidual, residualsList, leastInsertionCosts, success);
+		return knaapSackGreedy(result, client, leastInsertionPos, routesIndexWithResidual, residualsList, leastInsertionCosts, success);
 	}
 	return solution;
 }
 
-std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, const Client& client,
+std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, const Client& client, const std::vector<int>& leastInsertPos,
 	std::vector<int>& routesIndexWithResidual /*L*/, std::vector<float>& residualsList /*A*/, std::vector<float>& leastInsertionCosts /*U*/, bool& success) {
 
 	float currDemand = client.demand;
@@ -53,7 +56,8 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 	for (int i = 0; i < residualsList.size(); i++) {
 		float& residual = residualsList[i];
 		float& cost = leastInsertionCosts[i];
-		int profitval = cost / residual;
+		//int profitval = cost / residual;
+		float profitval = residual / cost;
 		Profit p;
 		p.id = i;
 		p.value = profitval;
@@ -73,8 +77,12 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 				cout << "ERROR. PRVFHEF::knaapSackGreedy, Trying to add demand <= 0.";
 			}
 			if (chosenRoute.canAddClient(maxThatCanInsert)) {
-				chosenRoute.addClientOrMerge(client.id, maxThatCanInsert);
+				Client maxPossible;
+				maxPossible.id = client.id;
+				maxPossible.demand = maxThatCanInsert;
+				chosenRoute.insertClient(maxPossible, leastInsertPos[p.id]);
 				currDemand -= maxThatCanInsert;
+				residualsList[p.id] -= maxThatCanInsert;
 			}
 			else {
 				cout << "ERROR. PRVFHEF::knaapSackGreedy, Cannot add client to best profit route.";
@@ -91,29 +99,42 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 	return solution;
 }
 
-std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts, const std::vector<Client>& clientList) {
-	return solution;
-	std::vector<Route> resultSolution = solution;
+std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts) {	
+	//return solution;
+	std::vector<Route> resultSolution(solution);
+	int currRoutes = 0; // Só contar rotas não vazias.
+	for (const Route& r : resultSolution) {
+		if (r.clientsList.empty()) {
+			currRoutes++;
+		}
+	}
+
 	int tries = 0;
-	while (resultSolution.size() > maxVels && tries < resultSolution.size()) {
+	while (currRoutes > maxVels && tries < resultSolution.size()) {
 		int mostEmptyRouteIndex = -1;
 		float cargo = std::numeric_limits<float>::max();
 		for (int i = 0; i < resultSolution.size(); i++) {
-			int currCargo = resultSolution[i].getTotalDemand();
-			if (currCargo < cargo) {
-				cargo = currCargo;
-				mostEmptyRouteIndex = i;
+			if (!resultSolution[i].clientsList.empty()) {
+				int currCargo = resultSolution[i].getTotalDemand();
+				if (currCargo < cargo) {
+					cargo = currCargo;
+					mostEmptyRouteIndex = i;
+				}
 			}
 		}
 		if (mostEmptyRouteIndex != -1) {
-			Route& chosen = resultSolution[mostEmptyRouteIndex];
-			for (int i = 0; i < chosen.clientsList.size(); i++) {
+			for (int i = 0; i < resultSolution[mostEmptyRouteIndex].clientsList.size(); i++) {
+				Client c(resultSolution[mostEmptyRouteIndex].clientsList[i]);
 				bool success = false;
-				resultSolution = splitReinsertion(resultSolution, chosen.clientsList[i], mostEmptyRouteIndex, success, adjacencyCosts); // Aqui pode ser só o cliente pois queremos esvaziar a rota.
+				resultSolution = splitReinsertion(resultSolution, c, mostEmptyRouteIndex, success, adjacencyCosts); // Aqui pode ser só o cliente pois queremos esvaziar a rota.
 				if (success) {
-					chosen.removeClient(chosen.clientsList[i]);
+					resultSolution[mostEmptyRouteIndex].removeClient(c);
+					cout << "emptyRoutes success\n";
 					i--;
 				}
+			}
+			if (resultSolution[mostEmptyRouteIndex].clientsList.size() == 0) {
+				currRoutes--;
 			}
 			tries++;
 		}

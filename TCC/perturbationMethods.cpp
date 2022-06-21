@@ -2,10 +2,10 @@
 #include "intrarouteStructures.h"
 #include "fraction.h"
 
-int MINSHIFTEXECS = 3;
+int MINSHIFTEXECS = 2;
 int MAXSHIFTEXECS = 4;
 
-int MINSWAPEXECS = 3;
+int MINSWAPEXECS = 2;
 int MAXSWAPEXECS = 4;
 
 std::vector<PERTURBATIONTYPES> perturbationMethods::getAll(bool hasLimitedVels) {
