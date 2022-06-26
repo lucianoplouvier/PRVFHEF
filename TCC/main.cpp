@@ -137,6 +137,9 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
             depotX = (atoi(lineSplit.at(1).c_str()));
             depotY = (atoi(lineSplit.at(2).c_str()));
         }
+        else {
+            return false;
+        }
         for (int i = 0; i < clients; i++) {
             if (getline(myfile, line)) {
                 std::vector<std::string> lineSplit = strSplit(line, ' ');
@@ -194,7 +197,7 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                 getline(myfile, line);
                 std::vector<std::string> lineSplit = strSplit(line, ' ');
                 for (int i = 0; i < vehicles; i++) {
-                    vehicleTypes[i].travelCost = atoi(lineSplit[i].c_str());
+                    vehicleTypes[i].travelCost = std::atof(lineSplit[i].c_str());
                 }
                 getline(myfile, line);
                 if (line.compare(eof) != 0) {
@@ -246,16 +249,21 @@ int main()
     
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    std::string filepath = "C:/Users/frien/Documents/Taillard_03.txt";
+    cout << "Numero do arquivo? EX: 03\n";
+
+    std::string t;  
+    cin >> t;
+
+    std::string filepath = "C:/Users/frien/Documents/Taillard_" + t + ".txt";
 
     bool readVariableCost = false;
 
     readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
 
     if (availableVels.size() > 0) {
-        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, availableVels, vels);
+        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, t, availableVels, vels);
     }
     else {
-        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts);
+        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, t);
     }
 }

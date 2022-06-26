@@ -19,6 +19,11 @@ struct Client {
 		this->id = other.id;
 		this->demand = other.demand;
 	}
+
+	bool operator==(Client& other) {
+		return this->id == other.id && (std::abs(std::abs(this->demand) - std::abs(other.demand)) < std::numeric_limits<float>::epsilon());
+	}
+
 };
 
 struct Vehicle {

@@ -1,24 +1,28 @@
-﻿  fraction.cpp
-F:\TCC\TCC\TCC\route.h(50,21): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\route.h(60,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\route.h(67,37): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\route.h(79,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(110,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\route.h(129,16): warning C4018: '>=': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(210,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\route.h(230,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\route.h(240,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(16,22): warning C4244: 'inicializando': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(26,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(56,20): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(69,29): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(79,33): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(93,8): warning C4018: '>=': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(113,39): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(116,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(120,14): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(126,22): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(152,17): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\fraction.cpp(159,21): warning C4018: '<': incompatibilidade de signed/unsigned
-F:\TCC\TCC\TCC\fraction.cpp(166,18): warning C4244: 'inicializando': conversão de 'float' para 'int', possível perda de dados
+﻿  perturbationMethods.cpp
+F:\TCC\TCC\TCC\Route.h(60,15): warning C4244: '=': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\Route.h(67,37): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\Route.h(79,22): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(110,42): warning C4244: 'argumento': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\Route.h(129,16): warning C4018: '>=': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(180,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(225,1): warning C4244: '+=': conversão de 'const float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\Route.h(227,10): warning C4244: 'return': conversão de 'int' para 'float', possível perda de dados
+F:\TCC\TCC\TCC\Route.h(245,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(255,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(257,14): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\Route.h(268,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(22,12): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(77,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(79,21): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(243,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(258,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(280,17): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(293,19): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(316,20): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(370,23): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(384,24): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(386,59): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(389,24): warning C4018: '<': incompatibilidade de signed/unsigned
+F:\TCC\TCC\TCC\perturbationMethods.cpp(390,78): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(73): warning C4715: 'getRandomPair': nem todos os caminhos de controle retornam um valor
   TCC.vcxproj -> F:\TCC\TCC\Debug\TCC.exe

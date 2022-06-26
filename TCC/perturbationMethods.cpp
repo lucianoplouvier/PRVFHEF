@@ -2,21 +2,22 @@
 #include "intrarouteStructures.h"
 #include "fraction.h"
 
-int MINSHIFTEXECS = 2;
-int MAXSHIFTEXECS = 4;
+int MINSHIFTEXECS = 1;
+int MAXSHIFTEXECS = 3;
 
-int MINSWAPEXECS = 2;
+int MINSWAPEXECS = 1;
 int MAXSWAPEXECS = 4;
 
-std::vector<PERTURBATIONTYPES> perturbationMethods::getAll(bool hasLimitedVels) {
+int MINRANDOMKSPLIT = 5;
+int MAXRANDOMKSPLIT = 7;
+
+std::vector<PERTURBATIONTYPES> perturbationMethods::getAll() {
 	std::vector<PERTURBATIONTYPES> all;
 	all.push_back(PERTURBATIONTYPES::MULTISWAP);
 	all.push_back(PERTURBATIONTYPES::MULTISHIFT);
 	all.push_back(PERTURBATIONTYPES::MERGE);
-	all.push_back(PERTURBATIONTYPES::KSPLIT); //ERRO
-	if (!hasLimitedVels) {
-		all.push_back(PERTURBATIONTYPES::SPLIT);
-	}
+	all.push_back(PERTURBATIONTYPES::KSPLIT);
+	all.push_back(PERTURBATIONTYPES::SPLIT);
 	return all;
 }
 
@@ -108,7 +109,7 @@ bool randomSwapping(Route& a, Route& b) {
 				float bTotalDemand = b.getTotalDemand();
 				float aDemand = rCA.demand;
 				float bDemand = rCB.demand;
-				if (((aTotalDemand - aDemand + bDemand) < a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) < b.vehicle.capacity)) {
+				if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
 					valid = true;
 					cA = rCA;
 					cB = rCB;
@@ -150,7 +151,7 @@ bool randomShifting(Route& a, Route& b) {
 				float bTotalDemand = b.getTotalDemand();
 				float aDemand = rCA.demand;
 				float bDemand = rCB.demand;
-				if (((aTotalDemand - aDemand + bDemand) < a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) < b.vehicle.capacity)) {
+				if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
 					valid = true;
 					cA = rCA;
 					cB = rCB;
@@ -208,7 +209,7 @@ void perturbationMethods::multiShift1_1(std::vector<Route>& solution) {
 }
 
 void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
-	int timesToExec = Utils::getRandomInt(5, 7);
+	int timesToExec = Utils::getRandomInt(MINRANDOMKSPLIT, MAXRANDOMKSPLIT);
 	std::vector<Client> randomClientsToChoose;
 	for (const Client& c : clientList) {
 		randomClientsToChoose.push_back(c);
@@ -234,78 +235,79 @@ void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& a
 	solution = result;
 }
 
-void perturbationMethods::split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels) {
+std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, const AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels, const std::vector<Client>& clientList) {
+	std::vector<Route> solution = oldSolution;
 	bool limitedVels = availableVels.size() > 0;
 	std::vector<int> currentAvalVels; 
 	if (limitedVels) {
 		currentAvalVels = RouteDefs::calculateAvailableVels(solution, availableVels);
 	}
-	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
+	float capacitySpace = 0;
+	for (int i = 0; i < currentAvalVels.size(); i++) {
+		int& leftVelAmount = currentAvalVels[i];
+		if (leftVelAmount> 0) {
+			capacitySpace += vehiclesList[i].capacity;
+		}
+	}
 	int routeIndex = 0;
 	bool found = false;
-	Route selected(solution[0]);
-	std::vector<int> indexes;
+
+	Vehicle smallestVehicle = RouteDefs::getSmallestVehicle(vehiclesList);
+	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
+
+	Route selected(0, Vehicle());
+
+	std::vector<int> routeOptions; // Preenche lista rotas possíveis
 	for (int i = 0; i < solution.size(); i++) {
-		indexes.push_back(i);
-	}
-	while (!found && indexes.size() > 0) {
-		int randomIndex = Utils::getRandomInt(0, indexes.size() - 1);
-		auto it = indexes.begin();
-		std::advance(it, randomIndex);
-		Route r = solution[*it];
-		if (r.vehicle != biggestVehicle && r.clientsList.size() > 1) {
-			bool fitsInVehicle = true;
-			for (Client& c : r.clientsList) { // Verifica se todos os clientes cabem em pelo menos um veículo que não seja o maior.
-				int cDemand = c.demand;
-				if (!RouteDefs::fitsInNonBiggestVehicle(cDemand, vehiclesList)) {
-					fitsInVehicle = false;
-				}
-			}
-			if (fitsInVehicle) {
-				selected = r; // Veículo selecionado para fazer split.
-				routeIndex = indexes[randomIndex];
-				found = true;
-			}
+		if (solution[i].vehicle != smallestVehicle && solution[i].clientsList.size() > 0 && (!limitedVels || solution[i].getTotalDemand() <= capacitySpace)) {
+			routeOptions.push_back(i);
 		}
-		indexes.erase(it);
 	}
 
-	if (found) {
-		auto it = solution.begin();
-		std::vector<Client> clients;
-		for (Client c : solution[routeIndex].clientsList) {
-			clients.push_back(c);
-		}
-		std::advance(it, routeIndex);
-		solution.erase(it);
-		const Vehicle* randomVehicle = NULL;
-		int iClient = 0;
-		while (iClient < clients.size()) {
-			std::vector<Vehicle> possibleVels = vehiclesList;
-			do {
-				int randomVel = Utils::getRandomInt(0, possibleVels.size() - 1);
-				if ((!limitedVels || currentAvalVels[randomVel] > 0) && vehiclesList[randomVel].capacity >= clients[iClient].demand && vehiclesList[randomVel].id != biggestVehicle.id) {
-					randomVehicle = &vehiclesList[randomVel];
-				}
-				auto velIt = possibleVels.begin();
-				std::advance(velIt, randomVel);
-				possibleVels.erase(velIt);
-			} while (!randomVehicle && possibleVels.size() > 0);
-			if (randomVehicle) { // TODO não entra aqui se não houver um veículo que caiba o cliente.
-				Route newR = routeCreator.createRoute(*randomVehicle);
-				while (iClient < clients.size() && clients[iClient].demand <= (newR.vehicle.capacity - newR.getTotalDemand())) {
-					newR.addClient(clients[iClient]);
-					iClient++;
-				}
-				if (newR.clientsList.size() > 0) {
-					solution.push_back(newR);
-				}
-			}
-			else {
+	if (routeOptions.size()) {
+		selected = (solution[Utils::getRandomInt(0, solution.size() - 1)]);
+	}
+	else {
+		return oldSolution;
+	}
 
+	auto it = solution.begin();
+	std::vector<Client> clients;
+	for (Client c : solution[routeIndex].clientsList) {
+		clients.push_back(c);
+	}
+	std::advance(it, routeIndex);
+	solution.erase(it);
+	const Vehicle* randomVehicle = NULL;
+	int iClient = 0;
+	while (iClient < clients.size()) {
+		std::vector<Vehicle> possibleVels = vehiclesList;
+		do {
+			int randomVel = Utils::getRandomInt(0, possibleVels.size() - 1);
+			if ((!limitedVels || currentAvalVels[randomVel] > 0) && vehiclesList[randomVel].capacity >= clients[iClient].demand && vehiclesList[randomVel].id != biggestVehicle.id) {
+				randomVehicle = &vehiclesList[randomVel];
 			}
-			randomVehicle = NULL;
+			auto velIt = possibleVels.begin();
+			std::advance(velIt, randomVel);
+			possibleVels.erase(velIt);
+		} while (!randomVehicle && possibleVels.size() > 0);
+		if (randomVehicle) { // TODO não entra aqui se não houver um veículo que caiba o cliente.
+			Route newR = routeCreator.createRoute(*randomVehicle);
+			while (iClient < clients.size() && clients[iClient].demand <= (newR.vehicle.capacity - newR.getTotalDemand())) {
+				newR.addClient(clients[iClient]);
+				iClient++;
+			}
+			if (newR.clientsList.size() > 0) {
+				solution.push_back(newR);
+			}
 		}
+		randomVehicle = NULL;
+	}
+	if (RouteDefs::isSolutionValid(solution, clientList, availableVels)) { // Caso não tenha conseguido alocar todas as rotas, não tinha espaço suficiente.
+		return solution;
+	}
+	else {
+		return oldSolution;
 	}
 }
 
@@ -402,7 +404,7 @@ void perturbationMethods::merge(std::vector<Route>& solution, AdjacencyCosts& ad
 					solution.push_back(newRoute);
 					auto intraroutes = intrarouteStructures::getAll();
 					auto intraroutesIt = intraroutes.begin();
-					solution = intrarouteStructures::executeRandom(solution, adjacencyCosts, clientList);
+					solution = intrarouteStructures::executeAll(solution, adjacencyCosts, clientList);
 				}
 			}
 		}
@@ -422,7 +424,7 @@ void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERT
 		ksplit(solution, adjacencyCosts, vehiclesList, clientList, availableVels);
 		break;
 	case PERTURBATIONTYPES::SPLIT:
-		split(solution, adjacencyCosts, vehiclesList, creator, availableVels);
+		solution = split(solution, adjacencyCosts, vehiclesList, creator, availableVels, clientList);
 		break;
 	case PERTURBATIONTYPES::MERGE:
 		merge(solution, adjacencyCosts, creator, vehiclesList, clientList, availableVels);
@@ -433,7 +435,7 @@ void perturbationMethods::executePerturbation(std::vector<Route>& solution, PERT
 }
 
 void perturbationMethods::perturbate(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, RouteCreator& creator, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels) {
-	std::vector<PERTURBATIONTYPES> pert = getAll(availableVels.size() > 0);
+	std::vector<PERTURBATIONTYPES> pert = getAll();
 	int selectedPerturbation = Utils::getRandomInt(0, pert.size() - 1);
 	executePerturbation(solution, pert[selectedPerturbation], adjacencyCosts, creator, vehiclesList, clientList, availableVels);
 	RouteDefs::isSolutionValid(solution, clientList, availableVels);

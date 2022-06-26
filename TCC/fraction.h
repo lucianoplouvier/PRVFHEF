@@ -10,6 +10,6 @@ namespace fractionRoute {
 
 	std::vector<Route> emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts);
 
-	std::vector<Route> reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts, const std::vector<Client>& clientList);
+	std::vector<Route> reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
 
 }

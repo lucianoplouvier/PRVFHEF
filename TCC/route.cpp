@@ -48,8 +48,8 @@ float RouteDefs::evaluate(const std::vector<Route>& solution, const AdjacencyCos
 	for (const Route& route : solution) {
 		if (!route.clientsList.empty()) {
 			total += route.vehicle.cost;
-			float totalTravel = RouteDefs::calculateTravelCost(route.clientsList, adjacencyCosts);
-			total += route.vehicle.travelCost * totalTravel;
+			float routeCost = RouteDefs::evaluateRoute(route, adjacencyCosts);
+			total += routeCost;
 		}
 	}
 	return total;
@@ -144,7 +144,7 @@ std::pair<float, int> RouteDefs::findBestInsertion(const Route& route, const std
 				}
 			}
 		}
-		result.first = cost;
+		result.first = cost * route.vehicle.travelCost + route.vehicle.cost; // Levar em conta o custo de viagem + custo do veículo.
 		result.second = pos;
 		return result;
 	}
@@ -160,22 +160,26 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 	for (int i = 0; i < solution.size(); i++) {
 		float totalDemand = solution[i].getTotalDemand();
 		if (totalDemand > solution[i].vehicle.capacity) {
-			return false;
+			cout << "ERRO CAPACIDADE VEICULO\n";
+			return false; // Se entrar aqui é que estourou a capacidade
 		}
 		if (hasLimitedVels) {
 			int velLeft = availableVels[solution[i].vehicle.id]--;
 			if (velLeft < 0) {
-				return false;
+				cout << "ERRO QNT VEICULOS\n";
+				return false; // Se entrar aqui é que tem veículo demais em uso
 			}
 		}
 		std::vector<int> idsVisited; // Ver se não tem o mesmo cliente duas vezes.
 		for (int j = 0; j < solution[i].clientsList.size(); j++) {
 			int id = solution[i].clientsList[j].id;
+			/*
 			for (int idVisited : idsVisited) {
 				if (idVisited == id) {
 					//return false;
 				}
 			}
+			*/
 			idsVisited.push_back(id);
 			demandsApplied[id] -= solution[i].clientsList[j].demand;
 		}
@@ -183,7 +187,8 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 
 	for (int i = 0; i < completeClientList.size(); i++) {
 		if (demandsApplied[i] > 0 || demandsApplied[i] < 0) {
-			return false;
+			cout << "ERRO DEMANDA\n";
+			return false; // Se entrar aqui é que sumiu demanda
 		}
 	}
 
@@ -198,6 +203,16 @@ Vehicle RouteDefs::getBiggestVehicle(const std::vector<Vehicle>& vehiclesList) {
 		}
 	}
 	return biggestVehicle;
+}
+
+Vehicle RouteDefs::getSmallestVehicle(const std::vector<Vehicle>& vehiclesList) {
+	Vehicle smallestVehicle = vehiclesList[0];
+	for (auto iVels = 1; iVels < vehiclesList.size(); iVels++) {
+		if (vehiclesList[iVels].capacity < smallestVehicle.capacity) {
+			smallestVehicle = vehiclesList[iVels];
+		}
+	}
+	return smallestVehicle;
 }
 
 bool RouteDefs::fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList) {
@@ -239,36 +254,4 @@ std::vector<int> RouteDefs::calculateAvailableVels(const std::vector<Route>& sol
 		availableVels[r.vehicle.id] = availableVels[r.vehicle.id] - 1;
 	}
 	return availableVels;
-}
-
-Route compactify(const Route& r) {
-	Route result(r);
-	result.clientsList.clear();
-	for (int i = 0; i < r.clientsList.size(); i++) {
-		const Client& currI = r.clientsList[i];
-		if (result.findClient(currI.id) < 0) {
-			Client c(currI);
-			for (int j = i + 1; j < r.clientsList.size(); j++) {
-				const Client& currJ = r.clientsList[j];
-				if (c.id == currJ.id) {
-					c.demand += currJ.demand;
-				}
-				else {
-					break;
-				}
-			}
-			result.addClient(c);
-		}
-	}
-	return result;
-}
-
-std::vector<Route> RouteDefs::compactifySolution(const std::vector<Route>& solution) {
-	std::vector<Route> newSol;
-	for (const Route& r : solution) {
-		if (!r.clientsList.empty()) {
-			newSol.push_back(compactify(r));
-		}
-	}
-	return newSol;
 }

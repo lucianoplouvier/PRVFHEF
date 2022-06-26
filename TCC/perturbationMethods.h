@@ -14,7 +14,7 @@ enum class PERTURBATIONTYPES {
 
 namespace perturbationMethods { // Não retorna nada pois ele verifica antes de fazer movimentos inválidos, aí altera diretamente.
 
-	std::vector<PERTURBATIONTYPES> getAll(bool hasLimitedVels);
+	std::vector<PERTURBATIONTYPES> getAll();
 
 	void multipleSwap1_1(std::vector<Route>& solution);
 
@@ -29,7 +29,7 @@ namespace perturbationMethods { // Não retorna nada pois ele verifica antes de f
 	*/
 	void ksplit(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, const std::vector<Client>& clientList, const std::vector<int>& availableVels);
 
-	void split(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels);
+	std::vector<Route> split(std::vector<Route> solution, const AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList, RouteCreator& routeCreator, const std::vector<int>& availableVels, const std::vector<Client>& clientList);
 
 	/*
 	* @brief Junta duas Rotas. A primeira rota é selecionada aleatóriamente. A segunda rota é a rota com o cliente mais próximo a qualquer cliente da primeira rota.

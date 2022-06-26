@@ -44,7 +44,7 @@ namespace intrarouteStructures {
 
 	std::vector<Route> execute(INTRAROUTETYPES type, std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
 
-	std::vector<Route> executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
+	std::vector<Route> executeAll(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
 
 	static std::vector<Route> twoOPT(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 

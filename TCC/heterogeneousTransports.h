@@ -23,12 +23,15 @@ public:
 	* @param clientAdjacencies - Lista de adjacencias de clientes com custo.
 	* @param vehicleTypes - Lista de tipos de veículos disponíveis.
 	* @param vehicles - Quantidade de veículos iniciais.
+	* @param t - Identificador do numero do problema, para saida.
 	*/
-	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::vector<int> availableVels = std::vector<int>(), int vehicles = -1);
+	PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::string t, std::vector<int> availableVels = std::vector<int>(), int vehicles = -1);
 
 	~PRVFHEF();
 
 private:
+
+	std::string m_t;
 
 	int m_maxVehicles; // Kmin
 
@@ -61,12 +64,6 @@ private:
 	*/
 	std::list<int> initializeCandidatesList(const std::vector<Client>& allClients) const;
 
-	/*
-	* @brief Faz a estimativa de veículos necessários para atender a demanda de todos os clientes de um problema.
-	* @param allClients - Todos os clientes.
-	*/
-	int estimateVehicles(const std::vector<Client>& allClients) const;
-
 	void addClientToRoute(Route& r, int candidateId, float demandAmount);
 
 	/*
@@ -84,6 +81,11 @@ private:
 	* @param depotTravelCost - Custo de viagem entre o depósito e o cliente de indice x.
 	*/
 	void createAdjacencyMatrix(int clientsCount, std::vector<ClientAdjacency>& clientAdjacencies, std::vector<float> depotTravelCost);
+
+	/*
+	* @brief Verifica e conserta rotas que visitam o mesmo veículo várias vezes.
+	*/
+	void checkAndRepair(std::vector<Route>& solution);
 
 	/*
 	* @brief Executa o RVND.
@@ -109,6 +111,16 @@ private:
 	* @return custo.
 	*/
 	float getClosestInsertionCost(const Route& route, int& position, int candidateId) const;
+
+	/*
+	* @brief Recupera o custo de inserção para o cliente mais próximo na rota route do cliente de id informado.
+	* @param route - Rota a procurar o menor custo de inserção do cliente mais próximo.
+	* @param position - Retorna a posição de inserção.
+	* @param candidateId - Id do cliente a ser inserido.
+	* @param y - Peso para evitar inserção de cliente longe do depósito.
+	* @return custo.
+	*/
+	float getCheapestInsertionCost(const Route& route, int& position, int candidateId, float y) const;
 
 	std::vector<Route> intraroute(const std::vector<Route>& solution, float evaluation);
 

@@ -159,21 +159,37 @@ struct Route {
 	}
 
 	bool removeClient(int clientId) { // Retorna true se obteve sucesso, false caso contário.
+		bool found = false;
 		if (clientsList.size() > 0) {
 			auto iterator = clientsList.begin();
 			while (iterator != clientsList.end()) {
 				if (iterator->id == clientId) {
-					break;
+					clientsList.erase(iterator);
+					iterator = clientsList.begin(); // TODO Ineficiente
+					found = true;
 				}
-				iterator++;
+				else {
+					iterator++;
+				}
 			}
-			if (iterator != clientsList.end()) {
-				clientsList.erase(iterator);
+		}
+		return found;
+	}
+
+	bool removeClient(Client& c) {
+		for (int i = 0; i < clientsList.size(); i++) {
+			Client& curr = clientsList[i];
+			if(c == curr){
+				std::vector<Client>::iterator it = clientsList.begin();
+				std::advance(it, i);
+				clientsList.erase(it);
 				return true;
 			}
 		}
+		cout << "ERROR. Remove Client falhou.\n";
 		return false;
 	}
+
 
 	/*
 	void removeClient(int clientId, int clientDemand) {
@@ -204,7 +220,7 @@ struct Route {
 		return -1;
 	}
 
-	int getTotalDemand() const {
+	float getTotalDemand() const {
 		int totalDemand = 0;
 		for (int i = 0; i < (int)clientsList.size(); i++) {
 			totalDemand += clientsList[i].demand;
@@ -229,6 +245,19 @@ struct Route {
 		float result = clientsList[0].demand;
 		for (int i = 1; i < clientsList.size(); i++) {
 			float d = clientsList[i].demand;
+			if (d < result) result = d;
+		}
+		return result;
+	}
+
+	float minDeliveryAdj() const {
+		if (clientsList.size() == 0) return 0;
+		float result = clientsList[0].demand;
+		for (int i = 1; i < clientsList.size(); i++) {
+			float d = clientsList[i].demand;
+			if (i + 1 < clientsList.size()) {
+				d += clientsList[i + 1].demand;
+			}
 			if (d < result) result = d;
 		}
 		return result;
@@ -268,7 +297,7 @@ namespace RouteDefs {
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
 	* @param route - Rota.
-	* @param clientsList - cadeia de clientes adjacentes.
+	* @param clientsList - lista de clientes a se inserir.
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @param indice proibido, por padrão nenhum (-1).
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
@@ -297,10 +326,16 @@ namespace RouteDefs {
 	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels);
 
 	/*
-	* @brief Recupera o maior veículo disponível.
+	* @brief Recupera o menor veículo disponível.
 	* @return Maior veículo na lista de veículos.
 	*/
 	Vehicle getBiggestVehicle(const std::vector<Vehicle>& vehiclesList);
+
+	/*
+	* @brief Recupera o menor veículo disponível.
+	* @return Menor veículo na lista de veículos.
+	*/
+	Vehicle getSmallestVehicle(const std::vector<Vehicle>& vehiclesList);
 
 	/*
 	* @brief Remove um cliente da solução.
@@ -316,11 +351,6 @@ namespace RouteDefs {
 	bool fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList);
 
 	std::vector<int> calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels);
-
-	/*
-	* @brief Compacta uma solução, juntando clientes com pedidos divididos em uma mesma rota como apenas um cliente.
-	*/
-	std::vector<Route> compactifySolution(const std::vector<Route>& solution);
 }
 
 class RouteCreator {

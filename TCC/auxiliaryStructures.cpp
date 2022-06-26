@@ -209,8 +209,7 @@ void AuxiliaryStructures::calculateNeighborhoodStatus(const std::vector<Route>& 
 	newStatus.reserve(types);
 	for (int i = 0; i < types; i++) {
 		newStatus.push_back(std::map<int, neighborhoodStatusNode>());
-		int j = 0;
-		while (j < routes.size()) {
+		for (int j = 0; j < routes.size(); j++) {
 			int routeId = routes[j].id;
 			bool improvementStatus = true;
 			bool routeAltered = false;
@@ -225,7 +224,6 @@ void AuxiliaryStructures::calculateNeighborhoodStatus(const std::vector<Route>& 
 			n.improvementStatus = improvementStatus;
 			n.routeAltered = routeAltered;
 			newStatus[i][routeId] = n;
-			j++;
 		}
 	}
 	m_neighborhoodStatus = newStatus;

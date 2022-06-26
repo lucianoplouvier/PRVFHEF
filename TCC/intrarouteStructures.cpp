@@ -63,13 +63,14 @@ std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vect
 	return result;
 }
 
-std::vector<Route> intrarouteStructures::executeRandom(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList) {
+std::vector<Route> intrarouteStructures::executeAll(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList) {
 	std::list<INTRAROUTETYPES> intrarouteList = intrarouteStructures::getAll();
-	std::list<INTRAROUTETYPES>::iterator iterator = intrarouteList.begin();
-	int selectedIntrarouteIndex = Utils::getRandomInt(0, intrarouteList.size() - 1);
-	std::advance(iterator, selectedIntrarouteIndex);
-	INTRAROUTETYPES selectedIntraroute = *iterator;
-	return intrarouteStructures::execute(selectedIntraroute, solution, adjCosts, clientList);
+	for (int i = 0; i < intrarouteList.size(); i++) {
+		std::list<INTRAROUTETYPES>::iterator iterator = intrarouteList.begin();
+		std::advance(iterator, i);
+		solution = intrarouteStructures::execute(*iterator, solution, adjCosts, clientList);
+	}
+	return solution;
 }
 
 Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
@@ -100,10 +101,13 @@ Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& 
 			}
 			if (changeEval < bestEval) {
 				bestEval = changeEval;
+				bestRoute = routeToChange;
 			}
 		}
-		result = bestRoute;
-		resultEval = bestEval;
+		if (bestEval < resultEval) {
+			result = bestRoute;
+			resultEval = bestEval;
+		}
 	}
 	return result;
 }
@@ -113,12 +117,11 @@ static std::vector<Route> intrarouteStructures::shift(std::vector<Route>& soluti
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute(result[iRoute]);
-		float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 		if (currRoute.clientsList.size() > 1) {
-			float eval = currentEval;
+			float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 			float bestEval;
-			currRoute = executeShift(currRoute, eval, adjacencyCosts, bestEval);
-			if (bestEval < eval) {
+			currRoute = executeShift(currRoute, currentEval, adjacencyCosts, bestEval);
+			if (bestEval < currentEval) {
 				result[iRoute] = currRoute;
 				improved = true;
 			}
@@ -142,12 +145,12 @@ void invertRoute(Route& route, int indexStart, int indexEnd) {
 }
 
 Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
-	Route result(route);
+	Route result = route;
 	resultEval = initialEval;
 	bool improvementFound = true;
 	while (improvementFound) {
 		improvementFound = false;
-		Route bestRoute(result);
+		Route bestRoute = result;
 		float bestEval = resultEval;
 		for (int aClient = 0; aClient < route.clientsList.size(); aClient++) {
 			Route routeToChange(bestRoute);
@@ -165,8 +168,10 @@ Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& a
 				}
 			}
 		}
-		result = bestRoute;
-		resultEval = bestEval;
+		if (bestEval < resultEval) {
+			result = bestRoute;
+			resultEval = bestEval;
+		}
 	}
 	return result;
 
@@ -177,7 +182,7 @@ static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solutio
 	std::vector<Route> result = solution;
 	bool improved = false;
 	for (int i = 0; i < solution.size(); i++) {
-		Route currentRoute(result[i]);
+		Route currentRoute = result[i];
 		float currentEval = RouteDefs::evaluateRoute(currentRoute, adjacencyCosts);
 		float eval;
 		if (currentRoute.clientsList.size() > 1) {
@@ -224,8 +229,10 @@ Route executeOP2(const Route& route, float initialEval, const AdjacencyCosts& ad
 				}
 			}
 		}
-		result = bestRoute;
-		resultEval = bestEval;
+		if (bestEval < resultEval) {
+			result = bestRoute;
+			resultEval = bestEval;
+		}
 	}
 	return result;
 }
@@ -285,8 +292,10 @@ Route executeOP3(const Route& route, float initialEval, const AdjacencyCosts& ad
 				}
 			}
 		}
-		result = bestRoute;
-		resultEval = bestEval;
+		if (bestEval < resultEval) {
+			result = bestRoute;
+			resultEval = bestEval;
+		}
 	}
 	return result;
 }
@@ -333,8 +342,10 @@ Route executeTwoOpt(const Route& route, float initialEval, const AdjacencyCosts&
 				}
 			}
 		}
-		result = bestRoute;
-		resultEval = bestEval;
+		if (bestEval < resultEval) {
+			result = bestRoute;
+			resultEval = bestEval;
+		}
 	}
 	return result;
 }
