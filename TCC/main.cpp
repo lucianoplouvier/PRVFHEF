@@ -230,7 +230,7 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                 adjacencies.push_back(adj);
             }
         }
-        int depotCost = std::abs(std::abs(cCoord.first) - std::abs(depotX)) + std::abs(std::abs(cCoord.second) - std::abs(depotY));
+        float depotCost = std::abs(std::abs(cCoord.first) - std::abs(depotX)) + std::abs(std::abs(cCoord.second) - std::abs(depotY));
         depotTravelCosts.push_back(depotCost);
     }
     return true;

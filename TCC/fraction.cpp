@@ -117,7 +117,7 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 		float cargo = std::numeric_limits<float>::max();
 		for (int i = 0; i < resultSolution.size(); i++) {
 			if (!resultSolution[i].clientsList.empty()) {
-				int currCargo = resultSolution[i].getTotalDemand();
+				float currCargo = resultSolution[i].getTotalDemand();
 				if (currCargo < cargo) {
 					cargo = currCargo;
 					mostEmptyRouteIndex = i;
@@ -150,12 +150,12 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
 	bool splitApplied = false;
 	std::vector<Route> result = solution;
-	int resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
+	float resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
 	do {
 		splitApplied = false;
 
 		std::vector<Route> stepSol = result;
-		int stepEval = resultEval;
+		float stepEval = resultEval;
 
 		for (int i = 0; i < stepSol.size(); i++) {
 			Route& r = stepSol[i];
@@ -164,7 +164,7 @@ std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& sol
 				bool success = false;
 				std::vector<Route> splitSol = splitReinsertion(stepSol, c, i, success, adjacencyCosts); // Aqui pode ser só c pois só queremos esvaziar a rota.
 				if (success) {
-					int solEval = RouteDefs::evaluate(splitSol, adjacencyCosts);
+					float solEval = RouteDefs::evaluate(splitSol, adjacencyCosts);
 					if (solEval < stepEval) {
 						stepSol = splitSol;
 						stepEval = solEval;

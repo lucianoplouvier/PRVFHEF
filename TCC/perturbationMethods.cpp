@@ -117,10 +117,8 @@ bool randomSwapping(Route& a, Route& b) {
 			//}
 		} while (!valid && combinationsList.size() > 0);
 		if (valid) {
-			Route newA(a);
-			Route newB(b);
-			newA.clientsList[selectedA] = cB;
-			newB.clientsList[selectedB] = cA;
+			a.clientsList[selectedA] = cB;
+			b.clientsList[selectedB] = cA;
 			// Debug
 			//checkDuplicated(newA);
 			//checkDuplicated(newB);
@@ -134,6 +132,7 @@ bool randomShifting(Route& a, Route& b) {
 	bool valid = false;
 	int aSize = a.clientsList.size();
 	int bSize = b.clientsList.size();
+	int aIndex, bIndex;
 	Client cA, cB;
 	std::vector<std::pair<int, int>> combinationsList = generatePossibleRouteCombinations(a.clientsList.size(), b.clientsList.size());
 	if (combinationsList.size() > 0) {
@@ -155,31 +154,16 @@ bool randomShifting(Route& a, Route& b) {
 					valid = true;
 					cA = rCA;
 					cB = rCB;
+					aIndex = selectedA;
+					bIndex = selectedB;
 				}
 			//}
 		} while (!valid && combinationsList.size() > 0);
 		if (valid) {
-			a.removeClient(cA);
-			b.removeClient(cB);
 			aSize--;
 			bSize--;
-
-			int indexcB = a.findClient(cB.id); // Procura pra ver se o cliente cB já não existe em a, se existir junta.
-			if (indexcB != -1) {
-				a.clientsList[indexcB].demand += cB.demand;
-			}
-			else {
-				a.insertClient(cB, Utils::getRandomInt(0, aSize));
-			}
-
-			// Procura pra ver se o cliente cB já não existe em a, se existir junta.
-			int indexcA = b.findClient(cA.id);
-			if (indexcA != -1) {
-				b.clientsList[indexcA].demand += cA.demand;
-			}
-			else {
-				b.insertClient(cA, Utils::getRandomInt(0, bSize));
-			}
+			a.clientsList[aIndex] = cB;
+			b.clientsList[bIndex] = cA;
 		}
 	}
 	return valid;
@@ -438,5 +422,4 @@ void perturbationMethods::perturbate(std::vector<Route>& solution, AdjacencyCost
 	std::vector<PERTURBATIONTYPES> pert = getAll();
 	int selectedPerturbation = Utils::getRandomInt(0, pert.size() - 1);
 	executePerturbation(solution, pert[selectedPerturbation], adjacencyCosts, creator, vehiclesList, clientList, availableVels);
-	RouteDefs::isSolutionValid(solution, clientList, availableVels);
 }

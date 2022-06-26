@@ -9,7 +9,7 @@ using namespace std;
 
 int EXECUTIONTIMES = 450;
 int MAXITERSNOIMPROVE = 3000;
-int VAR_EXEC_TIMES = 5;
+int VAR_EXEC_TIMES = 10;
 
 PRVFHEF::PRVFHEF(std::vector<float> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<float> depotTravelCost, std::string t, std::vector<int> availableVels, int vehicles) {
 	m_t = t;
