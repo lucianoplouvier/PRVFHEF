@@ -54,13 +54,10 @@ std::list<INTERROUTETYPES> interrouteStructures::getAll() {
 
 std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
 		Route routeI = solution[i];
 		for (int j = 0; j < solution.size(); j++) {
-			if (j == 3) {
-				int aisjd = 0;
-			}
 			Route routeJ = solution[j];
 			if (routeI.id != routeJ.id) {
 				bool nStatus = auxStruct->neighborhoodStatus(INTERROUTETYPES::SHIFT1_0, routeI.id);
@@ -107,7 +104,7 @@ std::vector<Route> interrouteStructures::shift1_0(std::vector<Route>& solution, 
 
 std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < result.size(); i++) {
 		const Route& routeI = solution[i];
 		if (routeI.clientsList.size() > 1) {
@@ -124,26 +121,30 @@ std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, 
 							std::vector<Client> clients;
 							clients.push_back(client);
 							clients.push_back(next);
-							if (client.demand + sumDeliveryJ <= routeJ.vehicle.capacity) { // Mover de routeI para routeJ
-								//if (solution[j].findClient(client.id) < 0 && solution[j].findClient(next.id) < 0) { //TODO Se não tem o cliente na rota j prosseguir
-									int pos = RouteDefs::findBestInsertion(routeJ, clients, adjCosts).second;
-									std::vector<Route> newResult = solution;
-									newResult[i].removeClient(next);
-									newResult[i].removeClient(client);
-									bool ok = newResult[j].insertClient(next, pos);
+							if (client.demand + next.demand + sumDeliveryJ <= routeJ.vehicle.capacity) { // Mover de routeI para routeJ
+								int pos = RouteDefs::findBestInsertion(routeJ, clients, adjCosts).second;
+								std::vector<Route> newResult = solution;
+								newResult[i].removeClient(next);
+								newResult[i].removeClient(client);
+								bool ok = newResult[j].insertClient(next, pos);
+								if (ok) {
+									ok = newResult[j].insertClient(client, pos);
 									if (ok) {
-										ok = newResult[j].insertClient(client, pos);
-										if (ok) {
-											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-												float eval = RouteDefs::evaluate(newResult, adjCosts);
-												if (eval < resultEval) {// && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-													result = newResult;
-													resultEval = eval;
-												}
+										if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+											float eval = RouteDefs::evaluate(newResult, adjCosts);
+											if (eval < resultEval) {// && RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+												result = newResult;
+												resultEval = eval;
 											}
 										}
 									}
-								//}
+									else {
+										cout << "ERROR Insert SHIFT2_0";
+									}
+								}
+								else {
+									cout << "ERROR Insert SHIFT2_0";
+								}
 							}
 						}
 					}
@@ -163,7 +164,7 @@ std::vector<Route> interrouteStructures::shift2_0(std::vector<Route>& solution, 
 
 std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
 		const Route& routeI = solution[i];
 		for (int j = 0; j < solution.size(); j++) {
@@ -184,22 +185,20 @@ std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, f
 							if (client.demand + sumDeliveryJ - maxDeliveryJ <= routeJCapacity) {
 								for (int jClient = 0; jClient < routeJ.clientsList.size(); jClient++) {
 									const Client& other = routeJ.clientsList[jClient];
-									//if (routeI.findClient(other.id) < 0 && routeJ.findClient(client.id) < 0) { // TODO se tiver não entra
-										std::vector<Route> newResult = solution;
-										float newDemandI = sumDeliveryI - client.demand + other.demand;
-										float newDemandJ = sumDeliveryJ + client.demand - other.demand;
-										if ((newDemandI) <= newResult[i].vehicle.capacity &&
-											(newDemandJ) <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
-											RouteDefs::swapClients(newResult[i], iClient, newResult[j], jClient);
-											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-												float eval = RouteDefs::evaluate(newResult, adjCosts);
-												if (eval < resultEval) {
-													resultEval = eval;
-													result = newResult;
-												}
+									std::vector<Route> newResult = solution;
+									float newDemandI = sumDeliveryI - client.demand + other.demand;
+									float newDemandJ = sumDeliveryJ + client.demand - other.demand;
+									if ((newDemandI) <= newResult[i].vehicle.capacity &&
+										(newDemandJ) <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
+										RouteDefs::swapClients(newResult[i], iClient, newResult[j], jClient);
+										if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+											float eval = RouteDefs::evaluate(newResult, adjCosts);
+											if (eval < resultEval) {
+												resultEval = eval;
+												result = newResult;
 											}
 										}
-									//}
+									}
 								}
 							}
 						}
@@ -220,7 +219,7 @@ std::vector<Route> interrouteStructures::swap1_1(std::vector<Route>& solution, f
 
 std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
 		const Route& routeI = solution[i];
 		for (int j = 0; j < solution.size(); j++) {
@@ -244,19 +243,17 @@ std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, f
 									const Client& other = routeJ.clientsList[jClient];
 									if (sumDeliveryI - client.demand - next.demand + other.demand <= routeI.vehicle.capacity &&
 										sumDeliveryJ - other.demand + client.demand + next.demand <= routeJ.vehicle.capacity) {
-										//if (routeI.findClient(other.id) < 0 && routeJ.findClient(client.id) < 0 && routeJ.findClient(next.id) < 0) { // TODO se tiver não entra
-											std::vector<Route> newResult = solution;
-											RouteDefs::swapClients(newResult[i], iClient, newResult[j], jClient);
-											newResult[i].removeClient(next);
-											newResult[j].insertClient(Client(next), jClient);
-											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)){
-												float eval = RouteDefs::evaluate(newResult, adjCosts);
-												if (eval < resultEval) {
-													resultEval = eval;
-													result = newResult;
-												}
+										std::vector<Route> newResult = solution;
+										RouteDefs::swapClients(newResult[i], iClient, newResult[j], jClient);
+										newResult[i].removeClient(next);
+										newResult[j].insertClient(Client(next), jClient);
+										if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)){
+											float eval = RouteDefs::evaluate(newResult, adjCosts);
+											if (eval < resultEval) {
+												resultEval = eval;
+												result = newResult;
 											}
-										//}
+										}
 									}
 								}
 							}
@@ -278,7 +275,7 @@ std::vector<Route> interrouteStructures::swap2_1(std::vector<Route>& solution, f
 
 std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
 		const Route& routeI = solution[i];
 		for (int j = 0; j < solution.size(); j++) {
@@ -293,55 +290,53 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 							const Client& client = routeI.clientsList[iClient];
 							for (int jClient = 0; jClient < routeJ.clientsList.size(); jClient++) {
 								const Client& other = routeJ.clientsList[jClient];
-								//if (routeI.findClient(other.id) < 0 && routeJ.findClient(client.id) < 0) { // TODO só presseguir se não existe.
-									std::vector<Route> newResult = solution;
-									if (client.demand > other.demand) {  // i > j
-										if ((newResult[j].getTotalDemand() + client.demand - other.demand) <= newResult[j].vehicle.capacity && 
-											newResult[i].getTotalDemand() + other.demand <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
-											Client copyI(client);
-											Client copyJ(other);
-											copyI.demand = other.demand;
-											newResult[i].clientsList[iClient].demand -= other.demand; // Se não tiver isso fica em excesso
-											std::vector<Client> cList;
-											cList.push_back(copyJ);
-											int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
-											if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
-												newResult[i].insertClient(copyJ, indexToInsert);
-												newResult[j].clientsList[jClient] = copyI;
-												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-													float eval = RouteDefs::evaluate(newResult, adjCosts);
-													if (eval < resultEval) {
-														resultEval = eval;
-														result = newResult;
-													}
+								std::vector<Route> newResult = solution;
+								if (client.demand > other.demand) {  // i > j
+									if ((newResult[j].getTotalDemand() + client.demand - other.demand) <= newResult[j].vehicle.capacity && 
+										newResult[i].getTotalDemand() + other.demand <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
+										Client copyI(client);
+										Client copyJ(other);
+										copyI.demand = other.demand;
+										newResult[i].clientsList[iClient].demand -= other.demand; // Se não tiver isso fica em excesso
+										std::vector<Client> cList;
+										cList.push_back(copyJ);
+										int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
+										if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
+											newResult[i].insertClient(copyJ, indexToInsert);
+											newResult[j].clientsList[jClient] = copyI;
+											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+												float eval = RouteDefs::evaluate(newResult, adjCosts);
+												if (eval < resultEval) {
+													resultEval = eval;
+													result = newResult;
 												}
 											}
 										}
 									}
-									else if (client.demand < other.demand) {
-										if ((newResult[i].getTotalDemand() - client.demand + other.demand) <= newResult[i].vehicle.capacity &&
-											(newResult[j].getTotalDemand() + client.demand) <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
-											Client copyI(client);
-											Client copyJ(other);
-											copyJ.demand = client.demand;
-											newResult[j].clientsList[jClient].demand -= client.demand; // Se não tiver isso fica em excesso
-											std::vector<Client> cList;
-											cList.push_back(copyI);
-											int indexToInsert = RouteDefs::findBestInsertion(newResult[j], cList, adjCosts, iClient).second;
-											if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
-												newResult[j].insertClient(copyI, indexToInsert);
-												newResult[i].clientsList[iClient] = copyJ;
-												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-													float eval = RouteDefs::evaluate(newResult, adjCosts);
-													if (eval < resultEval) {
-														resultEval = eval;
-														result = newResult;
-													}
+								}
+								else if (client.demand < other.demand) {
+									if ((newResult[i].getTotalDemand() - client.demand + other.demand) <= newResult[i].vehicle.capacity &&
+										(newResult[j].getTotalDemand() + client.demand) <= newResult[j].vehicle.capacity) { // Verifica se cabe nos dois
+										Client copyI(client);
+										Client copyJ(other);
+										copyJ.demand = client.demand;
+										newResult[j].clientsList[jClient].demand -= client.demand; // Se não tiver isso fica em excesso
+										std::vector<Client> cList;
+										cList.push_back(copyI);
+										int indexToInsert = RouteDefs::findBestInsertion(newResult[j], cList, adjCosts, iClient).second;
+										if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
+											newResult[j].insertClient(copyI, indexToInsert);
+											newResult[i].clientsList[iClient] = copyJ;
+											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+												float eval = RouteDefs::evaluate(newResult, adjCosts);
+												if (eval < resultEval) {
+													resultEval = eval;
+													result = newResult;
 												}
 											}
 										}
 									}
-								//}
+								}
 							}
 						}
 					}
@@ -361,7 +356,7 @@ std::vector<Route> interrouteStructures::swap1_1S(std::vector<Route>& solution, 
 
 std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, float evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
 	std::vector<Route> result = solution;
-	int resultEval = evaluation;
+	float resultEval = evaluation;
 	for (int i = 0; i < solution.size(); i++) {
 		const Route& routeI = solution[i];
 		for (int j = 0; j < solution.size(); j++) {
@@ -380,33 +375,60 @@ std::vector<Route> interrouteStructures::swap2_1S(std::vector<Route>& solution, 
 								if (routeI.getTotalDemand() - clientI1.demand - clientI2.demand + other.demand <= routeI.vehicle.capacity &&
 									routeJ.getTotalDemand() - other.demand + clientI1.demand + clientI2.demand <= routeJ.vehicle.capacity) {
 									if (clientI1.demand + clientI2.demand > other.demand && clientI1.demand < other.demand) {  // i > j
-										//if (routeI.findClient(other.id) < 0 && routeJ.findClient(clientI1.id) < 0 && routeJ.findClient(clientI2.id) < 0) { // TODO só presseguir se não existe.
-											std::vector<Route> newResult = solution;
-											Client copyI1(clientI1);// dI
-											Client copyI2(clientI2);// dJ
-											Client copyJ(other);
-											copyI2.demand = other.demand - clientI1.demand;
-											newResult[i].clientsList[iClient + 1].demand -= copyI2.demand; // Se não tiver isso fica em excesso
-											std::vector<Client> cList;
-											cList.push_back(copyJ);
-											int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
-											if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
-												newResult[j].clientsList[jClient] = copyI2;
-												newResult[j].insertClient(copyI1, jClient);
-												newResult[i].removeClient(copyI1);
-												newResult[i].insertClient(copyJ, indexToInsert);
-												if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
-													float eval = RouteDefs::evaluate(newResult, adjCosts);
-													if (eval < resultEval) {
-														resultEval = eval;
-														result = newResult;
-													}
+										std::vector<Route> newResult = solution;
+										Client copyI1(clientI1);// dI
+										Client copyI2(clientI2);// dJ
+										Client copyJ(other);
+										copyI2.demand = other.demand - clientI1.demand;
+										newResult[i].clientsList[iClient + 1].demand -= copyI2.demand; // Se não tiver isso fica em excesso
+										std::vector<Client> cList;
+										cList.push_back(copyJ);
+										int indexToInsert = RouteDefs::findBestInsertion(newResult[i], cList, adjCosts, iClient).second;
+										if (indexToInsert != -1) { // Só inserir se um indice foi encontrado.
+											newResult[j].clientsList[jClient] = copyI2;
+											newResult[j].insertClient(copyI1, jClient);
+											newResult[i].removeClient(copyI1);
+											newResult[i].insertClient(copyJ, indexToInsert);
+											if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+												float eval = RouteDefs::evaluate(newResult, adjCosts);
+												if (eval < resultEval) {
+													resultEval = eval;
+													result = newResult;
 												}
 											}
-										//}
+										}
 									}
 									else if (clientI1.demand + clientI2.demand < other.demand){
-										
+										std::vector<Route> newResult = solution;
+										Client copyI1(clientI1);// dI
+										Client copyI2(clientI2);// dJ
+										Client copyJ(other);
+
+										copyJ.demand = copyI1.demand + copyI2.demand;
+										newResult[j].clientsList[jClient].demand -= copyJ.demand;
+
+										std::vector<Client> cList;
+										cList.push_back(copyI1);
+										cList.push_back(copyI2);
+
+										int indexToInsert = RouteDefs::findBestInsertion(newResult[j], cList, adjCosts, iClient).second;
+
+										newResult[j].insertClient(copyI2, indexToInsert);
+										newResult[j].insertClient(copyI1, indexToInsert);
+										newResult[i].removeClient(clientI1);
+
+										newResult[i].clientsList[iClient] = copyJ;
+
+										if (RouteDefs::isSolutionValid(newResult, originalClients, availableVels)) {
+											float eval = RouteDefs::evaluate(newResult, adjCosts);
+											if (eval < resultEval) {
+												resultEval = eval;
+												result = newResult;
+											}
+										}
+										else {
+											cout << "ERRO";
+										}
 									}
 								}
 							}

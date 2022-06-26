@@ -46,13 +46,13 @@ struct Route {
 		this->vehicle = v;
 	}
 
-	bool canAddClient(int demand) const {
+	bool canAddClient(float demand) const {
 		float totalDemand = getTotalDemand();
 		float left = vehicle.capacity - totalDemand;
 		return demand <= left;
 	}
 
-	bool addClient(int clientIndex, int demand) {
+	bool addClient(int clientIndex, float demand) {
 		bool canAdd = this->canAddClient(demand);
 		if (canAdd) {
 			Client c;
@@ -72,7 +72,7 @@ struct Route {
 	}
 
 	// Junta a demanda do cliente caso o cliente já exista na rota.
-	bool addClientOrMerge(int clientId, int demand) {
+	bool addClientOrMerge(int clientId, float demand) {
 		bool canAdd = this->canAddClient(demand);
 		if (canAdd) {
 			bool done = false;
@@ -89,23 +89,7 @@ struct Route {
 		}
 		return canAdd;
 	}
-	/*
-	bool insertClient(int clientIndex, int demand, int position) {
-		bool canAdd = this->canAddClient(demand);
-		if (canAdd) {
-			Client c;
-			c.id = clientIndex;
-			c.demand = demand;
-			std::vector<Client>::iterator it = this->clientsList.begin();
-			while (position > 0) {
-				it++;
-				position--;
-			}
-			clientsList.insert(it, c);
-		}
-		return canAdd;
-	}
-	*/
+
 	bool insertClient(const Client& client, int position) {
 		bool canAdd = this->canAddClient(client.demand);
 		if (canAdd) {
@@ -190,23 +174,6 @@ struct Route {
 		return false;
 	}
 
-
-	/*
-	void removeClient(int clientId, int clientDemand) {
-		if (clientsList.size() > 0) {
-			auto iterator = clientsList.begin();
-			while (iterator != clientsList.end()) {
-				if (iterator->id == clientId && iterator->demand == clientDemand) {
-					break;
-				}
-				iterator++;
-			}
-			if (iterator != clientsList.end()) {
-				clientsList.erase(iterator);
-			}
-		}
-	}
-	*/
 	int findClient(int clientId) const {
 		int index = 0;
 		auto iterator = this->clientsList.begin();
@@ -221,7 +188,7 @@ struct Route {
 	}
 
 	float getTotalDemand() const {
-		int totalDemand = 0;
+		float totalDemand = 0;
 		for (int i = 0; i < (int)clientsList.size(); i++) {
 			totalDemand += clientsList[i].demand;
 		}
@@ -348,7 +315,7 @@ namespace RouteDefs {
 
 	Client getOriginalClient(int clientId, const std::vector<Client>& clientList);
 
-	bool fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList);
+	bool fitsInNonBiggestVehicle(float demand, const std::vector<Vehicle>& vehiclesList);
 
 	std::vector<int> calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels);
 }

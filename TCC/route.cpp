@@ -215,7 +215,7 @@ Vehicle RouteDefs::getSmallestVehicle(const std::vector<Vehicle>& vehiclesList) 
 	return smallestVehicle;
 }
 
-bool RouteDefs::fitsInNonBiggestVehicle(int demand, const std::vector<Vehicle>& vehiclesList) {
+bool RouteDefs::fitsInNonBiggestVehicle(float demand, const std::vector<Vehicle>& vehiclesList) {
 	Vehicle biggest = RouteDefs::getBiggestVehicle(vehiclesList);
 	for (Vehicle v : vehiclesList) {
 		if (v.id != biggest.id && demand <= v.capacity) {
