@@ -18,7 +18,7 @@ std::vector<std::string> strSplit(const std::string& text, char separator) {
     return result;
 }
 
-bool readProblem(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<float>& depotTravelCosts) {
+bool readProblem(std::string input, std::vector<double>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<double>& depotTravelCosts) {
     /*
     * Formato do arquivo
     * -> numero de clientes
@@ -107,7 +107,7 @@ bool readProblem(std::string input, std::vector<float>& demands, std::vector<Veh
     return true;
 }
 
-bool readProblemText(std::string input, std::vector<float>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& availableVels, std::vector<float>& depotTravelCosts, int& vels, bool readVariableCost) {
+bool readProblemText(std::string input, std::vector<double>& demands, std::vector<Vehicle>& vehicleTypes, std::vector<ClientAdjacency>& adjacencies, std::vector<int>& availableVels, std::vector<double>& depotTravelCosts, int& vels, bool readVariableCost) {
 
     string line;
 
@@ -115,7 +115,7 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
 
     int vehicles = 0;
 
-    int depotX, depotY;
+    int depotX = 0, depotY = 0;
     
     std::string eof = "EOF";
 
@@ -197,7 +197,8 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                 getline(myfile, line);
                 std::vector<std::string> lineSplit = strSplit(line, ' ');
                 for (int i = 0; i < vehicles; i++) {
-                    vehicleTypes[i].travelCost = std::atof(lineSplit[i].c_str());
+                    //vehicleTypes[i].travelCost = std::atof(lineSplit[i].c_str()); // As outras soluções da literatura não consideram este fator.
+                    vehicleTypes[i].travelCost = 1;
                 }
                 getline(myfile, line);
                 if (line.compare(eof) != 0) {
@@ -226,11 +227,16 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
                 ClientAdjacency adj;
                 adj.clientFromId = i;
                 adj.clientToId = j;
-                adj.travelCost = std::abs(std::abs(cCoord.first) - std::abs(otherCoord.first)) + std::abs(std::abs(cCoord.second) - std::abs(otherCoord.second));
+                double xDiff = std::abs(std::abs(cCoord.first) - std::abs(otherCoord.first));
+                double yDiff = std::abs(std::abs(cCoord.second) - std::abs(otherCoord.second));
+                adj.travelCost = std::sqrt(xDiff * xDiff + yDiff * yDiff);
                 adjacencies.push_back(adj);
             }
         }
-        float depotCost = std::abs(std::abs(cCoord.first) - std::abs(depotX)) + std::abs(std::abs(cCoord.second) - std::abs(depotY));
+        double depotXDiff = std::abs(std::abs(cCoord.first) - std::abs(depotX));
+        double depotYDiff = std::abs(std::abs(cCoord.second) - std::abs(depotY));
+
+        double depotCost = std::sqrt(depotXDiff * depotXDiff + depotYDiff * depotYDiff);
         depotTravelCosts.push_back(depotCost);
     }
     return true;
@@ -238,10 +244,10 @@ bool readProblemText(std::string input, std::vector<float>& demands, std::vector
 
 int main()
 {
-    std::vector<float> demands;
+    std::vector<double> demands;
     std::vector<ClientAdjacency> adjacencies;
     std::vector<Vehicle> vehicleTypes;
-    std::vector<float> depotTravelCosts;
+    std::vector<double> depotTravelCosts;
     std::vector<int> availableVels;
     int vels = 0;
 
@@ -260,10 +266,43 @@ int main()
 
     readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
 
-    if (availableVels.size() > 0) {
-        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, t, availableVels, vels);
+    int execTimes = 10;
+
+    double bestResult = numeric_limits<double>::max();
+
+    double totalResult = 0;
+    double totalTime = 0;
+
+    for (int i = 1; i <= execTimes; i++) {
+        std::string iStr;
+        std::string ap = " (";
+        ap += to_string(i);
+        ap += ")";
+        std::string tt = t + ap;
+         
+        if (availableVels.size() > 0) {
+            PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt, availableVels, vels);
+        }
+        else {
+            PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt);
+            double currResult = transport.getResult();
+            if (currResult < bestResult) {
+                bestResult = currResult;
+            }
+            totalResult += currResult;
+            totalTime += transport.getExecTime();
+        }
     }
-    else {
-        PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, t);
-    }
+
+    double avgResult = totalResult / execTimes;
+    double avgExecTime = totalTime / execTimes;
+
+    ofstream exitStream;
+    std::string f = "F:\\TCC\\TCC\\x64\\Release\\estatisticas Taillard_" + t + ".txt";
+    exitStream.open(f);
+    exitStream << "Tempo de execução total:" << totalTime << "\n";
+    exitStream << "Best Result: " << bestResult << "\n";
+    exitStream << "Tempo de execução médio: " << avgExecTime << "\n";
+    exitStream << "Average Result: " << avgResult << "\n";
+    exitStream.close();
 }

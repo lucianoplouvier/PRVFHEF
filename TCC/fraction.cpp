@@ -2,20 +2,20 @@
 
 std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& solution, const Client& client, int forbiddenRouteIndex, bool& success, const AdjacencyCosts& adjacencyCosts) {
 	std::vector<int> routesIndexWithResidual; // L
-	std::vector<float> residualsList; // A
-	std::vector<float> leastInsertionCosts; // U
+	std::vector<double> residualsList; // A
+	std::vector<double> leastInsertionCosts; // U
 	std::vector<int> leastInsertionPos;
 
 
 	std::vector<Route> result = solution;
 
 	int vehicles = solution.size();
-	float totalResidual = 0;
+	double totalResidual = 0;
 	for (int i = 0; i < vehicles; i++) {
 		const Route& r = solution[i];
 		if (!r.vehicle.ficticous) {
-			float rTotalDemand = r.getTotalDemand();
-			float currResidual = r.vehicle.capacity - rTotalDemand;
+			double rTotalDemand = r.getTotalDemand();
+			double currResidual = r.vehicle.capacity - rTotalDemand;
 			if (i != forbiddenRouteIndex && currResidual > 0) {
 				routesIndexWithResidual.push_back(i);
 				residualsList.push_back(currResidual);
@@ -26,10 +26,11 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 
 	if (totalResidual >= client.demand) { // Então existe o espaço para o cliente.
 		for (int i = 0; i < routesIndexWithResidual.size(); i++) {
-			if (!result[i].vehicle.ficticous) {
+			int routeIndex = routesIndexWithResidual[i];
+			if (!result[routeIndex].vehicle.ficticous) {
 				std::vector<Client> clients;
 				clients.push_back(client);
-				auto bestInsert = RouteDefs::findBestInsertion(result[i], clients, adjacencyCosts);
+				auto bestInsert = RouteDefs::findBestInsertion(result[routeIndex], clients, adjacencyCosts);
 				leastInsertionCosts.push_back(bestInsert.first);
 				leastInsertionPos.push_back(bestInsert.second);
 			}
@@ -46,36 +47,36 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 }
 
 std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, const Client& client, const std::vector<int>& leastInsertPos,
-	std::vector<int>& routesIndexWithResidual /*L*/, std::vector<float>& residualsList /*A*/, std::vector<float>& leastInsertionCosts /*U*/, bool& success) {
+	std::vector<int>& routesIndexWithResidual /*L*/, std::vector<double>& residualsList /*A*/, std::vector<double>& leastInsertionCosts /*U*/, bool& success) {
 
-	float currDemand = client.demand;
+	double currDemand = client.demand;
 
 	struct Profit {
 		int id;
-		float value;
+		double value;
 	};
 
 	std::vector<Profit> profits(residualsList.size());
 
 	for (int i = 0; i < residualsList.size(); i++) {
-		float& residual = residualsList[i];
-		float& cost = leastInsertionCosts[i];
-		float profitval = residual / cost;
+		double& residual = residualsList[i];
+		double& cost = leastInsertionCosts[i];
+		double profitval = cost / residual;
 		Profit p;
 		p.id = i;
 		p.value = profitval;
 		profits[i] = p;
 	}
 
-	std::sort(profits.begin(), profits.end(), [](const Profit& p, const Profit& q) { return (float)p.value > (float)q.value; });
+	std::sort(profits.begin(), profits.end(), [](const Profit& p, const Profit& q) { return (double)p.value < (double)q.value; });
 	int i = 0;
 	for (i; i < solution.size() && currDemand > 0; i++) {
 		Profit p = profits[i];
 		int chosenRouteIndex = routesIndexWithResidual[p.id]; // The chosen route is the one that has residual space for insertion.
-		float residual = residualsList[p.id];
+		double residual = residualsList[p.id];
 		if (residual > 0) {
 			Route& chosenRoute = solution[chosenRouteIndex];
-			float maxThatCanInsert = std::min(currDemand, residual);
+			double maxThatCanInsert = std::min(currDemand, residual);
 			if (maxThatCanInsert <= 0) {
 				cout << "ERROR. PRVFHEF::knaapSackGreedy, Trying to add demand <= 0.";
 			}
@@ -93,7 +94,7 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 		}
 	}
 	if (i >= solution.size() && (currDemand > 0 || currDemand < 0)) {
-		cout << "WARN. PRVFHEF::knaapSackGreedy, Client still not fully added.";
+		cout << "ERROR. PRVFHEF::knaapSackGreedy, Client still not fully added.";
 	}
 	else {
 		success = true;
@@ -114,10 +115,10 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 	int tries = 0;
 	while (currRoutes > maxVels && tries < resultSolution.size()) {
 		int mostEmptyRouteIndex = -1;
-		float cargo = std::numeric_limits<float>::max();
+		double cargo = std::numeric_limits<double>::max();
 		for (int i = 0; i < resultSolution.size(); i++) {
 			if (!resultSolution[i].clientsList.empty()) {
-				float currCargo = resultSolution[i].getTotalDemand();
+				double currCargo = resultSolution[i].getTotalDemand();
 				if (currCargo < cargo) {
 					cargo = currCargo;
 					mostEmptyRouteIndex = i;
@@ -150,12 +151,12 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
 	bool splitApplied = false;
 	std::vector<Route> result = solution;
-	float resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
+	double resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
 	do {
 		splitApplied = false;
 
 		std::vector<Route> stepSol = result;
-		float stepEval = resultEval;
+		double stepEval = resultEval;
 
 		for (int i = 0; i < stepSol.size(); i++) {
 			Route& r = stepSol[i];
@@ -164,7 +165,7 @@ std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& sol
 				bool success = false;
 				std::vector<Route> splitSol = splitReinsertion(stepSol, c, i, success, adjacencyCosts); // Aqui pode ser só c pois só queremos esvaziar a rota.
 				if (success) {
-					float solEval = RouteDefs::evaluate(splitSol, adjacencyCosts);
+					double solEval = RouteDefs::evaluate(splitSol, adjacencyCosts);
 					if (solEval < stepEval) {
 						stepSol = splitSol;
 						stepEval = solEval;

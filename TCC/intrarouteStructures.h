@@ -17,6 +17,7 @@ namespace intrarouteStructures {
 	static int orOpt2Improve = 0;
 	static int orOpt3Improve = 0;
 	static int twoOptImprove = 0;
+	static int reverseImprove = 0;
 
 	int getIntrarrouteSumImprove();
 
@@ -29,6 +30,8 @@ namespace intrarouteStructures {
 	int getorOpt3Improve();
 
 	int getTwoOptImprove();
+
+	int getReverseImprove();
 
 	std::list<INTRAROUTETYPES> getAll();
 
@@ -47,5 +50,7 @@ namespace intrarouteStructures {
 	std::vector<Route> executeAll(std::vector<Route>& solution, AdjacencyCosts& adjCosts, const std::vector<Client>& clientList);
 
 	static std::vector<Route> twoOPT(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
+
+	void reverse(std::vector<Route>& solution, AdjacencyCosts& adjacencyCosts);
 
 }

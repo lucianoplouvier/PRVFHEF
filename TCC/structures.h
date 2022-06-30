@@ -5,12 +5,12 @@
 struct ClientAdjacency {
 	int clientFromId;
 	int clientToId;
-	float travelCost;
+	double travelCost;
 };
 
 struct Client {
 	int id;
-	float demand;
+	double demand;
 	Client() {
 		id = -1;
 		demand = -1;
@@ -21,16 +21,16 @@ struct Client {
 	}
 
 	bool operator==(Client& other) {
-		return this->id == other.id && (std::abs(std::abs(this->demand) - std::abs(other.demand)) < std::numeric_limits<float>::epsilon());
+		return this->id == other.id && (std::abs(std::abs(this->demand) - std::abs(other.demand)) < std::numeric_limits<double>::epsilon());
 	}
 
 };
 
 struct Vehicle {
 	int id;
-	float capacity;
-	float cost;
-	float travelCost; // Como multiplica, tem que ser pelo menos 1
+	double capacity;
+	double cost;
+	double travelCost; // Como multiplica, tem que ser pelo menos 1
 	bool ficticous = false;
 
 	bool operator==(const Vehicle& other) {

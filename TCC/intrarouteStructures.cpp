@@ -27,6 +27,11 @@ int intrarouteStructures::getTwoOptImprove() {
 	return twoOptImprove;
 }
 
+int intrarouteStructures::getReverseImprove() {
+	return reverseImprove;
+}
+
+
 std::list<INTRAROUTETYPES> intrarouteStructures::getAll() {
 	std::list<INTRAROUTETYPES> all;
 	all.push_back(INTRAROUTETYPES::REINSERTION);
@@ -34,6 +39,7 @@ std::list<INTRAROUTETYPES> intrarouteStructures::getAll() {
 	all.push_back(INTRAROUTETYPES::OR_OPT2);
 	all.push_back(INTRAROUTETYPES::OR_OPT3);
 	all.push_back(INTRAROUTETYPES::TWO_OPT);
+	//all.push_back(INTRAROUTETYPES::REVERSE); //Muito pouca melhora.
 	return all;
 }
 
@@ -56,6 +62,9 @@ std::vector<Route> intrarouteStructures::execute(INTRAROUTETYPES type, std::vect
 	case INTRAROUTETYPES::TWO_OPT:
 		result = twoOPT(solution, adjCosts);
 		break;
+	case INTRAROUTETYPES::REVERSE:
+		reverse(solution, adjCosts);
+		break;
 	default:
 		cout << "ERROR. intrarouteStructures::execute , tipo de vizinhança não reconhecido.";
 		break;
@@ -73,17 +82,17 @@ std::vector<Route> intrarouteStructures::executeAll(std::vector<Route>& solution
 	return solution;
 }
 
-Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
+Route executeShift(const Route& route, double initialEval, const AdjacencyCosts& adjacencyCosts, double& resultEval) {
 	Route result(route);
 	resultEval = initialEval;
 	bool improvementFound = true;
 	while (improvementFound) {
 		improvementFound = false;
 		Route bestRoute(result);
-		float bestEval = resultEval;
+		double bestEval = resultEval;
 		for (int aClient = 0; aClient < route.clientsList.size(); aClient++) {
 			Route routeToChange(bestRoute);
-			float changeEval = bestEval;
+			double changeEval = bestEval;
 			for (int iClient = 0; iClient < routeToChange.clientsList.size(); iClient++) {
 				Route step(routeToChange);
 				Client currClient = step.clientsList[iClient];
@@ -92,7 +101,7 @@ Route executeShift(const Route& route, float initialEval, const AdjacencyCosts& 
 				step.removeClient(currClient);
 				int pos = RouteDefs::findBestInsertion(step, clients, adjacencyCosts).second;
 				step.insertClient(currClient, pos);
-				float executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
+				double executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
 				if (executionEval < resultEval) {
 					changeEval = executionEval; // TESTE Confirm
 					routeToChange = step;
@@ -118,8 +127,8 @@ static std::vector<Route> intrarouteStructures::shift(std::vector<Route>& soluti
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute(result[iRoute]);
 		if (currRoute.clientsList.size() > 1) {
-			float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
-			float bestEval;
+			double currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
+			double bestEval;
 			currRoute = executeShift(currRoute, currentEval, adjacencyCosts, bestEval);
 			if (bestEval < currentEval) {
 				result[iRoute] = currRoute;
@@ -144,14 +153,33 @@ void invertRoute(Route& route, int indexStart, int indexEnd) {
 	}
 }
 
-Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
+void intrarouteStructures::reverse(std::vector<Route>& solution, AdjacencyCosts& adjCosts) {
+	std::vector<Route> result = solution;
+	double eval = RouteDefs::evaluate(solution, adjCosts);
+	bool improved = false;
+	for (int i = 0; i < result.size(); i++) {
+		Route r = result[i];
+		invertRoute(r, 0, r.clientsList.size() - 1);
+		double currEval = RouteDefs::evaluate(solution, adjCosts);
+		if (currEval < eval) {
+			eval = currEval;
+			improved = true;
+			solution[i] = r;
+		}
+	}
+	if (improved) {
+		reverseImprove++;
+	}
+}
+
+Route executeSwap(const Route& route, double initialEval, const AdjacencyCosts& adjacencyCosts, double& resultEval) {
 	Route result = route;
 	resultEval = initialEval;
 	bool improvementFound = true;
 	while (improvementFound) {
 		improvementFound = false;
 		Route bestRoute = result;
-		float bestEval = resultEval;
+		double bestEval = resultEval;
 		for (int aClient = 0; aClient < route.clientsList.size(); aClient++) {
 			Route routeToChange(bestRoute);
 			for (int iClient = 0; iClient < routeToChange.clientsList.size(); iClient++) {
@@ -159,7 +187,7 @@ Route executeSwap(const Route& route, float initialEval, const AdjacencyCosts& a
 				for (jClient; jClient < routeToChange.clientsList.size(); jClient++) {
 					Route afterStep = routeToChange;
 					invertRoute(afterStep, iClient, jClient);
-					float executionEval = RouteDefs::evaluateRoute(afterStep, adjacencyCosts);
+					double executionEval = RouteDefs::evaluateRoute(afterStep, adjacencyCosts);
 					if (executionEval < bestEval) {
 						bestEval = executionEval;
 						bestRoute = afterStep;
@@ -183,8 +211,8 @@ static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solutio
 	bool improved = false;
 	for (int i = 0; i < solution.size(); i++) {
 		Route currentRoute = result[i];
-		float currentEval = RouteDefs::evaluateRoute(currentRoute, adjacencyCosts);
-		float eval;
+		double currentEval = RouteDefs::evaluateRoute(currentRoute, adjacencyCosts);
+		double eval;
 		if (currentRoute.clientsList.size() > 1) {
 			executeSwap(currentRoute, currentEval, adjacencyCosts, eval);
 			if (eval < currentEval) {
@@ -199,14 +227,14 @@ static std::vector<Route> intrarouteStructures::swap(std::vector<Route>& solutio
 	return result;
 }
 
-Route executeOP2(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
-	Route result(route);
+Route executeOP2(const Route& route, double initialEval, const AdjacencyCosts& adjacencyCosts, double& resultEval) {
+	Route result = route;
 	resultEval = initialEval;
 	bool improvementFound = true;
 	while (improvementFound) {
 		improvementFound = false;
-		Route bestRoute(result);
-		float bestEval = resultEval;
+		Route bestRoute = result;
+		double bestEval = resultEval;
 		for (int aClient = 0; aClient < route.clientsList.size(); aClient++) {
 			Route routeToChange(bestRoute);
 			for (int iClient = 0; iClient < routeToChange.clientsList.size() - 1; iClient++) {
@@ -221,7 +249,7 @@ Route executeOP2(const Route& route, float initialEval, const AdjacencyCosts& ad
 				int pos = RouteDefs::findBestInsertion(step, clients, adjacencyCosts).second;
 				step.insertClient(nextClient, pos);
 				step.insertClient(currClient, pos);
-				float executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
+				double executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
 				if (executionEval < bestEval) {
 					bestEval = executionEval;
 					bestRoute = step;
@@ -242,9 +270,9 @@ static std::vector<Route> intrarouteStructures::orOpt2(std::vector<Route>& solut
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];
-		float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
+		double currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 		if (currRoute.clientsList.size() > 2) {
-			float resultEval = currentEval + 1;
+			double resultEval = currentEval + 1;
 			currRoute = executeOP2(currRoute, currentEval, adjacencyCosts, resultEval);
 			if (resultEval < currentEval) {
 				result[iRoute] = currRoute;
@@ -258,18 +286,18 @@ static std::vector<Route> intrarouteStructures::orOpt2(std::vector<Route>& solut
 	return result;
 }
 
-Route executeOP3(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
-	Route result(route);
+Route executeOP3(const Route& route, double initialEval, const AdjacencyCosts& adjacencyCosts, double& resultEval) {
+	Route result = route;
 	resultEval = initialEval;
 	bool improvementFound = true;
 	while (improvementFound) {
 		improvementFound = false;
-		Route bestRoute(result);
-		float bestEval = resultEval;
+		Route bestRoute = result;
+		double bestEval = resultEval;
 		for (int aClient = 0; aClient < route.clientsList.size(); aClient++) {
-			Route routeToChange(bestRoute);
+			Route routeToChange = bestRoute;
 			for (int iClient = 0; iClient < routeToChange.clientsList.size() - 2; iClient++) {
-				Route step(routeToChange);
+				Route step = routeToChange;
 				Client currClient = step.clientsList[iClient];
 				Client nextClient = step.clientsList[iClient + 1];
 				Client lastClient = step.clientsList[iClient + 2];
@@ -284,7 +312,7 @@ Route executeOP3(const Route& route, float initialEval, const AdjacencyCosts& ad
 				step.insertClient(lastClient, pos);
 				step.insertClient(nextClient, pos);
 				step.insertClient(currClient, pos);
-				float executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
+				double executionEval = RouteDefs::evaluateRoute(step, adjacencyCosts);
 				if (executionEval < bestEval) {
 					bestEval = executionEval;
 					bestRoute = step;
@@ -305,9 +333,9 @@ static std::vector<Route> intrarouteStructures::orOpt3(std::vector<Route>& solut
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];
-		float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
+		double currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 		if (currRoute.clientsList.size() > 3) {
-			float resultEval = currentEval + 1;
+			double resultEval = currentEval + 1;
 			currRoute = executeOP3(currRoute, currentEval, adjacencyCosts, resultEval);
 			if (resultEval < currentEval) {
 				result[iRoute] = currRoute;
@@ -321,20 +349,20 @@ static std::vector<Route> intrarouteStructures::orOpt3(std::vector<Route>& solut
 	return result;
 }
 
-Route executeTwoOpt(const Route& route, float initialEval, const AdjacencyCosts& adjacencyCosts, float& resultEval) {
+Route executeTwoOpt(const Route& route, double initialEval, const AdjacencyCosts& adjacencyCosts, double& resultEval) {
 	Route result(route);
 	if (route.clientsList.size() < 2) return result;
-	bool improvementFound = true;
+	bool improvementFound = false;
 	resultEval = initialEval;
-	while (improvementFound) {
+	do {
 		improvementFound = false;
 		Route bestRoute(result);
-		float bestEval = resultEval;
+		double bestEval = resultEval;
 		for (int i = 0; i < route.clientsList.size() - 2; i++) {
 			for (int j = i + 2; j < route.clientsList.size() - 1; j++) {
 				Route currRoute(result);
 				invertRoute(currRoute, i + 1, j + 1);
-				float eval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
+				double eval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 				if (eval < bestEval) {
 					bestEval = eval;
 					improvementFound = true;
@@ -346,7 +374,7 @@ Route executeTwoOpt(const Route& route, float initialEval, const AdjacencyCosts&
 			result = bestRoute;
 			resultEval = bestEval;
 		}
-	}
+	} while (improvementFound);
 	return result;
 }
 
@@ -355,9 +383,9 @@ static std::vector<Route> intrarouteStructures::twoOPT(std::vector<Route>& solut
 	bool improved = false;
 	for (int iRoute = 0; iRoute < result.size(); iRoute++) {
 		Route currRoute = result[iRoute];
-		float currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
+		double currentEval = RouteDefs::evaluateRoute(currRoute, adjacencyCosts);
 		if (currRoute.clientsList.size() > 3) {
-			float resultEval = currentEval;
+			double resultEval = currentEval;
 			currRoute = executeTwoOpt(currRoute, currentEval, adjacencyCosts, resultEval);
 			if (resultEval < currentEval) {
 				result[iRoute] = currRoute;

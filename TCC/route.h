@@ -25,7 +25,8 @@ enum class INTRAROUTETYPES {
 	REINSERTION, // Shift
 	TWO_OPT,
 	OR_OPT2,
-	OR_OPT3
+	OR_OPT3,
+	REVERSE
 };
 
 struct Route {
@@ -46,13 +47,13 @@ struct Route {
 		this->vehicle = v;
 	}
 
-	bool canAddClient(float demand) const {
-		float totalDemand = getTotalDemand();
-		float left = vehicle.capacity - totalDemand;
+	bool canAddClient(double demand) const {
+		double totalDemand = getTotalDemand();
+		double left = vehicle.capacity - totalDemand;
 		return demand <= left;
 	}
 
-	bool addClient(int clientIndex, float demand) {
+	bool addClient(int clientIndex, double demand) {
 		bool canAdd = this->canAddClient(demand);
 		if (canAdd) {
 			Client c;
@@ -72,7 +73,7 @@ struct Route {
 	}
 
 	// Junta a demanda do cliente caso o cliente já exista na rota.
-	bool addClientOrMerge(int clientId, float demand) {
+	bool addClientOrMerge(int clientId, double demand) {
 		bool canAdd = this->canAddClient(demand);
 		if (canAdd) {
 			bool done = false;
@@ -187,8 +188,8 @@ struct Route {
 		return -1;
 	}
 
-	float getTotalDemand() const {
-		float totalDemand = 0;
+	double getTotalDemand() const {
+		double totalDemand = 0;
 		for (int i = 0; i < (int)clientsList.size(); i++) {
 			totalDemand += clientsList[i].demand;
 		}
@@ -199,29 +200,29 @@ struct Route {
 		return other.id == this->id;
 	}
 
-	float getDemand(int indexStart, int indexEnd) const {
-		float result = 0;
+	double getDemand(int indexStart, int indexEnd) const {
+		double result = 0;
 		for (int i = indexStart; i <= indexEnd; i++) {
 			result += clientsList[i].demand;
 		}
 		return result;
 	}
 
-	float minDelivery() const {
+	double minDelivery() const {
 		if (clientsList.size() == 0) return 0;
-		float result = clientsList[0].demand;
+		double result = clientsList[0].demand;
 		for (int i = 1; i < clientsList.size(); i++) {
-			float d = clientsList[i].demand;
+			double d = clientsList[i].demand;
 			if (d < result) result = d;
 		}
 		return result;
 	}
 
-	float minDeliveryAdj() const {
+	double minDeliveryAdj() const {
 		if (clientsList.size() == 0) return 0;
-		float result = clientsList[0].demand;
+		double result = clientsList[0].demand;
 		for (int i = 1; i < clientsList.size(); i++) {
-			float d = clientsList[i].demand;
+			double d = clientsList[i].demand;
 			if (i + 1 < clientsList.size()) {
 				d += clientsList[i + 1].demand;
 			}
@@ -230,11 +231,11 @@ struct Route {
 		return result;
 	}
 
-	float maxDelivery() const {
+	double maxDelivery() const {
 		if (clientsList.size() == 0) return 0;
-		float result = clientsList[0].demand;
+		double result = clientsList[0].demand;
 		for (int i = 1; i < clientsList.size(); i++) {
-			float d = clientsList[i].demand;
+			double d = clientsList[i].demand;
 			if (d > result) result = d;
 		}
 		return result;
@@ -242,18 +243,18 @@ struct Route {
 };
 
 struct AdjacencyCosts {
-	std::vector<std::vector<float>> costs;
-	std::vector<float> depotTravel;
-	float getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
+	std::vector<std::vector<double>> costs;
+	std::vector<double> depotTravel;
+	double getAdjacencyCosts(int client1Index, int client2Index) const { return costs[client1Index][client2Index]; }
 };
 
 namespace RouteDefs {
 
-	float calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
+	double calculateTravelCost(const std::vector<Client>& clients, const AdjacencyCosts& adjacencyCosts);
 
-	float evaluate(const std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
+	double evaluate(const std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts);
 
-	float evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
+	double evaluateRoute(const Route& route, const AdjacencyCosts& adjacencyCosts);
 
 	void printRoute(const Route& route);
 
@@ -269,7 +270,7 @@ namespace RouteDefs {
 	* @param indice proibido, por padrão nenhum (-1).
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	std::pair<float, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts, int forbiddenIndex = -1);
+	std::pair<double, int> findBestInsertion(const Route& route, const std::vector<Client>& clientsList, const AdjacencyCosts& adjacencyCosts, int forbiddenIndex = -1);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -278,7 +279,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<float, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<double, int> findBestInsertion(const Route& route, const Client& client, const AdjacencyCosts& adjacencyCosts);
 
 	/*
 	* @brief Encontra a melhor inserção do cliente informado na rota.
@@ -288,7 +289,7 @@ namespace RouteDefs {
 	* @param adjacencyCosts - Lista de adjacencias.
 	* @return Par, onde o primeiro valor = custo, e o segundo valor é o indice.
 	*/
-	//std::pair<float, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
+	//std::pair<double, int> findBestInsertion(Route& route, Client& client, Client& next, const AdjacencyCosts& adjacencyCosts);
 
 	bool isSolutionValid(const std::vector<Route>& solution, std::vector<Client> completeClientList, std::vector<int> availableVels);
 
@@ -315,7 +316,7 @@ namespace RouteDefs {
 
 	Client getOriginalClient(int clientId, const std::vector<Client>& clientList);
 
-	bool fitsInNonBiggestVehicle(float demand, const std::vector<Vehicle>& vehiclesList);
+	bool fitsInNonBiggestVehicle(double demand, const std::vector<Vehicle>& vehiclesList);
 
 	std::vector<int> calculateAvailableVels(const std::vector<Route>& solution, std::vector<int> availableVels);
 }

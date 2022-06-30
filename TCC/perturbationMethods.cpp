@@ -6,10 +6,10 @@ int MINSHIFTEXECS = 1;
 int MAXSHIFTEXECS = 3;
 
 int MINSWAPEXECS = 1;
-int MAXSWAPEXECS = 4;
+int MAXSWAPEXECS = 3;
 
-int MINRANDOMKSPLIT = 5;
-int MAXRANDOMKSPLIT = 7;
+int MINRANDOMKSPLIT = 2;
+int MAXRANDOMKSPLIT = 4;
 
 std::vector<PERTURBATIONTYPES> perturbationMethods::getAll() {
 	std::vector<PERTURBATIONTYPES> all;
@@ -104,24 +104,19 @@ bool randomSwapping(Route& a, Route& b) {
 			selectedB = moves.second;
 			Client rCA = a.clientsList[selectedA];
 			Client rCB = b.clientsList[selectedB];
-			//if (b.findClient(rCA.id) < 0 && a.findClient(rCB.id) < 0) {
-				float aTotalDemand = a.getTotalDemand();
-				float bTotalDemand = b.getTotalDemand();
-				float aDemand = rCA.demand;
-				float bDemand = rCB.demand;
-				if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
-					valid = true;
-					cA = rCA;
-					cB = rCB;
-				}
-			//}
+			double aTotalDemand = a.getTotalDemand();
+			double bTotalDemand = b.getTotalDemand();
+			double aDemand = rCA.demand;
+			double bDemand = rCB.demand;
+			if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
+				valid = true;
+				cA = rCA;
+				cB = rCB;
+			}
 		} while (!valid && combinationsList.size() > 0);
 		if (valid) {
 			a.clientsList[selectedA] = cB;
 			b.clientsList[selectedB] = cA;
-			// Debug
-			//checkDuplicated(newA);
-			//checkDuplicated(newB);
 		}
 	}
 	return valid;
@@ -145,25 +140,24 @@ bool randomShifting(Route& a, Route& b) {
 			int selectedB = moves.second;
 			Client rCA = a.clientsList[selectedA];
 			Client rCB = b.clientsList[selectedB];
-			//if (!b.findClient(rCA.id) && !a.findClient(rCB.id)) {
-				float aTotalDemand = a.getTotalDemand();
-				float bTotalDemand = b.getTotalDemand();
-				float aDemand = rCA.demand;
-				float bDemand = rCB.demand;
-				if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
-					valid = true;
-					cA = rCA;
-					cB = rCB;
-					aIndex = selectedA;
-					bIndex = selectedB;
-				}
-			//}
+			double aTotalDemand = a.getTotalDemand();
+			double bTotalDemand = b.getTotalDemand();
+			double aDemand = rCA.demand;
+			double bDemand = rCB.demand;
+			if (((aTotalDemand - aDemand + bDemand) <= a.vehicle.capacity) && ((bTotalDemand - bDemand + aDemand) <= b.vehicle.capacity)) {
+				valid = true;
+				cA = rCA;
+				cB = rCB;
+				aIndex = selectedA;
+				bIndex = selectedB;
+			}
 		} while (!valid && combinationsList.size() > 0);
 		if (valid) {
-			aSize--;
-			bSize--;
-			a.clientsList[aIndex] = cB;
-			b.clientsList[bIndex] = cA;
+			a.removeClient(cA);
+			b.removeClient(cB);
+
+			a.insertClient(cB, Utils::getRandomInt(0, a.clientsList.size()));
+			b.insertClient(cA, Utils::getRandomInt(0, b.clientsList.size()));
 		}
 	}
 	return valid;
@@ -174,8 +168,12 @@ void perturbationMethods::multipleSwap1_1(std::vector<Route>& solution) {
 	int solSize = solution.size();
 	for (int i = 0; i < timesToExec; i++) {
 		std::vector<std::pair<int, int>> possibilities = generatePossibleSolutionCombinations(solSize);
-		std::pair<Route&, Route&> randomRoutePair = getRandomPair(solution, possibilities);
-		randomSwapping(randomRoutePair.first, randomRoutePair.second);
+		bool success = false;
+		while (!success && possibilities.size() > 0) {
+			std::pair<Route&, Route&> randomRoutePair = getRandomPair(solution, possibilities);
+			success = randomSwapping(randomRoutePair.first, randomRoutePair.second);
+		}
+		if (!success) break;
 	}
 }
 
@@ -189,6 +187,7 @@ void perturbationMethods::multiShift1_1(std::vector<Route>& solution) {
 			std::pair<Route&, Route&> randomRoutePair = getRandomPair(solution, possibilities);
 			success = randomShifting(randomRoutePair.first, randomRoutePair.second);
 		}
+		if (!success) break;
 	}
 }
 
@@ -211,7 +210,7 @@ void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& a
 		RouteDefs::removeClientFromSolution(step, it->id, positionOfSingleRemoval);
 		bool success = false;
 		step = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(it->id, clientList), positionOfSingleRemoval, success, adjacencyCosts);
-		if (success && RouteDefs::isSolutionValid(step, clientList, availableVels)) {
+		if (success) {
 			result = step;
 		}
 		randomClientsToChoose.erase(it);
@@ -226,7 +225,7 @@ std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, co
 	if (limitedVels) {
 		currentAvalVels = RouteDefs::calculateAvailableVels(solution, availableVels);
 	}
-	float capacitySpace = 0;
+	double capacitySpace = 0;
 	for (int i = 0; i < currentAvalVels.size(); i++) {
 		int& leftVelAmount = currentAvalVels[i];
 		if (leftVelAmount> 0) {
@@ -297,16 +296,16 @@ std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, co
 
 int findClosestRoute(std::vector<Route>& solution, Route* selected, AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehiclesList) {
 	int closestRouteId = -1;
-	float avgRouteDist = std::numeric_limits<float>::max();
+	double avgRouteDist = std::numeric_limits<double>::max();
 	int indexResult = -1;
 	Vehicle biggestVehicle = RouteDefs::getBiggestVehicle(vehiclesList);
 	for (int i = 0; i < solution.size(); i++) {
 		Route& r = solution[i];
 		if (r.id != selected->id) {
-			float totalDemand = r.getTotalDemand() + selected->getTotalDemand();
+			double totalDemand = r.getTotalDemand() + selected->getTotalDemand();
 			if (totalDemand <= biggestVehicle.capacity) { // Senão não dá pra fazer o merge das rotas.
 				int index = -1;
-				float dist = 0;
+				double dist = 0;
 				for (const Client& c : selected->clientsList) {
 					for (const Client& cOther : r.clientsList) {
 						dist += adjacencyCosts.getAdjacencyCosts(c.id, cOther.id);
