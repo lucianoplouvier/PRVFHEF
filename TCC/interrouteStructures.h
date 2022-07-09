@@ -37,6 +37,8 @@ namespace interrouteStructures {
 
 	int getKSplitImprove();
 
+	void resetImprove();
+
 	/*
 	* @brief Executa shift1_0, o qual passa o cliente de uma rota para outra.
 	* @param solution - Solução atual.

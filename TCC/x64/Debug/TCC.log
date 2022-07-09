@@ -1,19 +1,26 @@
-﻿  heterogeneousTransports.cpp
-F:\TCC\TCC\TCC\route.h(39,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\intrarouteStructures.h(38,56): warning C4267: 'return': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(16,40): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(29,63): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(57,40): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(59,70): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(69,68): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(79,69): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(145,81): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(197,83): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(231,35): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(432,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(489,77): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(502,79): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(512,43): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(532,42): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\heterogeneousTransports.cpp(552,47): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+﻿  perturbationMethods.cpp
+F:\TCC\TCC\TCC\Route.h(39,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\intrarouteStructures.h(40,56): warning C4267: 'return': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(66,51): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(93,34): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(94,34): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(97,130): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(100,79): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(128,34): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(129,34): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(132,130): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(135,79): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(159,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(160,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(168,31): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(182,31): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(200,49): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(205,46): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(251,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(271,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(338,37): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(347,71): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(366,81): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(428,67): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\perturbationMethods.cpp(76): warning C4715: 'getRandomPair': nem todos os caminhos de controle retornam um valor
   TCC.vcxproj -> F:\TCC\TCC\x64\Debug\TCC.exe

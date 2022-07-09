@@ -102,7 +102,7 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 	return solution;
 }
 
-std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts) {	
+std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts) {
 	//return solution;
 	std::vector<Route> resultSolution(solution);
 	int currRoutes = 0; // Só contar rotas não vazias.

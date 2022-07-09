@@ -263,7 +263,9 @@ std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, co
 	solution.erase(it);
 	const Vehicle* randomVehicle = NULL;
 	int iClient = 0;
-	while (iClient < clients.size()) {
+	bool success = true;
+	while (iClient < clients.size() && success) {
+		success = false;
 		std::vector<Vehicle> possibleVels = vehiclesList;
 		do {
 			int randomVel = Utils::getRandomInt(0, possibleVels.size() - 1);
@@ -273,6 +275,9 @@ std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, co
 			auto velIt = possibleVels.begin();
 			std::advance(velIt, randomVel);
 			possibleVels.erase(velIt);
+			if (limitedVels) {
+				currentAvalVels[randomVel]--;
+			}
 		} while (!randomVehicle && possibleVels.size() > 0);
 		if (randomVehicle) { // TODO não entra aqui se não houver um veículo que caiba o cliente.
 			Route newR = routeCreator.createRoute(*randomVehicle);
@@ -283,6 +288,7 @@ std::vector<Route> perturbationMethods::split(std::vector<Route> oldSolution, co
 			if (newR.clientsList.size() > 0) {
 				solution.push_back(newR);
 			}
+			success = true;
 		}
 		randomVehicle = NULL;
 	}

@@ -7,9 +7,9 @@
 
 using namespace std;
 
-int EXECUTIONTIMES = 400;
-int MAXITERSNOIMPROVE = 3000;
-int VAR_EXEC_TIMES = 10;
+int EXECUTIONTIMES = 300;
+int MAXITERSNOIMPROVE = 1000;
+int VAR_EXEC_TIMES = 2;
 
 PRVFHEF::PRVFHEF(std::vector<double> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<double> depotTravelCost, std::string t, std::vector<int> availableVels, int vehicles) {
 	m_t = t;
@@ -421,8 +421,7 @@ std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::li
 	if (availableVels.size() > 0) {
 		avalVels = RouteDefs::calculateAvailableVels(routes, availableVels);
 	}
-	//bool criteria = Utils::getRandomInt(0, 1); // 0 = CIMPV, 1 = CIMBVM
-	bool criteria = 1;
+	bool criteria = Utils::getRandomInt(0, 1); // 0 = CIMPV, 1 = CIMBVM
 	double gamma = 0;
 	if (criteria == 1) {
 		std::vector<double> gammaCosts;
@@ -531,19 +530,43 @@ std::vector<Route> PRVFHEF::paralelInsertion(std::vector<Route>& routes, std::li
 }
 
 double PRVFHEF::getClosestInsertionCost(const Route& route, int& position, int candidateId) const {
-	int routeSize = route.clientsList.size();
-	position = routeSize;
-	double cost = m_adjacencyCosts.depotTravel[candidateId];
-	if (routeSize > 0) {
-		cost += m_adjacencyCosts.depotTravel[route.clientsList[0].id];
-		for (int i = 1; i < route.clientsList.size(); i++) {
-			cost += m_adjacencyCosts.getAdjacencyCosts(i, i-1);
-		}
+	int clientId = candidateId;
+	double cost = 0;
+	int pos = 0;
+	// Se colocar na primeira posição.
+	cost = m_adjacencyCosts.depotTravel[clientId];
+	pos = 0;
+
+	int clients = route.clientsList.size();
+
+	if (clients == 0) { // Inserir em rota  vazia.
+		return cost;
 	}
 	else {
-		cost *= 2;
+		for (int i = 0; i <= clients; i++) {
+			int currClientId = -1;
+			if (i != clients) {
+				currClientId = route.clientsList[i].id;
+			}
+			double currCost = 0;
+			if (i == 0) { // Colocar um cliente no inicio
+				currCost = m_adjacencyCosts.depotTravel[clientId];
+			}
+			else if (i == clients) { // Colocar um cliente no fim
+				currCost = m_adjacencyCosts.getAdjacencyCosts(clientId, route.clientsList[i - 1].id);
+			}
+			else {
+				int prevId = route.clientsList[i - 1].id;
+				currCost = m_adjacencyCosts.getAdjacencyCosts(prevId, clientId);
+			}
+			if (currCost < cost) {
+				cost = currCost;
+				pos = i;
+			}
+		}
+		position = pos;
+		return cost;
 	}
-	return cost;
 }
 
 double PRVFHEF::getCheapestInsertionCost(const Route& route, int& position, int candidateId, double y) const {

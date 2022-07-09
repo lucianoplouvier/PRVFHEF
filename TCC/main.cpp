@@ -244,65 +244,86 @@ bool readProblemText(std::string input, std::vector<double>& demands, std::vecto
 
 int main()
 {
-    std::vector<double> demands;
-    std::vector<ClientAdjacency> adjacencies;
-    std::vector<Vehicle> vehicleTypes;
-    std::vector<double> depotTravelCosts;
-    std::vector<int> availableVels;
-    int vels = 0;
+    
 
     //std::string filepath = "C:/Users/frien/Documents/testeTCC.txt";
     
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    cout << "Numero do arquivo? EX: 03\n";
+    //cout << "Numero do arquivo? EX: 03\n";
 
-    std::string t;  
-    cin >> t;
+    //std::string t;  
+    //cin >> t;
 
-    std::string filepath = "C:/Users/frien/Documents/Taillard_" + t + ".txt";
+    std::vector<std::string> problemList;
+    //problemList = {"17"};
+    problemList = {"03", "04", "05", "06" , "13" , "14" , "15" , "16", "17", "18", "19", "20"};
+    //problemList = {"17", "20"};
+    //problemList = { "03", "13", "17", "20"};
+    //problemList = { "20" };
+    //problemList = {"14"};
 
-    bool readVariableCost = false;
+    for (auto problem : problemList) {
 
-    readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
+        std::vector<double> demands = std::vector<double>();
+        std::vector<ClientAdjacency> adjacencies = std::vector<ClientAdjacency>();
+        std::vector<Vehicle> vehicleTypes = std::vector<Vehicle>();
+        std::vector<double> depotTravelCosts = std::vector<double>();
+        std::vector<int> availableVels = std::vector<int>();
+        int vels = 0;
 
-    int execTimes = 10;
+        std::string filepath = "C:/Users/frien/Documents/Taillard_" + problem + ".txt";
 
-    double bestResult = numeric_limits<double>::max();
+        bool readVariableCost = false;
 
-    double totalResult = 0;
-    double totalTime = 0;
+        readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
 
-    for (int i = 1; i <= execTimes; i++) {
-        std::string iStr;
-        std::string ap = " (";
-        ap += to_string(i);
-        ap += ")";
-        std::string tt = t + ap;
-         
-        if (availableVels.size() > 0) {
-            PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt, availableVels, vels);
-        }
-        else {
-            PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt);
-            double currResult = transport.getResult();
+        int execTimes = 10;
+
+        double bestResult = numeric_limits<double>::max();
+
+        double totalResult = 0;
+        double totalTime = 0;
+
+        for (int i = 1; i <= execTimes; i++) {
+            std::string iStr;
+            std::string ap = " (";
+            ap += to_string(i);
+            ap += ")";
+            std::string tt = problem + ap;
+            double currResult;
+            double currTime;
+            if (availableVels.size() > 0) {
+                PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt, availableVels, vels);
+                currResult = transport.getResult();
+                currTime = transport.getExecTime();
+            }
+            else {
+                PRVFHEF transport(demands, adjacencies, vehicleTypes, depotTravelCosts, tt);
+                currResult = transport.getResult();
+                currTime = transport.getExecTime();
+            }
             if (currResult < bestResult) {
                 bestResult = currResult;
             }
             totalResult += currResult;
-            totalTime += transport.getExecTime();
+            totalTime += currTime;
+
+            interrouteStructures::resetImprove();
+            intrarouteStructures::resetImprove();
         }
+
+        double avgResult = totalResult / execTimes;
+        double avgExecTime = totalTime / execTimes;
+
+        ofstream exitStream;
+        std::string f = "F:\\TCC\\TCC\\x64\\Release\\estatisticas Taillard_" + problem + ".txt";
+        exitStream.open(f);
+        exitStream << "Tempo de execução total:" << totalTime << "\n";
+        exitStream << "Best Result: " << bestResult << "\n";
+        exitStream << "Tempo de execução médio: " << avgExecTime << "\n";
+        exitStream << "Average Result: " << avgResult << "\n";
+        exitStream.close();
+
     }
-
-    double avgResult = totalResult / execTimes;
-    double avgExecTime = totalTime / execTimes;
-
-    ofstream exitStream;
-    std::string f = "F:\\TCC\\TCC\\x64\\Release\\estatisticas Taillard_" + t + ".txt";
-    exitStream.open(f);
-    exitStream << "Tempo de execução total:" << totalTime << "\n";
-    exitStream << "Best Result: " << bestResult << "\n";
-    exitStream << "Tempo de execução médio: " << avgExecTime << "\n";
-    exitStream << "Average Result: " << avgResult << "\n";
-    exitStream.close();
 }

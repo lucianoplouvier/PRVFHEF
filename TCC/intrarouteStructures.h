@@ -33,6 +33,8 @@ namespace intrarouteStructures {
 
 	int getReverseImprove();
 
+	void resetImprove();
+
 	std::list<INTRAROUTETYPES> getAll();
 
 	static int intrarrouteCount() { return getAll().size(); }

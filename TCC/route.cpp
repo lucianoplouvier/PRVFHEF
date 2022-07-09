@@ -160,13 +160,13 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 	for (int i = 0; i < solution.size(); i++) {
 		double totalDemand = solution[i].getTotalDemand();
 		if (totalDemand > solution[i].vehicle.capacity) {
-			cout << "ERRO CAPACIDADE VEICULO\n";
+			//cout << "ERRO CAPACIDADE VEICULO\n";
 			return false; // Se entrar aqui é que estourou a capacidade
 		}
 		if (hasLimitedVels) {
 			int velLeft = availableVels[solution[i].vehicle.id]--;
 			if (velLeft < 0) {
-				cout << "ERRO QNT VEICULOS\n";
+				//cout << "ERRO QNT VEICULOS\n";
 				return false; // Se entrar aqui é que tem veículo demais em uso
 			}
 		}
@@ -187,7 +187,7 @@ bool RouteDefs::isSolutionValid(const std::vector<Route>& solution, std::vector<
 
 	for (int i = 0; i < completeClientList.size(); i++) {
 		if (demandsApplied[i] > 0 || demandsApplied[i] < 0) {
-			cout << "ERRO DEMANDA\n";
+			//cout << "ERRO DEMANDA\n";
 			return false; // Se entrar aqui é que sumiu demanda
 		}
 	}

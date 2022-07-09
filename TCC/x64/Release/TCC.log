@@ -1,11 +1,24 @@
-﻿  main.cpp
+﻿  heterogeneousTransports.cpp
 F:\TCC\TCC\TCC\route.h(39,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\intrarouteStructures.h(38,56): warning C4267: 'return': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\main.cpp(169,40): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
-F:\TCC\TCC\TCC\main.cpp(186,40): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\intrarouteStructures.h(40,56): warning C4267: 'return': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(16,40): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(29,63): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(57,40): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(59,70): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(69,68): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(79,69): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(145,81): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(197,83): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(231,35): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(433,66): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(490,77): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(503,79): warning C4267: 'argumento': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(513,43): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(540,40): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+F:\TCC\TCC\TCC\heterogeneousTransports.cpp(577,47): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
   Gerando código
-  1 of 1561 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  3 of 1579 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    17 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finalizada a geração de código
   TCC.vcxproj -> F:\TCC\TCC\x64\Release\TCC.exe

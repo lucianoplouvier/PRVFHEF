@@ -39,6 +39,18 @@ int interrouteStructures::getKSplitImprove() {
 	return kSplitImprove;
 }
 
+void interrouteStructures::resetImprove() {
+	shift10Improve = 0; 
+	shift20Improve = 0;
+	swap11Improve = 0;
+	swap21Improve = 0;
+	swap11SImprove = 0;
+	swap21SImprove = 0;
+	swap21SImprove = 0; 
+	crossImprove = 0; 
+	kSplitImprove = 0;
+}
+
 std::list<INTERROUTETYPES> interrouteStructures::getAll() {
 	std::list<INTERROUTETYPES> all;
 	all.push_back(INTERROUTETYPES::KSPLIT);
