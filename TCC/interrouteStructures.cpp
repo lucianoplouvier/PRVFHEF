@@ -46,7 +46,6 @@ void interrouteStructures::resetImprove() {
 	swap21Improve = 0;
 	swap11SImprove = 0;
 	swap21SImprove = 0;
-	swap21SImprove = 0; 
 	crossImprove = 0; 
 	kSplitImprove = 0;
 }
@@ -496,7 +495,7 @@ std::vector<Route> interrouteStructures::cross(std::vector<Route>& solution, dou
 	}
 }
 
-std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
+std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels, const std::vector<Vehicle>& vehicleTypes) {
 	std::vector<int> resolvedClients;
 	std::vector<Route> result = solution;
 	double resultEval = evaluation;
@@ -521,7 +520,7 @@ std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, do
 					forbiddenIndex = i;
 				}
 				bool success = false;
-				std::vector<Route> stepResult = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(client.id, originalClients), forbiddenIndex, success, adjCosts);
+				std::vector<Route> stepResult = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(client.id, originalClients), forbiddenIndex, success, adjCosts, vehicleTypes);
 				if (success) {
 					double eval = RouteDefs::evaluate(stepResult, adjCosts);
 					if (eval < resultEval) {
@@ -542,7 +541,7 @@ std::vector<Route> interrouteStructures::kSplit(std::vector<Route>& solution, do
 	}
 }
 
-std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels) {
+std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels, const std::vector<Vehicle>& vehicleTypes) {
 	switch (type)
 	{
 	case INTERROUTETYPES::SHIFT1_0:
@@ -564,7 +563,7 @@ std::vector<Route> interrouteStructures::executeInterroute(INTERROUTETYPES type,
 		return swap2_1S(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
 		break;
 	case INTERROUTETYPES::KSPLIT:
-		return kSplit(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);
+		return kSplit(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels, vehicleTypes);
 		break;
 	case INTERROUTETYPES::CROSS:
 		return cross(solution, evaluation, auxStruct, adjCosts, originalClients, availableVels);

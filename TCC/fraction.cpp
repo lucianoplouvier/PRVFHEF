@@ -1,6 +1,6 @@
 #include "fraction.h"
 
-std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& solution, const Client& client, int forbiddenRouteIndex, bool& success, const AdjacencyCosts& adjacencyCosts) {
+std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& solution, const Client& client, int forbiddenRouteIndex, bool& success, const AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehicleTypes) {
 	std::vector<int> routesIndexWithResidual; // L
 	std::vector<double> residualsList; // A
 	std::vector<double> leastInsertionCosts; // U
@@ -41,13 +41,13 @@ std::vector<Route> fractionRoute::splitReinsertion(const std::vector<Route>& sol
 			exit(1);
 		}
 
-		return knaapSackGreedy(result, client, leastInsertionPos, routesIndexWithResidual, residualsList, leastInsertionCosts, success);
+		return knaapSackGreedy(result, client, leastInsertionPos, routesIndexWithResidual, residualsList, leastInsertionCosts, vehicleTypes, success);
 	}
 	return solution;
 }
 
 std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, const Client& client, const std::vector<int>& leastInsertPos,
-	std::vector<int>& routesIndexWithResidual /*L*/, std::vector<double>& residualsList /*A*/, std::vector<double>& leastInsertionCosts /*U*/, bool& success) {
+	std::vector<int>& routesIndexWithResidual /*L*/, std::vector<double>& residualsList /*A*/, std::vector<double>& leastInsertionCosts /*U*/, const std::vector<Vehicle>& vehicleTypes, bool& success) {
 
 	double currDemand = client.demand;
 
@@ -56,12 +56,36 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 		double value;
 	};
 
+	double avgCapacity = 0;
+	double maxCapacity = 0;
+	int countVehicle = 0;
+	for (int i = 0; i < vehicleTypes.size(); i++) {
+		countVehicle++;
+		avgCapacity += vehicleTypes[i].capacity;
+		if (vehicleTypes[i].capacity > maxCapacity) {
+			maxCapacity = vehicleTypes[i].capacity;
+		}
+	}
+	avgCapacity /= countVehicle;
+
 	std::vector<Profit> profits(residualsList.size());
 
 	for (int i = 0; i < residualsList.size(); i++) {
 		double& residual = residualsList[i];
 		double& cost = leastInsertionCosts[i];
 		double profitval = cost / residual;
+		double velCapacity = solution[routesIndexWithResidual[i]].vehicle.capacity;
+		if (velCapacity < avgCapacity) {
+			double diff = std::abs(std::abs(velCapacity) - std::abs(avgCapacity));
+			diff = diff / maxCapacity;
+			profitval = profitval + profitval * diff;
+		}
+		else if (velCapacity > avgCapacity) {
+			double diff = std::abs(std::abs(velCapacity) - std::abs(avgCapacity));
+			diff = diff / maxCapacity;
+			profitval = profitval - profitval * diff;
+		}
+
 		Profit p;
 		p.id = i;
 		p.value = profitval;
@@ -102,7 +126,7 @@ std::vector<Route> fractionRoute::knaapSackGreedy(std::vector<Route>& solution, 
 	return solution;
 }
 
-std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts) {
+std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution, int maxVels, const AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehicleTypes) {
 	//return solution;
 	std::vector<Route> resultSolution(solution);
 	int currRoutes = 0; // Só contar rotas não vazias.
@@ -129,7 +153,7 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 			for (int i = 0; i < resultSolution[mostEmptyRouteIndex].clientsList.size(); i++) {
 				Client c(resultSolution[mostEmptyRouteIndex].clientsList[i]);
 				bool success = false;
-				resultSolution = splitReinsertion(resultSolution, c, mostEmptyRouteIndex, success, adjacencyCosts); // Aqui pode ser só o cliente pois queremos esvaziar a rota.
+				resultSolution = splitReinsertion(resultSolution, c, mostEmptyRouteIndex, success, adjacencyCosts, vehicleTypes); // Aqui pode ser só o cliente pois queremos esvaziar a rota.
 				if (success) {
 					resultSolution[mostEmptyRouteIndex].removeClient(c);
 					i--;
@@ -148,7 +172,7 @@ std::vector<Route> fractionRoute::emptyRoutes(const std::vector<Route>& solution
 	return resultSolution;
 }
 
-std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts) {
+std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& solution, const AdjacencyCosts& adjacencyCosts, const std::vector<Vehicle>& vehicleTypes) {
 	bool splitApplied = false;
 	std::vector<Route> result = solution;
 	double resultEval = RouteDefs::evaluate(solution, adjacencyCosts);
@@ -163,7 +187,7 @@ std::vector<Route> fractionRoute::reinsertSingleCustomer(std::vector<Route>& sol
 			if (r.clientsList.size() == 1) {
 				Client c = r.takeClient(0);
 				bool success = false;
-				std::vector<Route> splitSol = splitReinsertion(stepSol, c, i, success, adjacencyCosts); // Aqui pode ser só c pois só queremos esvaziar a rota.
+				std::vector<Route> splitSol = splitReinsertion(stepSol, c, i, success, adjacencyCosts, vehicleTypes); // Aqui pode ser só c pois só queremos esvaziar a rota.
 				if (success) {
 					double solEval = RouteDefs::evaluate(splitSol, adjacencyCosts);
 					if (solEval < stepEval) {

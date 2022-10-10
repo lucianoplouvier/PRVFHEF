@@ -17,7 +17,7 @@ F:\TCC\TCC\TCC\heterogeneousTransports.cpp(513,43): warning C4267: '=': convers�
 F:\TCC\TCC\TCC\heterogeneousTransports.cpp(540,40): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
 F:\TCC\TCC\TCC\heterogeneousTransports.cpp(577,47): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
   Gerando código
-  3 of 1579 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  3 of 1571 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finalizada a geração de código

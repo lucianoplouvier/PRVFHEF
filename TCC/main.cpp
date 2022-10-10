@@ -197,8 +197,12 @@ bool readProblemText(std::string input, std::vector<double>& demands, std::vecto
                 getline(myfile, line);
                 std::vector<std::string> lineSplit = strSplit(line, ' ');
                 for (int i = 0; i < vehicles; i++) {
-                    //vehicleTypes[i].travelCost = std::atof(lineSplit[i].c_str()); // As outras soluções da literatura não consideram este fator.
-                    vehicleTypes[i].travelCost = 1;
+                    if (readVariableCost) {
+                        vehicleTypes[i].travelCost = std::atof(lineSplit[i].c_str()); // As outras soluções da literatura não consideram este fator.
+                    }
+                    else {
+                        vehicleTypes[i].travelCost = 1;
+                    }
                 }
                 getline(myfile, line);
                 if (line.compare(eof) != 0) {
@@ -250,20 +254,30 @@ int main()
     
     //readProblem(filepath, demands, vehicleTypes, adjacencies, depotTravelCosts);
 
-    //cout << "Numero do arquivo? EX: 03\n";
+    cout << "Numero do arquivo? EX: 03\n";
 
-    //std::string t;  
-    //cin >> t;
+    std::string ub;  
+    cin >> ub;
 
     std::vector<std::string> problemList;
+    problemList.push_back(ub);
     //problemList = {"17"};
-    problemList = {"03", "04", "05", "06" , "13" , "14" , "15" , "16", "17", "18", "19", "20"};
+    //problemList = {"03", "04", "05", "06" , "13" , "14" , "15" , "16", "17", "18", "19", "20"};
+    //problemList = {"03", "04", "05", "06"};
     //problemList = {"17", "20"};
     //problemList = { "03", "13", "17", "20"};
     //problemList = { "20" };
     //problemList = {"14"};
+    //problemList = { "13" , "14" , "15" , "16", "17", "18", "19", "20" }; // Variáveis
+    //problemList = { "18", "19", "20" }; // Variáveis
+
+    int execTimes = 30;
+
+    bool useVariableCost = false;
 
     for (auto problem : problemList) {
+
+        cout << "Resolvendo problema " << problem << "\n";
 
         std::vector<double> demands = std::vector<double>();
         std::vector<ClientAdjacency> adjacencies = std::vector<ClientAdjacency>();
@@ -274,11 +288,7 @@ int main()
 
         std::string filepath = "C:/Users/frien/Documents/Taillard_" + problem + ".txt";
 
-        bool readVariableCost = false;
-
-        readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, readVariableCost);
-
-        int execTimes = 10;
+        readProblemText(filepath, demands, vehicleTypes, adjacencies, availableVels, depotTravelCosts, vels, useVariableCost);
 
         double bestResult = numeric_limits<double>::max();
 

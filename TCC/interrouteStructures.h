@@ -60,7 +60,7 @@ namespace interrouteStructures {
 
 	std::vector<Route> cross(std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels);
 
-	std::vector<Route> kSplit(std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels);
+	std::vector<Route> kSplit(std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels, const std::vector<Vehicle>& vehicleTypes);
 
 	std::list<INTERROUTETYPES> getAll();
 
@@ -72,5 +72,5 @@ namespace interrouteStructures {
 	* @param auxStruct - Struturas auxiliares.
 	* @param adjCosts - custos de adjacência.
 	*/
-	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels);
+	std::vector<Route> executeInterroute(INTERROUTETYPES type, std::vector<Route>& solution, double evaluation, AuxiliaryStructures* auxStruct, AdjacencyCosts& adjCosts, const std::vector<Client>& originalClients, std::vector<int>& availableVels, const std::vector<Vehicle>& vehicleTypes);
 }

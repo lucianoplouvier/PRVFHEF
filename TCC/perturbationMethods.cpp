@@ -209,7 +209,7 @@ void perturbationMethods::ksplit(std::vector<Route>& solution, AdjacencyCosts& a
 		std::advance(it, randomClientIndex);
 		RouteDefs::removeClientFromSolution(step, it->id, positionOfSingleRemoval);
 		bool success = false;
-		step = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(it->id, clientList), positionOfSingleRemoval, success, adjacencyCosts);
+		step = fractionRoute::splitReinsertion(step, RouteDefs::getOriginalClient(it->id, clientList), positionOfSingleRemoval, success, adjacencyCosts, vehiclesList);
 		if (success) {
 			result = step;
 		}

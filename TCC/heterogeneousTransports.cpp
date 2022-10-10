@@ -9,7 +9,7 @@ using namespace std;
 
 int EXECUTIONTIMES = 300;
 int MAXITERSNOIMPROVE = 1000;
-int VAR_EXEC_TIMES = 2;
+int VAR_EXEC_TIMES = 5;
 
 PRVFHEF::PRVFHEF(std::vector<double> clientsDemands, std::vector<ClientAdjacency> clientAdjacencies, std::vector<Vehicle> vehicleTypes, std::vector<double> depotTravelCost, std::string t, std::vector<int> availableVels, int vehicles) {
 	m_t = t;
@@ -101,9 +101,9 @@ std::vector<Route> PRVFHEF::createInitialSolution(int vehiclesCount) {
 			routes.push_back(emptyVelType);
 		}
 	}
-	routes = fractionRoute::reinsertSingleCustomer(routes, m_adjacencyCosts);
+	routes = fractionRoute::reinsertSingleCustomer(routes, m_adjacencyCosts, m_vehicleTypes);
 	if (routes.size() > vehiclesCount) {
-		routes = fractionRoute::emptyRoutes(routes, vehiclesCount, m_adjacencyCosts);
+		routes = fractionRoute::emptyRoutes(routes, vehiclesCount, m_adjacencyCosts, m_vehicleTypes);
 	}
 
 	return routes;
@@ -199,7 +199,7 @@ std::vector<Route> PRVFHEF::rvnd(std::vector<Route>& currSol, double evaluation)
 		INTERROUTETYPES selectedInterroute = *iterator;
 
 		// Execução da interrota.
-		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, finalResult, finalEval, m_auxiliaryStructures, m_adjacencyCosts, m_allClients, m_availableVels);
+		std::vector<Route> interrouteResult = interrouteStructures::executeInterroute(selectedInterroute, finalResult, finalEval, m_auxiliaryStructures, m_adjacencyCosts, m_allClients, m_availableVels, m_vehicleTypes);
 		double roundEval = RouteDefs::evaluate(interrouteResult, m_adjacencyCosts);
 		if (roundEval < finalEval) {
 			checkAndRepair(interrouteResult);
